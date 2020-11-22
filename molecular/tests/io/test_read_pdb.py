@@ -15,6 +15,8 @@ from unittest import TestCase
 # Path to samples
 samples = os.path.join('molecular', 'tests', 'samples')
 
+print(os.getcwd())
+
 
 # Test that we know how to read PDB files
 class TestReadPDB(TestCase):

@@ -1,5 +1,6 @@
 /build/
 /dist/
+dummy
 .hypothesis/
 .hypothesis/*
 /.idea/
