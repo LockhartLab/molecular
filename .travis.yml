@@ -32,7 +32,7 @@ jobs:
           git commit -m "[deploy] ${TRAVIS_COMMIT_MESSAGE}"
           git push -fq https://doclockh:"${GIT_API_KEY}"@github.com/"${TRAVIS_REPO_SLUG}".git master:master
 
-    - if: commit_message =~ /\[deployxxx\]/
+    - if: commit_message =~ /\[deploy\]/
       #
       script:
         - echo 0
@@ -42,7 +42,7 @@ jobs:
         - provider: pypi
           user: "__token__"
           password:
-            secure: htZ9CW6AXO9p4MtE/LQkI56wAUucHw3Y2h4gdY7MnDMkEPEDTqZ9FYFMlLCif98ThjoQ6PDobqgdWAx8+86kd6E+J/UnSlXQ+ixKAvLz90E1VWgn8R+hMLDG+0CKxPaSA9ffT/jshVR2o/01oJaZPr28UpJjET8wXhdLsFrEowSkrfAIaXCTlTZzzn9qrGHOOY1JpJvGn38Q36K6LXvUDrTNvJHy3GWRwRl5xxNQqHlO0+8Q5mVwAgJ50kfeoYs+u0zvHIrS9KLh03h6JRaSSnUJ8E5jeG6er/GXhPEED56PkSE+zn+2lIh4HkBA0uqHjUWexOSl5j2hPDotPMKx1Pxd0HSiKkkTIIfVrjUxCWkFK5ZsF2frTslpBClUJJ1jCC55fOr96VI2Df3a6+PyMpJ+A9Ap4SalCleDn91S2AhIMHDE0bB/JZRWlI8nXd7WpQQG0u64shHw3SMpg2BYn8XAXm9LdhLs54/keRe8QLEi3GwaCSUKCwmr0GoAYqzCKMrvIA8+XbtrVoV0yjo3Cb7prj7juDKDd2c7G+LiJB20jGgNg2MCh1cPkzKZL+vBDZ9ee8q7Ti0Do2KNKZgp5Q2x1j0jkZzwlkNl+7cycY0PIJaHHXL5cLQtFpAonU0b5wJZoV1rgoMk0OR5WhKkCXM1R/jHNqAxL6MoWvk9ymM=
+            secure: "H1izncpSp+yWMAwKYiEZAQYWXMO1ilTFjhxb1N9i0MYWIJb7TquuelUlVDwff1B+7BeGb3wxX5gZTwjGQn8R5hJLl7pRsW7d3w1Gsz/kmowv6LTCvU39VFsyKq5GNtia4CqYSDt1GwYaaa7bxrVpW2JaQN4zH2fjSrYHkcPSKdKKFFbOjCyaqe/PTAAlP2umJdTdB74xxPj/ZoYQ3xCggQI1In4vTBMeKy6lI+PAckgGFZVoZQ3hLo2+JNxG6hLqLxym7pevWlCl4wSWNN6mFUehWzMUHOx2bxdG0/nO+udX04pQD+vOWfcKn69dgXFvCLsadaG6lGm8dffp+MEl/fkBCpVO31ADWHE0VNEplq4Ws0g+g3Ack9ITlC/GY12Fhm8SIeQOBgpr8UMqY3+0O5VU1PcTbzRQh9E4lTaozqjsnHrr+I6OlLNl7K5thgEcMbdWrEFUAynIMC988216bjQiwL9xlvCohBAqZypxTDYMvU6Lo94fFb/ffaUuiQh9Qc/Li4CdaBFS+cpCAapsPoWs4loBs3fcLeqfhGYfvQ6IKabStkb9QjM2aWZSeOgx/9FFYDsg7T9gA/XxQbjFQDoY0uEIMLmK6TrE5iPk741h12d83DBG1gLbuevnuySKzuPpTqazivSaPjij2AHnFjtYtV4ackUbpjePFAwLcsQ="
           twine_check: true
           skip_cleanup: true
 #          on:

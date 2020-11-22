@@ -14,7 +14,6 @@ from unittest import TestCase
 
 # Path to samples
 samples = os.path.abspath(os.path.join(__file__, '..', '..', 'samples'))
-print(samples)
 
 
 # Test that we know how to read PDB files
