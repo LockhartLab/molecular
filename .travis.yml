@@ -11,6 +11,8 @@ jobs:
     - if: commit_message !~ /\[deploy\]/
       # run all tests
       script:
+        - pwd
+        - ls
         - cp molecular/tests/test.py .
       #  - python -m coverage run test.py
         - coverage run -m unittest test.py
