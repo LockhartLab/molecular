@@ -18,15 +18,9 @@ a package for molecular dynamics simulations and analysis
 
 <hr>
 
-"Completed":  
-`molecular.geometry`
-
-<hr>
-
-
 note that this package is **still in development**  
 at this stage, I'm only building thing as they come to mind  
 version 1.0 will be the first major release  
 until then, consider this code heavily volatile
 
-yet, install simply by calling ```pip install molecular```
+yet, install simply by calling ```pip install molecular``` or ```pip install --pre molecular`` for the latest development release.

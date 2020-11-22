@@ -23,7 +23,7 @@ if version['micro'] != 0:
 
 # Output version
 with open('version.yml', 'w') as f:
-    yaml.safe_dump(version, f)
+    yaml.safe_dump(version, f, sort_keys=False)
 
 # Transform version dict to string
 version = '.'.join([str(version[key]) for key in ['major', 'minor', 'micro']])
