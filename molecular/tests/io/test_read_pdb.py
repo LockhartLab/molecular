@@ -13,7 +13,7 @@ import os.path
 from unittest import TestCase
 
 # Path to samples
-samples = os.path.abspath(os.path.join(__file__, '..', 'samples'))
+samples = os.path.abspath(os.path.join(__file__, '..', '..', 'samples'))
 print(samples)
 
 
