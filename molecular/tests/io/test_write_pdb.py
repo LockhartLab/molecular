@@ -19,7 +19,7 @@ class TestWritePDB(TestCase):
     # Test that we know how to read a single PDB
     def test_write_structure(self):
         # Try to read a single PDB
-        trajectory1 = read_pdb(os.path.join(samples, 'structure.pdb'))
+        trajectory1 = read_pdb(os.path.join('samples', 'structure.pdb'))
 
         # Write as PDB
         trajectory1.to_pdb('temp.pdb')
@@ -35,7 +35,7 @@ class TestWritePDB(TestCase):
     # Test that we know how to read a PDB trajectory
     def test_write_trajectory(self):
         # Read trajectory
-        trajectory1 = read_pdb(os.path.join(samples, 'trajectory.pdb'))
+        trajectory1 = read_pdb(os.path.join('samples', 'trajectory.pdb'))
 
         # Write as PDB
         trajectory1.to_pdb('temp.pdb')
