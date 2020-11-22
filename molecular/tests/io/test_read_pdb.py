@@ -13,9 +13,8 @@ import os.path
 from unittest import TestCase
 
 # Path to samples
-samples = os.path.join('molecular', 'tests', 'samples')
-
-print(os.getcwd())
+samples = os.path.abspath(os.path.join(__file__, '..', 'samples'))
+print(samples)
 
 
 # Test that we know how to read PDB files
@@ -23,7 +22,7 @@ class TestReadPDB(TestCase):
     # Test that we know how to read a single PDB
     def test_read_structure(self):
         # Try to read a single PDB
-        trajectory = read_pdb(os.path.join('samples', 'structure.pdb'))
+        trajectory = read_pdb(os.path.join(samples, 'structure.pdb'))
 
         # Must be of type Structure
         self.assertIsInstance(trajectory, Trajectory)
@@ -42,7 +41,7 @@ class TestReadPDB(TestCase):
     # Test that we know how to read a PDB trajectory
     def test_read_trajectory(self):
         # Read trajectory
-        trajectory = read_pdb(os.path.join('samples', 'trajectory.pdb'))
+        trajectory = read_pdb(os.path.join(samples, 'trajectory.pdb'))
 
         # Must be of type Trajectory
         self.assertIsInstance(trajectory, Trajectory)
