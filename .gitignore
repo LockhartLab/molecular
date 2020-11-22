@@ -1,0 +1,13 @@
+/build/
+/dist/
+.hypothesis/
+.hypothesis/*
+/.idea/
+/molecular.egg-info/
+__pycache__/
+__pycache__/*
+/samples/
+samples
+samples/*
+*.dcd
+*.pdb
