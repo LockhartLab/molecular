@@ -1,3 +1,2 @@
-include include/*
 include requirements.txt
 include version.yml

@@ -8,8 +8,9 @@ language: Python3
 import numpy as np
 
 
+# why code this at all instead of relying on statsmodels.tsa.stattools.acf?
 # noinspection PyShadowingNames
-def acorr(a):
+def acorr(a, adjust=False):
     r"""
     Compute the lagged autocorrelation of an observation :math:`a`.
 
@@ -20,6 +21,9 @@ def acorr(a):
     Parameters
     ----------
     a : numpy.ndarray
+    adjust : bool
+        Same meaning as the parameter in :ref:`statsmodels.tsa.stattools.acf`. This divides by :math:`n-k` instead of
+        :math:`n`.
 
     Returns
     -------
@@ -38,7 +42,10 @@ def acorr(a):
     # https://stackoverflow.com/questions/5639280/why-numpy-correlate-and-corrcoef-return-different-values-and-how-to-normalize
     # See https://github.com/numpy/numpy/issues/2310 on normalization
     a = (a - np.mean(a)) / np.std(a)
-    rho = np.correlate(a / len(a), a, mode='full')[(len(a) - 1):]
+    len_a = len(a)
+    rho = np.correlate(a / len_a, a, mode='full')[(len_a - 1):]
+    if adjust:
+        rho *= len_a / (len_a - np.arange(len_a))
 
     # As a sanity check, index 0 must be 1.
     if not np.allclose(rho[0], 1.):
@@ -192,11 +199,12 @@ def teq(a):
         Equilibration time.
     """
 
-    rho = acorr(a)[1:]
+    rho_ = acorr(a)[1:]
+    rho = rho_[:np.min(np.where(rho_ < 0))]
     t_max = len(a)
-    t = np.arange(1, t_max)
+    t = np.arange(1, len(rho) + 1)
 
-    return np.sum((1. - t / t_max) * np.abs(rho))
+    return np.sum((1. - t / t_max) * rho)
 
 
 if __name__ == '__main__':
