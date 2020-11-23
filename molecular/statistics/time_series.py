@@ -199,8 +199,9 @@ def teq(a):
         Equilibration time.
     """
 
-    rho_ = acorr(a)[1:]
+    rho_ = acorr(a, adjust=True)[1:]
     rho = rho_[:np.min(np.where(rho_ < 0))]
+
     t_max = len(a)
     t = np.arange(1, len(rho) + 1)
 
