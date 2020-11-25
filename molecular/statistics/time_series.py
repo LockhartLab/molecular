@@ -60,7 +60,7 @@ def acov(a, fft=False):
 
     .. math :: \gamma(k)=\frac{1}{N-k}\sum_{t=1}^{N-k}(a_t - \mu)(a_{t+k} - \mu)
 
-    Here,
+    Here, we also compute the mean
 
     .. math :: \mu=\frac{1}{N}\sum_t^Na_t
 
