@@ -16,7 +16,7 @@ from typelike import ArrayLike
 
 
 # Globular loadtxt
-def loadtxt(fname, dtype=float, glob=False):
+def loadtxt(fname, dtype=float, glob=False, verbose=False):
     """
     A refactoring of :ref:`numpy.loadtxt` that allows for globbing files.
 
@@ -25,9 +25,11 @@ def loadtxt(fname, dtype=float, glob=False):
     fname : file, str, or pathlib.Path
         Name of file.
     dtype : str or object
-
+        File type.
     glob : bool
         Does `fname` need to be globbed?
+    verbose : bool
+        Should information about the read-in be displayed?
 
     Returns
     -------
@@ -35,15 +37,32 @@ def loadtxt(fname, dtype=float, glob=False):
         Read file
     """
 
+    # If glob, change fname to include all globbed files
     if glob:
         # Glob first; if glob is empty, throw an error
         fname_glob = glob_(fname)
         if not fname_glob:
             raise FileNotFoundError(fname)
 
-        fname = input_(sorted(fname_glob))
+        # Sort glob
+        fname_glob = sorted(fname_glob)
 
-    return np.loadtxt(fname, dtype=dtype)
+        # Output if verbose
+        if verbose:
+            print(f'globbing: {list(fname_glob)}')
+
+        # Update fname to include all globbed files
+        fname = input_(fname_glob)
+
+    # Utilize numpy to read-in the file(s)
+    data = np.loadtxt(fname, dtype=dtype)
+
+    # If verbose, note the shape of the data
+    if verbose:
+        print(f'shape: {data.shape}')
+
+    # Return
+    return data
 
 
 # Read PDB

@@ -61,6 +61,10 @@ def acov(a, fft=False):
     -------
     numpy.ndarray
         Autocovariance function
+
+    References
+    ----------
+    https://www.itl.nist.gov/div898/handbook/eda/section3/autocopl.htm
     """
 
     # We only want to compute this for 1D arrays
@@ -91,7 +95,7 @@ def inefficiency(a):
     """
     Compute the statistical inefficiency :math:`g` from the equilibration time :math:`\tau_{corr}`.
 
-    .. math :: g = 1 + 2\tau_{eq}.
+    .. math :: g = 1 + 2 \tau_{corr}.
 
     Parameters
     ----------
@@ -134,7 +138,7 @@ def sem_tcorr(a, tol=1e-3):
 # noinspection PyShadowingNames
 def tcorr(a, fft=False):
     r"""
-    Compute equilibration time :math:`\tau_{corr}` based on the autocorrelation function :math:`\rho(k)`.
+    Compute correlation time :math:`\tau_{corr}` based on the autocorrelation function :math:`\rho(k)`.
 
     .. math :: \tau_{corr} = \sum_{t=1}^{T} (1 - \frac{t}{T}) \rho_{t}
 
