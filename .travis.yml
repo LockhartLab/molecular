@@ -23,6 +23,8 @@ jobs:
         - |
           version=$(python _scripts/increment_version.py)
           cd docs
+          rm -rf source/api/generated
+          rm -rf build
           make html
           cd ..
           git config user.name "doclockh"
