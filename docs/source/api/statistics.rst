@@ -10,3 +10,4 @@ Functions
    :toctree: generated
 
    block_error
+   time_series
