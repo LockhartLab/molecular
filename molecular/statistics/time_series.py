@@ -16,7 +16,7 @@ def acorr(a):
 
     .. math :: \rho(k) = \frac{\gamma(k)}{\gamma(0)}
 
-    The function :math:`\gamma` is from :ref:`acov`.
+    The function :math:`\gamma` is from :func:`acov`.
 
     Parameters
     ----------
@@ -67,7 +67,7 @@ def acov(a, fft=False):
     Note: by default, all :math:`k` from 0 to N-1 are evaluated. Sampling deteriorates rapidly as :math:`k` increases.
     There is also a *biased* estimator for the autocovariance, which changes the denominator from :math:`n-k` to
     :math:`n` and has an effect of reducing the fluctuations due to error at large :math:`k`. To compute this, see
-    :ref:`statsmodels.tsa.stattools.acf`.
+    :func:`statsmodels.tsa.stattools.acovf`.
 
     Parameters
     ----------
