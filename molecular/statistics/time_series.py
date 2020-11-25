@@ -9,22 +9,19 @@ from numba import njit
 import numpy as np
 
 
-# why code this at all instead of relying on statsmodels.tsa.stattools.acf?
 # noinspection PyShadowingNames
-def acorr(a, adjusted=False):
+def acorr(a):
     r"""
     Compute the lagged autocorrelation of an observation :math:`a`.
 
-    .. math :: \rho(\tau) = \sum_
+    .. math :: \rho(\tau) = \frac{\gamma(\tau)}{\gamma(0)}
 
-    Note: this is mostly derived from :func:`matplotlib.axes.Axes.acorr`.
+    The function :math:`\gamma` is from :ref:`acov`.
 
     Parameters
     ----------
     a : numpy.ndarray
-    adjusted : bool
-        Same meaning as the parameter in :ref:`statsmodels.tsa.stattools.acf`. This divides by :math:`n-k` instead of
-        :math:`n`.
+        1D array.
 
     Returns
     -------
@@ -80,7 +77,8 @@ def acov(a, fft=False):
 
     Returns
     -------
-
+    numpy.ndarray
+        Autocovariance function
     """
 
     # We only want to compute this for 1D arrays
