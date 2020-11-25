@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.statistics.time_series &#8212; molecular 0.1.dev10 documentation</title>
+    <title>molecular.statistics.time_series &#8212; molecular 0.1.dev11 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="../statistics.html" title="molecular.statistics"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev10 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev11 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../statistics.html" accesskey="U">molecular.statistics</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.statistics.time_series</a></li> 
@@ -49,9 +49,7 @@
   <div class="section" id="molecular-statistics-time-series">
 <h1>molecular.statistics.time_series<a class="headerlink" href="#molecular-statistics-time-series" title="Permalink to this headline">¶</a></h1>
 <p class="rubric">Description</p>
-<span class="target" id="module-molecular.statistics.time_series"></span><p>time_series.py</p>
-<p>author: C. Lockhart &lt;<a class="reference external" href="mailto:chris&#37;&#52;&#48;lockhartlab&#46;org">chris<span>&#64;</span>lockhartlab<span>&#46;</span>org</a>&gt;
-language: Python3</p>
+<span class="target" id="module-molecular.statistics.time_series"></span><p>Functions related to time series analysis.</p>
 <p class="rubric">Functions</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -59,20 +57,20 @@ language: Python3</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="molecular.statistics.time_series.acorr.html#molecular.statistics.time_series.acorr" title="molecular.statistics.time_series.acorr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acorr</span></code></a>(a)</p></td>
-<td><p>Compute the lagged autocorrelation of an observation <span class="math notranslate nohighlight">\(a\)</span>.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="molecular.statistics.time_series.acorr.html#molecular.statistics.time_series.acorr" title="molecular.statistics.time_series.acorr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acorr</span></code></a>(a[, fft])</p></td>
+<td><p>Compute the lag-<span class="math notranslate nohighlight">\(k\)</span> autocorrelation <span class="math notranslate nohighlight">\(\rho(k)\)</span> from dataset <span class="math notranslate nohighlight">\(a\)</span>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="molecular.statistics.time_series.acov.html#molecular.statistics.time_series.acov" title="molecular.statistics.time_series.acov"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acov</span></code></a>(a[, fft])</p></td>
 <td><p>Compute the unbiased auto-covariance function <span class="math notranslate nohighlight">\(\gamma(k)\)</span> from dataset <span class="math notranslate nohighlight">\(a\)</span> with <span class="math notranslate nohighlight">\(N\)</span> samples for lag-time <span class="math notranslate nohighlight">\(k\)</span>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="molecular.statistics.time_series.inefficiency.html#molecular.statistics.time_series.inefficiency" title="molecular.statistics.time_series.inefficiency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inefficiency</span></code></a>(a)</p></td>
-<td><p>Compute the statistical inefficiency <span class="math notranslate nohighlight">\(g\)</span> from the equilibration time  au_{eq}.</p></td>
+<td><p>Compute the statistical inefficiency <span class="math notranslate nohighlight">\(g\)</span> from the equilibration time :math:`  au_{corr}`.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="molecular.statistics.time_series.sem_tcorr.html#molecular.statistics.time_series.sem_tcorr" title="molecular.statistics.time_series.sem_tcorr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sem_tcorr</span></code></a>(a[, tol])</p></td>
 <td><p>Estimate of standard error of the mean derived from the correlation time.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="molecular.statistics.time_series.tcorr.html#molecular.statistics.time_series.tcorr" title="molecular.statistics.time_series.tcorr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tcorr</span></code></a>(a)</p></td>
-<td><p>Compute equilibration time <span class="math notranslate nohighlight">\(\tau_{corr}\)</span> based on the autocorrelation function <span class="math notranslate nohighlight">\(\rho(t)\)</span>.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="molecular.statistics.time_series.tcorr.html#molecular.statistics.time_series.tcorr" title="molecular.statistics.time_series.tcorr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tcorr</span></code></a>(a[, fft])</p></td>
+<td><p>Compute equilibration time <span class="math notranslate nohighlight">\(\tau_{corr}\)</span> based on the autocorrelation function <span class="math notranslate nohighlight">\(\rho(k)\)</span>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -127,7 +125,7 @@ language: Python3</p>
         <li class="right" >
           <a href="../statistics.html" title="molecular.statistics"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev10 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev11 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../statistics.html" >molecular.statistics</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.statistics.time_series</a></li> 
