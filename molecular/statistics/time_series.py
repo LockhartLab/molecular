@@ -1,8 +1,5 @@
 """
-time_series.py
-
-author: C. Lockhart <chris@lockhartlab.org>
-language: Python3
+Functions related to time series analysis.
 """
 
 from numba import njit
@@ -10,9 +7,9 @@ import numpy as np
 
 
 # noinspection PyShadowingNames
-def acorr(a):
+def acorr(a, fft=False):
     r"""
-    Compute the lagged autocorrelation of an observation :math:`a`.
+    Compute the lag-:math:`k` autocorrelation :math:`\rho(k)` from dataset :math:`a`.
 
     .. math :: \rho(k) = \frac{\gamma(k)}{\gamma(0)}
 
@@ -22,34 +19,18 @@ def acorr(a):
     ----------
     a : numpy.ndarray
         1D array.
+    fft : bool
+        Should fast Fourier transform be used?
 
     Returns
     -------
     numpy.ndarray
         Autocorrelation function
     """
+
     # Compute autocovariance
-    gamma = acov(a)
+    gamma = acov(a, fft=fft)
     return gamma / gamma[0]
-
-
-# noinspection PyShadowingNames
-def _acorr(a):
-    gamma = _acov(a)
-    return gamma / gamma[0]
-
-
-def _acorr_test(a, decimal=7, plot=True):
-    rho0 = acorr(a)
-    rho1 = _acorr(a)
-    if plot:
-        import matplotlib.pyplot as plt
-        plt.figure()
-        x = np.arange(len(rho0))
-        plt.plot(x, rho0)
-        plt.plot(x, rho1)
-        plt.show()
-    np.testing.assert_almost_equal(rho0, rho1, decimal=decimal)
 
 
 # noinspection DuplicatedCode,PyShadowingNames
@@ -105,41 +86,10 @@ def acov(a, fft=False):
     return gamma
 
 
-@njit
-def _acov(a):
-    n = len(a)
-    u = np.mean(a)
-    gamma = np.zeros(n)
-    for k in range(n):
-        gamma[k] = np.mean((a[:n - k] - u) * (a[k:] - u))
-    return gamma
-
-
-def _acov_test(a):
-    import time
-    start_time = time.time()
-    gamma0 = acov(a)
-    end_time = time.time()
-    print('acov={}'.format(end_time - start_time))
-
-    start_time = time.time()
-    gamma1 = acov(a, fft=True)
-    end_time = time.time()
-    print('acov={}'.format(end_time - start_time))
-
-    start_time = time.time()
-    gamma2 = _acov(a)
-    end_time = time.time()
-    print('acov={}'.format(end_time - start_time))
-
-    np.testing.assert_almost_equal(gamma0, gamma1)
-    np.testing.assert_almost_equal(gamma0, gamma2)
-
-
 # noinspection PyShadowingNames
 def inefficiency(a):
     """
-    Compute the statistical inefficiency :math:`g` from the equilibration time \tau_{eq}.
+    Compute the statistical inefficiency :math:`g` from the equilibration time :math:`\tau_{corr}`.
 
     .. math :: g = 1 + 2\tau_{eq}.
 
@@ -182,16 +132,21 @@ def sem_tcorr(a, tol=1e-3):
 
 # TODO derive this cleanly
 # noinspection PyShadowingNames
-def tcorr(a):
+def tcorr(a, fft=False):
     r"""
-    Compute equilibration time :math:`\tau_{corr}` based on the autocorrelation function :math:`\rho(t)`.
+    Compute equilibration time :math:`\tau_{corr}` based on the autocorrelation function :math:`\rho(k)`.
 
     .. math :: \tau_{corr} = \sum_{t=1}^{T} (1 - \frac{t}{T}) \rho_{t}
+
+    Note: only :math:`k` before the first occurrence :math:`\rho(k) = 0` are taken. Estimates after this are
+    statistically unreliable.
 
     Parameters
     ----------
     a : numpy.ndarray
         1D array.
+    fft : bool
+        Should fast Fourier transform be used?
 
     Returns
     -------
@@ -203,13 +158,64 @@ def tcorr(a):
 
     """
 
-    rho_ = acorr(a)[1:]
+    # Compute autocorrelation, reduce to observations before first < 0
+    rho_ = acorr(a, fft=fft)[1:]
     rho = rho_[:np.min(np.where(rho_ < 0))]
 
     t_max = len(a)
     t = np.arange(1, len(rho) + 1)
 
     return np.sum((1. - t / t_max) * rho)
+
+
+# noinspection PyShadowingNames
+def _acorr(a):
+    gamma = _acov(a)
+    return gamma / gamma[0]
+
+
+def _acorr_test(a, decimal=7, plot=True):
+    rho0 = acorr(a)
+    rho1 = _acorr(a)
+    if plot:
+        import matplotlib.pyplot as plt
+        plt.figure()
+        x = np.arange(len(rho0))
+        plt.plot(x, rho0)
+        plt.plot(x, rho1)
+        plt.show()
+    np.testing.assert_almost_equal(rho0, rho1, decimal=decimal)
+
+
+@njit
+def _acov(a):
+    n = len(a)
+    u = np.mean(a)
+    gamma = np.zeros(n)
+    for k in range(n):
+        gamma[k] = np.mean((a[:n - k] - u) * (a[k:] - u))
+    return gamma
+
+
+def _acov_test(a):
+    import time
+    start_time = time.time()
+    gamma0 = acov(a)
+    end_time = time.time()
+    print('acov={}'.format(end_time - start_time))
+
+    start_time = time.time()
+    gamma1 = acov(a, fft=True)
+    end_time = time.time()
+    print('acov={}'.format(end_time - start_time))
+
+    start_time = time.time()
+    gamma2 = _acov(a)
+    end_time = time.time()
+    print('acov={}'.format(end_time - start_time))
+
+    np.testing.assert_almost_equal(gamma0, gamma1)
+    np.testing.assert_almost_equal(gamma0, gamma2)
 
 
 if __name__ == '__main__':
