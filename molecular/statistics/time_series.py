@@ -5,12 +5,13 @@ author: C. Lockhart <chris@lockhartlab.org>
 language: Python3
 """
 
+from numba import njit
 import numpy as np
 
 
 # why code this at all instead of relying on statsmodels.tsa.stattools.acf?
 # noinspection PyShadowingNames
-def acorr(a, adjust=False):
+def acorr(a, adjusted=False):
     r"""
     Compute the lagged autocorrelation of an observation :math:`a`.
 
@@ -21,7 +22,7 @@ def acorr(a, adjust=False):
     Parameters
     ----------
     a : numpy.ndarray
-    adjust : bool
+    adjusted : bool
         Same meaning as the parameter in :ref:`statsmodels.tsa.stattools.acf`. This divides by :math:`n-k` instead of
         :math:`n`.
 
@@ -31,45 +32,109 @@ def acorr(a, adjust=False):
         Autocorrelation function
     """
 
-    # We only want to compute this for 1D arrays
-    if a.ndim != 1:
-        raise AttributeError('must be 1D')
-
-    # numpy.correlate with mode='full' computes the un-normalized correlation from -len(a) to len(a)
-    # To normalize this, we must divide by np.sqrt(np.dot(a, a) * np.dot(a, a)) = np.dot(a, a)
-    # Then, we are only interested in the data from lag = 0:len(a), so we subset the resulting array
-    # rho = (np.correlate(a, a, mode='full') / np.dot(a, a))[(len(a) - 1):]
-    # https://stackoverflow.com/questions/5639280/why-numpy-correlate-and-corrcoef-return-different-values-and-how-to-normalize
-    # See https://github.com/numpy/numpy/issues/2310 on normalization
-    a = (a - np.mean(a)) / np.std(a)
-    len_a = len(a)
-    rho = np.correlate(a / len_a, a, mode='full')[(len_a - 1):]
-    if adjust:
-        rho *= len_a / (len_a - np.arange(len_a))
-
-    # As a sanity check, index 0 must be 1.
-    if not np.allclose(rho[0], 1.):
-        raise ValueError('autocorrelation function not computed correctly')
-
-    # Return
-    return rho
+    # Compute autocovariance
+    gamma = acov(a)
+    return gamma / gamma[0]
 
 
 # noinspection PyShadowingNames
 def _acorr(a):
-    n = len(a)
-    u = np.mean(a)
-    s = np.sum(np.square(a - u))
-    rho = []
-    for i in np.arange(len(a)):
-        rho.append(np.sum((a[:n - i] - u) * (a[i:] - u)) / s)
-    return rho
+    gamma = _acov(a)
+    return gamma / gamma[0]
 
 
-def _acorr_test(a, decimal=7):
+def _acorr_test(a, decimal=7, plot=True):
     rho0 = acorr(a)
     rho1 = _acorr(a)
+    if plot:
+        import matplotlib.pyplot as plt
+        plt.figure()
+        x = np.arange(len(rho0))
+        plt.plot(x, rho0)
+        plt.plot(x, rho1)
+        plt.show()
     np.testing.assert_almost_equal(rho0, rho1, decimal=decimal)
+
+
+# noinspection DuplicatedCode,PyShadowingNames
+def acov(a, fft=False):
+    r"""
+    Compute the unbiased auto-covariance function :math:`\gamma(k)` from dataset :math:`a` with :math:`N` samples for
+    lag-time :math:`k`.
+
+    .. math :: \gamma(k)=\frac{1}{N-k}\sum_{t=1}^{N-k}(a_t - \mu)(a_{t+k} - \mu)
+
+    Here, :math:`\mu=\frac{1}{N}\sum_t^Na_t`.
+
+    Note: by default, all :math:`k` from 0 to N-1 are evaluated. Sampling deteriorates rapidly as :math:`k` increases.
+    There is also a *biased* estimator for the autocovariance, which changes the denominator from :math:`n-k` to
+    :math:`n` and has an effect of reducing the fluctuations due to error at large :math:`k`. To compute this, see
+    :ref:`statsmodels.tsa.stattools.acf`.
+
+    Parameters
+    ----------
+    a : numpy.ndarray
+        1D array.
+    fft : bool
+        Should Fast-Fourier Transform be used?
+
+    Returns
+    -------
+
+    """
+
+    # We only want to compute this for 1D arrays
+    if a.ndim != 1:
+        raise AttributeError('must be 1D')
+
+    # Remove the mean from the observations
+    a -= np.mean(a)
+
+    # Compute autocovariance gamma
+    if not fft:
+        # Compute a * a for all lag times using correlate and the unbiased autocovariance
+        len_a = len(a)
+        gamma = np.correlate(a, a, mode='full')[(len_a - 1):] / (len_a - np.arange(len_a))
+
+    else:
+        # Use statsmodels to compute FFT
+        # noinspection PyPackageRequirements
+        from statsmodels.tsa.stattools import acovf
+        gamma = acovf(a, adjusted=True, demean=False, fft=True, missing='none', nlag=None)
+
+    # Return
+    return gamma
+
+
+@njit
+def _acov(a):
+    n = len(a)
+    u = np.mean(a)
+    gamma = np.zeros(n)
+    for k in range(n):
+        gamma[k] = np.mean((a[:n - k] - u) * (a[k:] - u))
+    return gamma
+
+
+def _acov_test(a):
+    import time
+    start_time = time.time()
+    gamma0 = acov(a)
+    end_time = time.time()
+    print('acov={}'.format(end_time - start_time))
+
+    start_time = time.time()
+    gamma1 = acov(a, fft=True)
+    end_time = time.time()
+    print('acov={}'.format(end_time - start_time))
+
+    start_time = time.time()
+    gamma2 = _acov(a)
+    end_time = time.time()
+    print('acov={}'.format(end_time - start_time))
+
+    np.testing.assert_almost_equal(gamma0, gamma1)
+    np.testing.assert_almost_equal(gamma0, gamma2)
 
 
 # noinspection PyShadowingNames
@@ -199,7 +264,7 @@ def teq(a):
         Equilibration time.
     """
 
-    rho_ = acorr(a, adjust=True)[1:]
+    rho_ = acorr(a)[1:]
     rho = rho_[:np.min(np.where(rho_ < 0))]
 
     t_max = len(a)
@@ -212,7 +277,8 @@ if __name__ == '__main__':
     n = 100000
     a = np.random.normal(loc=0, scale=10, size=n)
     print(teq(a))
-    _acorr_test(a, decimal=3)
+    # _acov_test(a)
+    # _acorr_test(a, decimal=5)
     # _tcorr_test(a)
 
     # print(np.std(a))
