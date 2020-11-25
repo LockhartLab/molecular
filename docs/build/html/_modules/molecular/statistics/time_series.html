@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.statistics.time_series &#8212; molecular 0.1.dev11 documentation</title>
+    <title>molecular.statistics.time_series &#8212; molecular 0.1.dev12 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev11 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev12 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.statistics.time_series</a></li> 
       </ul>
@@ -101,6 +101,10 @@
 <span class="sd">    -------</span>
 <span class="sd">    numpy.ndarray</span>
 <span class="sd">        Autocovariance function</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    https://www.itl.nist.gov/div898/handbook/eda/section3/autocopl.htm</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># We only want to compute this for 1D arrays</span>
@@ -131,7 +135,7 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the statistical inefficiency :math:`g` from the equilibration time :math:`\tau_{corr}`.</span>
 
-<span class="sd">    .. math :: g = 1 + 2\tau_{eq}.</span>
+<span class="sd">    .. math :: g = 1 + 2 \tau_{corr}.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -174,7 +178,7 @@
 <span class="c1"># noinspection PyShadowingNames</span>
 <div class="viewcode-block" id="tcorr"><a class="viewcode-back" href="../../../api/generated/molecular.statistics.time_series.tcorr.html#molecular.statistics.time_series.tcorr">[docs]</a><span class="k">def</span> <span class="nf">tcorr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">fft</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Compute equilibration time :math:`\tau_{corr}` based on the autocorrelation function :math:`\rho(k)`.</span>
+<span class="sd">    Compute correlation time :math:`\tau_{corr}` based on the autocorrelation function :math:`\rho(k)`.</span>
 
 <span class="sd">    .. math :: \tau_{corr} = \sum_{t=1}^{T} (1 - \frac{t}{T}) \rho_{t}</span>
 
@@ -312,7 +316,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev11 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev12 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.statistics.time_series</a></li> 
       </ul>
