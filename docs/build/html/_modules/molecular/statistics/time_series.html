@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>molecular.statistics.time_series &#8212; molecular 0.1.dev7 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev7 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">molecular.statistics.time_series</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for molecular.statistics.time_series</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">time_series.py</span>
+
+<span class="sd">author: C. Lockhart &lt;chris@lockhartlab.org&gt;</span>
+<span class="sd">language: Python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="c1"># noinspection PyShadowingNames</span>
+<div class="viewcode-block" id="acorr"><a class="viewcode-back" href="../../../api/generated/molecular.statistics.time_series.acorr.html#molecular.statistics.time_series.acorr">[docs]</a><span class="k">def</span> <span class="nf">acorr</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the lagged autocorrelation of an observation :math:`a`.</span>
+
+<span class="sd">    .. math :: \rho(\tau) = \frac{\gamma(\tau)}{\gamma(0)}</span>
+
+<span class="sd">    The function :math:`\gamma` is from :ref:`acov`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : numpy.ndarray</span>
+<span class="sd">        1D array.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        Autocorrelation function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Compute autocovariance</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">acov</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">gamma</span> <span class="o">/</span> <span class="n">gamma</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<span class="c1"># noinspection PyShadowingNames</span>
+<span class="k">def</span> <span class="nf">_acorr</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">_acov</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">gamma</span> <span class="o">/</span> <span class="n">gamma</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_acorr_test</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">rho0</span> <span class="o">=</span> <span class="n">acorr</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">rho1</span> <span class="o">=</span> <span class="n">_acorr</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">plot</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rho0</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rho0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rho1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_almost_equal</span><span class="p">(</span><span class="n">rho0</span><span class="p">,</span> <span class="n">rho1</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="n">decimal</span><span class="p">)</span>
+
+
+<span class="c1"># noinspection DuplicatedCode,PyShadowingNames</span>
+<div class="viewcode-block" id="acov"><a class="viewcode-back" href="../../../api/generated/molecular.statistics.time_series.acov.html#molecular.statistics.time_series.acov">[docs]</a><span class="k">def</span> <span class="nf">acov</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">fft</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the unbiased auto-covariance function :math:`\gamma(k)` from dataset :math:`a` with :math:`N` samples for</span>
+<span class="sd">    lag-time :math:`k`.</span>
+
+<span class="sd">    .. math :: \gamma(k)=\frac{1}{N-k}\sum_{t=1}^{N-k}(a_t - \mu)(a_{t+k} - \mu)</span>
+
+<span class="sd">    Here, :math:`\mu=\frac{1}{N}\sum_t^Na_t`.</span>
+
+<span class="sd">    Note: by default, all :math:`k` from 0 to N-1 are evaluated. Sampling deteriorates rapidly as :math:`k` increases.</span>
+<span class="sd">    There is also a *biased* estimator for the autocovariance, which changes the denominator from :math:`n-k` to</span>
+<span class="sd">    :math:`n` and has an effect of reducing the fluctuations due to error at large :math:`k`. To compute this, see</span>
+<span class="sd">    :ref:`statsmodels.tsa.stattools.acf`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : numpy.ndarray</span>
+<span class="sd">        1D array.</span>
+<span class="sd">    fft : bool</span>
+<span class="sd">        Should Fast-Fourier Transform be used?</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        Autocovariance function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># We only want to compute this for 1D arrays</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;must be 1D&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Remove the mean from the observations</span>
+    <span class="n">a</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+    <span class="c1"># Compute autocovariance gamma</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fft</span><span class="p">:</span>
+        <span class="c1"># Compute a * a for all lag times using correlate and the unbiased autocovariance</span>
+        <span class="n">len_a</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">correlate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">)[(</span><span class="n">len_a</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):]</span> <span class="o">/</span> <span class="p">(</span><span class="n">len_a</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">len_a</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Use statsmodels to compute FFT</span>
+        <span class="c1"># noinspection PyPackageRequirements</span>
+        <span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">acovf</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="n">acovf</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">adjusted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">demean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fft</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">missing</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">nlag</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">gamma</span></div>
+
+
+<span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">_acov</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">gamma</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">a</span><span class="p">[:</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">k</span><span class="p">:]</span> <span class="o">-</span> <span class="n">u</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">gamma</span>
+
+
+<span class="k">def</span> <span class="nf">_acov_test</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">gamma0</span> <span class="o">=</span> <span class="n">acov</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;acov=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">gamma1</span> <span class="o">=</span> <span class="n">acov</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">fft</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;acov=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">gamma2</span> <span class="o">=</span> <span class="n">_acov</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;acov=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_almost_equal</span><span class="p">(</span><span class="n">gamma0</span><span class="p">,</span> <span class="n">gamma1</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_almost_equal</span><span class="p">(</span><span class="n">gamma0</span><span class="p">,</span> <span class="n">gamma2</span><span class="p">)</span>
+
+
+<span class="c1"># noinspection PyShadowingNames</span>
+<div class="viewcode-block" id="inefficiency"><a class="viewcode-back" href="../../../api/generated/molecular.statistics.time_series.inefficiency.html#molecular.statistics.time_series.inefficiency">[docs]</a><span class="k">def</span> <span class="nf">inefficiency</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the statistical inefficiency :math:`g` from the equilibration time \tau_{eq}.</span>
+
+<span class="sd">    .. math :: g = 1 + 2\tau_{eq}.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : numpy.ndarray</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Statistical inefficiency.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="mf">1.</span> <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">teq</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
+
+
+<span class="c1"># Estimate the standard error from the correlation time</span>
+<span class="c1"># noinspection PyShadowingNames</span>
+<div class="viewcode-block" id="sem_tcorr"><a class="viewcode-back" href="../../../api/generated/molecular.statistics.time_series.sem_tcorr.html#molecular.statistics.time_series.sem_tcorr">[docs]</a><span class="k">def</span> <span class="nf">sem_tcorr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Estimate of standard error of the mean derived from the correlation time.</span>
+
+<span class="sd">    The main assumption is that sqrt(N) ~ sqrt(len(a) / tcorr(a))</span>
+
+<span class="sd">    Should only be used for continuous time series data, e.g., from molecular dynamics. Discontinuous trajectories as</span>
+<span class="sd">    produced by replica exchange or Monte Carlo are not applicable.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : numpy.ndarray</span>
+<span class="sd">    tol : float</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tcorr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">))</span></div>
+
+
+<span class="c1"># TODO how is this different than teq?</span>
+<span class="c1"># noinspection PyShadowingNames</span>
+<div class="viewcode-block" id="tcorr"><a class="viewcode-back" href="../../../api/generated/molecular.statistics.time_series.tcorr.html#molecular.statistics.time_series.tcorr">[docs]</a><span class="k">def</span> <span class="nf">tcorr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute correlation time from the autocorrelation function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : numpy.ndarray</span>
+<span class="sd">    tol : float</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        Index of `a` where first converged, i.e., always less than `tol`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Autocorrelation function</span>
+    <span class="c1"># noinspection PyShadowingNames</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">acorr</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+    <span class="c1"># Accumulate the maximum for all time points</span>
+    <span class="c1"># Strictly, this is performed on the reversed and absolute autocorrelation function rho (i.e., looking backwards)</span>
+    <span class="n">rho_rev_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rho</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="c1"># Find rho_rev_max &lt; tol</span>
+    <span class="n">rho_rev_equil</span> <span class="o">=</span> <span class="n">rho_rev_max</span> <span class="o">&lt;</span> <span class="n">tol</span>
+
+    <span class="c1"># If there are no instances where we are equilibrated,</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">rho_rev_equil</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;autocorrelation not converged with tol=</span><span class="si">{</span><span class="n">tol</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Return N - first observed convergence</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">rho</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">rho_rev_equil</span><span class="p">)</span></div>
+
+
+<span class="c1"># noinspection PyShadowingNames</span>
+<span class="k">def</span> <span class="nf">_tcorr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute correlation time from the autocorrelation function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a</span>
+<span class="sd">    tol</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">acorr</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rho</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rho</span><span class="p">[</span><span class="n">t</span><span class="p">:]))</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">t</span>
+
+    <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;no correlation time found with tol=</span><span class="si">{</span><span class="n">tol</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_tcorr_test</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">):</span>
+    <span class="n">tau0</span> <span class="o">=</span> <span class="n">tcorr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">)</span>
+    <span class="n">tau1</span> <span class="o">=</span> <span class="n">_tcorr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">tau0</span><span class="p">,</span> <span class="n">tau1</span><span class="p">)</span>
+
+
+<span class="c1"># noinspection PyShadowingNames</span>
+<div class="viewcode-block" id="teq"><a class="viewcode-back" href="../../../api/generated/molecular.statistics.time_series.teq.html#molecular.statistics.time_series.teq">[docs]</a><span class="k">def</span> <span class="nf">teq</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute equilibration time :math:`\tau_{eq}` based on the autocorrelation function :math:`\rho(t)`.</span>
+
+<span class="sd">    .. math :: \tau_{eq} = \sum_{t=1}^{T} (1 - \frac{t}{T}) \rho_{t}</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : numpy.ndarray</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Equilibration time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">rho_</span> <span class="o">=</span> <span class="n">acorr</span><span class="p">(</span><span class="n">a</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">rho_</span><span class="p">[:</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rho_</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">))]</span>
+
+    <span class="n">t_max</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rho</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">t</span> <span class="o">/</span> <span class="n">t_max</span><span class="p">)</span> <span class="o">*</span> <span class="n">rho</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">100000</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">teq</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="c1"># _acov_test(a)</span>
+    <span class="c1"># _acorr_test(a, decimal=5)</span>
+    <span class="c1"># _tcorr_test(a)</span>
+
+    <span class="c1"># print(np.std(a))</span>
+    <span class="c1"># print(np.sqrt(np.cov(a)))</span>
+    <span class="c1"># print(np.sqrt(xx - x*x))</span>
+    <span class="c1"># print(correlation_time(a))</span>
+    <span class="c1"># print(sem_tcorr(a))</span>
+
+    <span class="c1"># import time</span>
+    <span class="c1"># start_time = time.time()</span>
+    <span class="c1"># rho = acorr(a)</span>
+    <span class="c1"># end_time = time.time()</span>
+    <span class="c1"># print(end_time - start_time)</span>
+    <span class="c1"># start_time = time.time()</span>
+    <span class="c1"># tau = tcorr(a)</span>
+    <span class="c1"># end_time = time.time()</span>
+    <span class="c1"># print(end_time - start_time)</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev7 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">molecular.statistics.time_series</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Lockhart Lab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.1.
+    </div>
+  </body>
+</html>
