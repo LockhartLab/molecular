@@ -26,6 +26,4 @@
     
     tcorr
     
-    teq
-    
 

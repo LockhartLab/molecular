@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.statistics.time_series.acov &#8212; molecular 0.1.dev7 documentation</title>
+    <title>molecular.statistics.time_series.acov &#8212; molecular 0.1.dev8 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="molecular.statistics.time_series.acorr.html" title="molecular.statistics.time_series.acorr"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev8 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../statistics.html" >molecular.statistics</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="molecular.statistics.time_series.html" accesskey="U">molecular.statistics.time_series</a> &#187;</li>
@@ -56,7 +56,9 @@
 lag-time <span class="math notranslate nohighlight">\(k\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[\gamma(k)=\frac{1}{N-k}\sum_{t=1}^{N-k}(a_t - \mu)(a_{t+k} - \mu)\]</div>
-<p>Here, <span class="math notranslate nohighlight">\(\mu=\frac{1}{N}\sum_t^Na_t\)</span>.</p>
+<p>Here,</p>
+<div class="math notranslate nohighlight">
+\[\mu=\frac{1}{N}\sum_t^Na_t\]</div>
 <p>Note: by default, all <span class="math notranslate nohighlight">\(k\)</span> from 0 to N-1 are evaluated. Sampling deteriorates rapidly as <span class="math notranslate nohighlight">\(k\)</span> increases.
 There is also a <em>biased</em> estimator for the autocovariance, which changes the denominator from <span class="math notranslate nohighlight">\(n-k\)</span> to
 <span class="math notranslate nohighlight">\(n\)</span> and has an effect of reducing the fluctuations due to error at large <span class="math notranslate nohighlight">\(k\)</span>. To compute this, see
@@ -128,7 +130,7 @@ There is also a <em>biased</em> estimator for the autocovariance, which changes 
         <li class="right" >
           <a href="molecular.statistics.time_series.acorr.html" title="molecular.statistics.time_series.acorr"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev8 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../statistics.html" >molecular.statistics</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="molecular.statistics.time_series.html" >molecular.statistics.time_series</a> &#187;</li>
