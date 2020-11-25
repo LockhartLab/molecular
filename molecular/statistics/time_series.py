@@ -14,7 +14,7 @@ def acorr(a):
     r"""
     Compute the lagged autocorrelation of an observation :math:`a`.
 
-    .. math :: \rho(\tau) = \frac{\gamma(\tau)}{\gamma(0)}
+    .. math :: \rho(k) = \frac{\gamma(k)}{\gamma(0)}
 
     The function :math:`\gamma` is from :ref:`acov`.
 
@@ -28,7 +28,6 @@ def acorr(a):
     numpy.ndarray
         Autocorrelation function
     """
-
     # Compute autocovariance
     gamma = acov(a)
     return gamma / gamma[0]
@@ -61,7 +60,9 @@ def acov(a, fft=False):
 
     .. math :: \gamma(k)=\frac{1}{N-k}\sum_{t=1}^{N-k}(a_t - \mu)(a_{t+k} - \mu)
 
-    Here, :math:`\mu=\frac{1}{N}\sum_t^Na_t`.
+    Here,
+
+    .. math :: \mu=\frac{1}{N}\sum_t^Na_t
 
     Note: by default, all :math:`k` from 0 to N-1 are evaluated. Sampling deteriorates rapidly as :math:`k` increases.
     There is also a *biased* estimator for the autocovariance, which changes the denominator from :math:`n-k` to
@@ -152,7 +153,7 @@ def inefficiency(a):
         Statistical inefficiency.
     """
 
-    return 1. + 2. * teq(a)
+    return 1. + 2. * tcorr(a)
 
 
 # Estimate the standard error from the correlation time
@@ -176,90 +177,30 @@ def sem_tcorr(a, tol=1e-3):
 
     """
 
-    return np.std(a) * np.sqrt(tcorr(a, tol=tol) / len(a))
+    return np.std(a) * np.sqrt(tcorr(a) / len(a))
 
 
-# TODO how is this different than teq?
+# TODO derive this cleanly
 # noinspection PyShadowingNames
-def tcorr(a, tol=1e-3):
-    """
-    Compute correlation time from the autocorrelation function.
-
-    Parameters
-    ----------
-    a : numpy.ndarray
-    tol : float
-
-    Returns
-    -------
-    int
-        Index of `a` where first converged, i.e., always less than `tol`.
-    """
-
-    # Autocorrelation function
-    # noinspection PyShadowingNames
-    rho = acorr(a)
-
-    # Accumulate the maximum for all time points
-    # Strictly, this is performed on the reversed and absolute autocorrelation function rho (i.e., looking backwards)
-    rho_rev_max = np.maximum.accumulate(np.abs(rho[::-1]))
-
-    # Find rho_rev_max < tol
-    rho_rev_equil = rho_rev_max < tol
-
-    # If there are no instances where we are equilibrated,
-    if np.sum(rho_rev_equil) == 0:
-        raise ValueError(f'autocorrelation not converged with tol={tol}')
-
-    # Return N - first observed convergence
-    return len(rho) - np.argmin(rho_rev_equil)
-
-
-# noinspection PyShadowingNames
-def _tcorr(a, tol=1e-3):
-    """
-    Compute correlation time from the autocorrelation function.
-
-    Parameters
-    ----------
-    a
-    tol
-
-    Returns
-    -------
-
-    """
-
-    rho = acorr(a)
-
-    for t in np.arange(len(rho)):
-        if np.max(np.abs(rho[t:])) < tol:
-            return t
-
-    raise AttributeError(f'no correlation time found with tol={tol}')
-
-
-def _tcorr_test(a, tol=1e-3):
-    tau0 = tcorr(a, tol=tol)
-    tau1 = _tcorr(a, tol=tol)
-    np.testing.assert_equal(tau0, tau1)
-
-
-# noinspection PyShadowingNames
-def teq(a):
+def tcorr(a):
     r"""
-    Compute equilibration time :math:`\tau_{eq}` based on the autocorrelation function :math:`\rho(t)`.
+    Compute equilibration time :math:`\tau_{corr}` based on the autocorrelation function :math:`\rho(t)`.
 
-    .. math :: \tau_{eq} = \sum_{t=1}^{T} (1 - \frac{t}{T}) \rho_{t}
+    .. math :: \tau_{corr} = \sum_{t=1}^{T} (1 - \frac{t}{T}) \rho_{t}
 
     Parameters
     ----------
     a : numpy.ndarray
+        1D array.
 
     Returns
     -------
     float
-        Equilibration time.
+        Correlation time.
+
+    References
+    ----------
+
     """
 
     rho_ = acorr(a)[1:]
@@ -274,7 +215,7 @@ def teq(a):
 if __name__ == '__main__':
     n = 100000
     a = np.random.normal(loc=0, scale=10, size=n)
-    print(teq(a))
+    print(tcorr(a))
     # _acov_test(a)
     # _acorr_test(a, decimal=5)
     # _tcorr_test(a)
