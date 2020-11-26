@@ -6,7 +6,73 @@ language: Python3
 """
 
 import numpy as np
+import pandas as pd
 from warnings import warn
+
+
+class Block:
+    def __init__(self, data, n_blocks=10):
+        # Make sure data is DataFrame
+        if not isinstance(data, pd.DataFrame):
+            raise AttributeError('data must be pandas.DataFrame')
+
+        # Create a copy of the DataFrame
+        data = data.copy()
+
+        # Split into blocks
+        if 'block' in data.columns:
+            raise AttributeError('block cannot be in pandas.DataFrame')
+        block_size = len(data) / n_blocks  # should this be ceiled?
+        data['block'] = (np.arange(len(data)) / block_size).astype(int)
+
+        # Make sure that we computed the right number of blocks
+        if n_blocks != data['block'].nunique():
+            raise ValueError('computed wrong number of blocks')
+
+        # Save data
+        self._data = data
+
+    @property
+    def data(self):
+        return self._data
+
+    # def __getattr__(self, item, *args, **kwargs):
+    #     result = getattr(self._data, item, None)
+    #     if result is not None:
+    #         if callable(result):
+    #             result = result(*args, **kwargs)
+    #         if result is not None:
+    #             return result
+
+    def count(self):
+        return self._data.pivot_table(index='block', aggfunc='count')
+
+    def mean(self):
+        return self._data.pivot_table(index='block', aggfunc='mean')
+
+    def sem(self):
+        # Compute standard error around mean
+        return block_error(self.mean())
+
+
+def block_average(df, n_blocks=10):
+    return Block(df, n_blocks=n_blocks).mean()
+
+
+# Shortcut function to compute block error directly from a DataFrame
+def block_error(df, n_blocks=10):
+    # If block is in the DataFrame, assume we're passed block averages
+    if 'block' in df.columns:
+        _, counts = np.unique(df['block'], return_counts=True)
+        if np.max(counts) != 1:
+            raise AttributeError('cannot parse DataFrame blocks')
+
+    # Otherwise, produce the block averages
+    else:
+        df = Block(df, n_blocks=n_blocks).mean()
+
+    # Return the block error
+    return df.std(ddof=1) / np.sqrt(len(df))
 
 
 # noinspection PyShadowingNames

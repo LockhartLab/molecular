@@ -105,7 +105,7 @@ def read_table(fname, glob=False, sep='\s+', header=None, verbose=False, **kwarg
         # noinspection PyUnboundLocalVariable
         end_time = time.time()
         # noinspection PyUnboundLocalVariable
-        print(f'file loaded with shape {data.shape} in {end_time - start_time} seconds')
+        print(f'file loaded with shape {data.shape} in {int(end_time - start_time)} seconds')
 
     # If header is None and index_col is defined, reset columns
     if header is None and kwargs.get('index_col', None) is not None:
