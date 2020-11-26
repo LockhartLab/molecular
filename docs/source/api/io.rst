@@ -9,5 +9,7 @@ Functions
 .. autosummary::
    :toctree: generated
 
+   loadtxt
    read_dcd
    read_pdb
+   read_table

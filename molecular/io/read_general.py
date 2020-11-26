@@ -107,8 +107,8 @@ def read_table(fname, glob=False, sep='\s+', header=None, verbose=False, **kwarg
         # noinspection PyUnboundLocalVariable
         print(f'file loaded with shape {data.shape} in {end_time - start_time} seconds')
 
-    # If header and index_col are None, reset columns
-    if header is None and kwargs.get('index_col', None) is None:
+    # If header is None and index_col is defined, reset columns
+    if header is None and kwargs.get('index_col', None) is not None:
         data.columns = np.arange(len(data.columns))
 
     # Return
