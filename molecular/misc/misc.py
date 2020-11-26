@@ -27,3 +27,4 @@ def assert_incremental(a, increment=1):
 # Test if an array is incremental
 def is_incremental(a, increment=1):
     return (np.diff(a) == increment).all()
+

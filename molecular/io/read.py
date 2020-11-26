@@ -6,63 +6,11 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from molecular.core import Topology, Trajectory
 
-from fileinput import input as input_
-from glob import glob as glob_
 import numpy as np
 # from numpy.lib.recfunctions import drop_fields, structured_to_unstructured
 import pandas as pd
 import re
 from typelike import ArrayLike
-
-
-# Globular loadtxt
-def loadtxt(fname, dtype=float, glob=False, verbose=False):
-    """
-    A refactoring of :ref:`numpy.loadtxt` that allows for globbing files.
-
-    Parameters
-    ----------
-    fname : file, str, or pathlib.Path
-        Name of file.
-    dtype : str or object
-        File type.
-    glob : bool
-        Does `fname` need to be globbed?
-    verbose : bool
-        Should information about the read-in be displayed?
-
-    Returns
-    -------
-    numpy.ndarray
-        Read file
-    """
-
-    # If glob, change fname to include all globbed files
-    if glob:
-        # Glob first; if glob is empty, throw an error
-        fname_glob = glob_(fname)
-        if not fname_glob:
-            raise FileNotFoundError(fname)
-
-        # Sort glob
-        fname_glob = sorted(fname_glob)
-
-        # Output if verbose
-        if verbose:
-            print(f'globbing: {list(fname_glob)}')
-
-        # Update fname to include all globbed files
-        fname = input_(fname_glob)
-
-    # Utilize numpy to read-in the file(s)
-    data = np.loadtxt(fname, dtype=dtype)
-
-    # If verbose, note the shape of the data
-    if verbose:
-        print(f'shape: {data.shape}')
-
-    # Return
-    return data
 
 
 # Read PDB
