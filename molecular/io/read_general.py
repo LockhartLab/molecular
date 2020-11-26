@@ -1,4 +1,3 @@
-
 from fileinput import input as input_
 from glob import glob as glob_
 import numpy as np
@@ -55,7 +54,7 @@ def loadtxt(fname, dtype=float, glob=False, verbose=False):
     return data
 
 
-def read_table(fname, glob=False, verbose=False, **kwargs):
+def read_table(fname, glob=False, sep='\s+', header=None, verbose=False, **kwargs):
     """
     Read table into :class:`pandas.DataFrame`.
 
@@ -63,7 +62,8 @@ def read_table(fname, glob=False, verbose=False, **kwargs):
     ----------
     fname
     glob
-    index_col
+    sep : str
+    header : bool
     verbose
 
     Returns
@@ -81,20 +81,35 @@ def read_table(fname, glob=False, verbose=False, **kwargs):
         # Sort glob
         fnames = sorted(fname_glob)
 
-        # Output if verbose
-        if verbose:
-            print(f'glob: {fnames}')
-
     # Otherwise, turn fname into a list
     # TODO evaluate if creating this list is right, or if we should short-circuit the read-in
     else:
         fnames = [fname]
 
+    # Verbose, print out files and start timer
+    if verbose:
+        print(f'file(s): {fnames}')
+        import time
+        start_time = time.time()
+
     # Cycle over fnames and read in
-    dataframes = [pd.read_table(_, **kwargs) for _ in fnames]
+    kwargs['sep'] = sep
+    kwargs['header'] = header
+    data = [pd.read_table(_, **kwargs) for _ in fnames]
 
     # Concatenate
-    dataframe = dataframes[0] if len(dataframes) == 1 else pd.concat(dataframes)
+    data = data[0] if len(data) == 1 else pd.concat(data)
+
+    # If verbose, note the shape of the data and the runtime
+    if verbose:
+        # noinspection PyUnboundLocalVariable
+        end_time = time.time()
+        # noinspection PyUnboundLocalVariable
+        print(f'file loaded with shape {data.shape} in {end_time - start_time} seconds')
+
+    # If header and index_col are None, reset columns
+    if header is None and kwargs.get('index_col', None) is None:
+        data.columns = np.arange(len(data.columns))
 
     # Return
-    return dataframe
+    return data
