@@ -18,7 +18,7 @@ def acorr(a, fft=False):
     Parameters
     ----------
     a : numpy.ndarray
-        1D array.
+        One-dimensional array.
     fft : bool
         Should fast Fourier transform be used?
 
