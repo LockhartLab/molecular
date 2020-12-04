@@ -1,3 +1,4 @@
+
 """
 read.py
 written in Python3
@@ -129,6 +130,9 @@ def _read_pdb(records):
     data = np.genfromtxt(atoms.split('\n'), delimiter=sections['width'], dtype=sections['type'], autostrip=True)
     # data.dtype.names = sections['column']
     data = pd.DataFrame(data.tolist(), columns=sections['column'])
+
+    # Renumber atom_id
+    data['atom_id'] = np.arange(1, len(data) + 1)
 
     # Drop extraneous columns
     # data = drop_fields(data, 'blank')
