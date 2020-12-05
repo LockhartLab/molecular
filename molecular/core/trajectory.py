@@ -367,7 +367,9 @@ class Trajectory(object):
 
         # If we have more than 100000 atoms, we need to change atom_id
         # TODO this sort of sucks
+        fmt = '%-6s%5i %4s%4s%2s%4i%12.3f%8.3f%8.3f%6.2f%6.2f%9s%2s'
         if data['atom_id'].max() >= 100000:
+            fmt = '%-6s%5s %4s%4s%2s%4i%12.3f%8.3f%8.3f%6.2f%6.2f%9s%2s'
             data['atom_id'] = pd.Series(np.vectorize(hex)(data['atom_id'])).str[2:]
             if data['atom_id'].str.len().max() >= 6:
                 raise ValueError('cannot hex atom_id')
@@ -395,7 +397,7 @@ class Trajectory(object):
                 np.savetxt(
                     buffer,
                     structure,
-                    fmt='%-6s%5i %4s%4s%2s%4i%12.3f%8.3f%8.3f%6.2f%6.2f%9s%2s',
+                    fmt=fmt,
                     header='CRYST1    0.000    0.000    0.000  90.00  90.00  90.00 P 1           1',
                     footer='END\n',
                     comments=''

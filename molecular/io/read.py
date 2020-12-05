@@ -131,9 +131,6 @@ def _read_pdb(records):
     # data.dtype.names = sections['column']
     data = pd.DataFrame(data.tolist(), columns=sections['column'])
 
-    # Renumber atom_id
-    data['atom_id'] = np.arange(1, len(data) + 1)
-
     # Drop extraneous columns
     # data = drop_fields(data, 'blank')
     data = data.drop(columns='blank')
@@ -144,6 +141,8 @@ def _read_pdb(records):
     #     data['atom_id'] -= 1
 
     # Determine number of structures in PDB
+    #atom_id = data['atom_id'].values
+    #pos_atom_id = atom_id[atom_id >= 0]
     _, atom_counts = np.unique(data['atom_id'].values, return_counts=True)
     n_structures = np.unique(atom_counts)
     # n_structures = data.pivot_table(index='atom_id', values='record', aggfunc='count')['record'].unique()
@@ -155,6 +154,11 @@ def _read_pdb(records):
     dynamical_columns = ['x', 'y', 'z']
     # static_columns = [column for column in data.dtype.names if column not in dynamical_columns]
     static_columns = [column for column in data.columns if column not in dynamical_columns]
+
+    # Renumber atom_id
+    if np.mod(len(data), n_structures) != 0:
+        raise AttributeError('len(data) must be evenly divisible by n_structures')
+    data['atom_id'] = np.tile(np.arange(1, len(data) / n_structures + 1), n_structures)
 
     # Create Topology first
     # TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?
