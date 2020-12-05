@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read &#8212; molecular 0.1.dev21 documentation</title>
+    <title>molecular.io.read &#8212; molecular 0.1.dev22 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev21 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev22 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
@@ -144,6 +144,10 @@
 
 
 <span class="k">def</span> <span class="nf">_read_pdb</span><span class="p">(</span><span class="n">records</span><span class="p">):</span>
+    <span class="c1"># Filter out CRYST1 records</span>
+    <span class="n">cryst</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(?!CRYST1).*$&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">records</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
+    <span class="n">n_structures</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;\WCRYST1&#39;</span><span class="p">,</span> <span class="n">cryst</span><span class="p">))</span>
+
     <span class="c1"># Filter out atom records</span>
     <span class="c1"># TODO this will be slow for large PDB files; perhaps move to Cython or C backend</span>
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(?!ATOM).*$&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">records</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
@@ -181,15 +185,15 @@
     <span class="c1">#     data[&#39;atom_id&#39;] -= 1</span>
 
     <span class="c1"># Determine number of structures in PDB</span>
-    <span class="n">atom_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-    <span class="n">pos_atom_id</span> <span class="o">=</span> <span class="n">atom_id</span><span class="p">[</span><span class="n">atom_id</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">]</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">atom_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">pos_atom_id</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">n_structures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">atom_counts</span><span class="p">)</span>
-    <span class="c1"># n_structures = data.pivot_table(index=&#39;atom_id&#39;, values=&#39;record&#39;, aggfunc=&#39;count&#39;)[&#39;record&#39;].unique()</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_structures</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;inconsistent record counts in PDB, </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n_structures</span><span class="p">)</span>
-        <span class="c1"># raise AttributeError(&#39;inconsistent record counts in PDB&#39;)</span>
-    <span class="n">n_structures</span> <span class="o">=</span> <span class="n">n_structures</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># atom_id = data[&#39;atom_id&#39;].values</span>
+    <span class="c1"># pos_atom_id = atom_id[atom_id &gt;= 0]</span>
+    <span class="c1"># _, atom_counts = np.unique(pos_atom_id, return_counts=True)</span>
+    <span class="c1"># n_structures = np.unique(atom_counts)</span>
+    <span class="c1"># # n_structures = data.pivot_table(index=&#39;atom_id&#39;, values=&#39;record&#39;, aggfunc=&#39;count&#39;)[&#39;record&#39;].unique()</span>
+    <span class="c1"># if len(n_structures) != 1:</span>
+    <span class="c1">#     raise AttributeError(&#39;inconsistent record counts in PDB, %s&#39; % n_structures)</span>
+    <span class="c1">#     # raise AttributeError(&#39;inconsistent record counts in PDB&#39;)</span>
+    <span class="c1"># n_structures = n_structures[0]</span>
 
     <span class="c1"># Separate out dynamic columns for Trajectory and static Topology data</span>
     <span class="n">dynamical_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]</span>
@@ -198,7 +202,7 @@
 
     <span class="c1"># Renumber atom_id</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">n_structures</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;len(data) must be evenly divisible by n_structures&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;len(data) must be evenly divisible by n_structures, (</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">n_structures</span><span class="p">))</span>
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_structures</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">n_structures</span><span class="p">)</span>
 
     <span class="c1"># Create Topology first</span>
@@ -358,7 +362,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev21 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev22 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
