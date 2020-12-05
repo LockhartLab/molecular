@@ -147,7 +147,7 @@ def _read_pdb(records):
     n_structures = np.unique(atom_counts)
     # n_structures = data.pivot_table(index='atom_id', values='record', aggfunc='count')['record'].unique()
     if len(n_structures) != 1:
-        raise AttributeError('inconsistent record counts in PDB, %s' % np.bincount(pos_atom_id))
+        raise AttributeError('inconsistent record counts in PDB, %s' % n_structures)
         # raise AttributeError('inconsistent record counts in PDB')
     n_structures = n_structures[0]
 
