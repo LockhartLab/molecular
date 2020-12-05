@@ -141,13 +141,14 @@ def _read_pdb(records):
     #     data['atom_id'] -= 1
 
     # Determine number of structures in PDB
-    #atom_id = data['atom_id'].values
-    #pos_atom_id = atom_id[atom_id >= 0]
-    _, atom_counts = np.unique(data['atom_id'].values, return_counts=True)
+    atom_id = data['atom_id'].values
+    pos_atom_id = atom_id[atom_id >= 0]
+    _, atom_counts = np.unique(pos_atom_id, return_counts=True)
     n_structures = np.unique(atom_counts)
     # n_structures = data.pivot_table(index='atom_id', values='record', aggfunc='count')['record'].unique()
     if len(n_structures) != 1:
-        raise AttributeError('inconsistent record counts in PDB, %s' % np.bincount(data['atom_id'].values))
+        raise AttributeError('inconsistent record counts in PDB, %s' % np.bincount(pos_atom_id))
+        # raise AttributeError('inconsistent record counts in PDB')
     n_structures = n_structures[0]
 
     # Separate out dynamic columns for Trajectory and static Topology data
