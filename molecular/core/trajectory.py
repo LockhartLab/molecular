@@ -366,8 +366,11 @@ class Trajectory(object):
         #     data['atom_id'] += 1
 
         # If we have more than 100000 atoms, we need to change atom_id
+        # TODO this sort of sucks
         if data['atom_id'].max() >= 100000:
-            
+            data['atom_id'] = pd.Series(np.vectorize(hex)(data['atom_id'])).str[2:]
+            if data['atom_id'].str.len().max() >= 6:
+                raise ValueError('cannot hex atom_id')
 
         # Format atom names
         i = data['atom'].str.len() == 1
