@@ -162,7 +162,7 @@ def _read_pdb(records):
 
     # Renumber atom_id
     if np.mod(len(data), n_structures) != 0:
-        raise AttributeError('len(data) must be evenly divisible by n_structures')
+        raise AttributeError('len(data) must be evenly divisible by n_structures, %s' % np.mod(len(data), n_structures))
     data['atom_id'] = np.tile(np.arange(1, len(data) / n_structures + 1), n_structures)
 
     # Create Topology first
