@@ -104,6 +104,10 @@ def read_peptide_sequence(residues):
 
 
 def _read_pdb(records):
+    # Filter out CRYST1 records
+    cryst = re.sub(r'^(?!CRYST).*$', '', records, flags=re.MULTILINE).strip()
+    n_structures = len(cryst)
+
     # Filter out atom records
     # TODO this will be slow for large PDB files; perhaps move to Cython or C backend
     atoms = re.sub(r'^(?!ATOM).*$', '', records, flags=re.MULTILINE).replace('\n\n', '\n').lstrip()
@@ -141,15 +145,15 @@ def _read_pdb(records):
     #     data['atom_id'] -= 1
 
     # Determine number of structures in PDB
-    atom_id = data['atom_id'].values
-    pos_atom_id = atom_id[atom_id >= 0]
-    _, atom_counts = np.unique(pos_atom_id, return_counts=True)
-    n_structures = np.unique(atom_counts)
-    # n_structures = data.pivot_table(index='atom_id', values='record', aggfunc='count')['record'].unique()
-    if len(n_structures) != 1:
-        raise AttributeError('inconsistent record counts in PDB, %s' % n_structures)
-        # raise AttributeError('inconsistent record counts in PDB')
-    n_structures = n_structures[0]
+    # atom_id = data['atom_id'].values
+    # pos_atom_id = atom_id[atom_id >= 0]
+    # _, atom_counts = np.unique(pos_atom_id, return_counts=True)
+    # n_structures = np.unique(atom_counts)
+    # # n_structures = data.pivot_table(index='atom_id', values='record', aggfunc='count')['record'].unique()
+    # if len(n_structures) != 1:
+    #     raise AttributeError('inconsistent record counts in PDB, %s' % n_structures)
+    #     # raise AttributeError('inconsistent record counts in PDB')
+    # n_structures = n_structures[0]
 
     # Separate out dynamic columns for Trajectory and static Topology data
     dynamical_columns = ['x', 'y', 'z']
