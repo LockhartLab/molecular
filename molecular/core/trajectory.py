@@ -262,7 +262,7 @@ class Trajectory(object):
         else:
             trajectory = Trajectory.copy()
             trajectory._xyz = xyz
-            return trajectry
+            return trajectory
 
     # Select
     # TODO compare the efficiency of this vs query
@@ -364,6 +364,10 @@ class Trajectory(object):
         # Change base-0 to base-1 for atom_id
         # if data['atom_id'].min() == 0:
         #     data['atom_id'] += 1
+
+        # If we have more than 100000 atoms, we need to change atom_id
+        if data['atom_id'].max() >= 100000:
+            
 
         # Format atom names
         i = data['atom'].str.len() == 1
