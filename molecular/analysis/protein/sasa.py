@@ -6,18 +6,33 @@ include_dir = os.path.abspath(__file__ + '../../../../_include')
 
 
 # Read relative SASA
-def get_relative_sasa():
+def get_relative_sasa(sequence=None):
     """
-    Relative SASA
+    Get relative SASA for sequence.
+
+    Parameters
+    ----------
+    sequence : np.ndarray
 
     Returns
     -------
 
     """
 
+    # Read in relative SASA
     with open(os.path.join(include_dir, 'protein', 'relative_sasa.yml'), 'r') as stream:
-        relative_sasa = yaml.safe_load(stream.read())
-    return pd.Series(relative_sasa).rename('relative_sasa')
+        data = yaml.safe_load(stream.read())
+
+    # Convert to Series
+    relative_sasa = pd.Series(data).rename('relative_sasa')
+
+    # Result
+    result = relative_sasa
+    if sequence is not None:
+        result = relative_sasa.loc[sequence]
+
+    # Return
+    return result
 
 
 class SurfaceArea:

@@ -105,8 +105,8 @@ def read_peptide_sequence(residues):
 
 def _read_pdb(records):
     # Filter out CRYST1 records
-    cryst = re.sub(r'^(?!CRYST).*$', '', records, flags=re.MULTILINE).strip()
-    n_structures = len(cryst)
+    cryst = re.sub(r'^(?!CRYST1).*$', '', records, flags=re.MULTILINE).lstrip()
+    n_structures = len(re.split('\WCRYST1', cryst))
 
     # Filter out atom records
     # TODO this will be slow for large PDB files; perhaps move to Cython or C backend
@@ -162,7 +162,7 @@ def _read_pdb(records):
 
     # Renumber atom_id
     if np.mod(len(data), n_structures) != 0:
-        raise AttributeError('len(data) must be evenly divisible by n_structures, %s' % np.mod(len(data), n_structures))
+        raise AttributeError('len(data) must be evenly divisible by n_structures, (%s, %s)' % (len(data), n_structures))
     data['atom_id'] = np.tile(np.arange(1, len(data) / n_structures + 1), n_structures)
 
     # Create Topology first
