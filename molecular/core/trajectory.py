@@ -367,6 +367,7 @@ class Trajectory(object):
 
         # If we have more than 100000 atoms, we need to change atom_id
         # TODO this sort of sucks
+        # https://github.com/MDAnalysis/mdanalysis/issues/1897
         fmt = '%-6s%5i %4s%4s%2s%4i%12.3f%8.3f%8.3f%6.2f%6.2f%9s%2s'
         if data['atom_id'].max() >= 100000:
             fmt = '%-6s%5s %4s%4s%2s%4i%12.3f%8.3f%8.3f%6.2f%6.2f%9s%2s'
