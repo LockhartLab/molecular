@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.core.trajectory &#8212; molecular 0.1.dev22 documentation</title>
+    <title>molecular.core.trajectory &#8212; molecular 0.1.dev23 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev22 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev23 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.trajectory</a></li> 
       </ul>
@@ -407,6 +407,7 @@
 
         <span class="c1"># If we have more than 100000 atoms, we need to change atom_id</span>
         <span class="c1"># TODO this sort of sucks</span>
+        <span class="c1"># https://github.com/MDAnalysis/mdanalysis/issues/1897</span>
         <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%-6s%5i</span><span class="s1"> </span><span class="si">%4s%4s%2s%4i%12.3f%8.3f%8.3f%6.2f%6.2f%9s%2s</span><span class="s1">&#39;</span>
         <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">100000</span><span class="p">:</span>
             <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%-6s%5s</span><span class="s1"> </span><span class="si">%4s%4s%2s%4i%12.3f%8.3f%8.3f%6.2f%6.2f%9s%2s</span><span class="s1">&#39;</span>
@@ -766,7 +767,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev22 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev23 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.trajectory</a></li> 
       </ul>
