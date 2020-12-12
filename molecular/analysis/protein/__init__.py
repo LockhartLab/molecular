@@ -12,3 +12,4 @@ __all__ = [
     'SecondaryStructure',
     'secondary_structure',
 ]
+

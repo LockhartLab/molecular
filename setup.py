@@ -40,6 +40,7 @@ setup(
         'molecular',
         'molecular.analysis',
         'molecular.analysis.protein',
+        'molecular.bioinformatics',
         'molecular.core',
         'molecular.external',
         'molecular.geometry',

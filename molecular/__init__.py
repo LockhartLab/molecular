@@ -2,6 +2,9 @@
 from . import analysis
 from .analysis import *
 
+from . import bioinformatics
+from .bioinformatics import *
+
 from . import core
 from .core import *
 
