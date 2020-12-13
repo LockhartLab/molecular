@@ -2,7 +2,7 @@
 import numpy as np
 
 
-def replica_temperatures(temp_min=300, temp_max=440, n_replicas=40, mode='geometric'):
+def reptemp(temp_min=300, temp_max=440, n_replicas=40, mode='geometric'):
     """
     Geometric = the ratio from one temperature to the next is kept constant
 
@@ -30,4 +30,4 @@ def replica_temperatures(temp_min=300, temp_max=440, n_replicas=40, mode='geomet
 
 
 if __name__ == '__main__':
-    print(replica_temperatures(300, 440, 40))
+    print(reptemp(300, 440, 40))

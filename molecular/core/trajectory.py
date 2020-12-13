@@ -89,6 +89,62 @@ class Trajectory(object):
             # dimensions: {2}
         """.format(self.n_structures, self.n_atoms, self.n_dim)
 
+    # Get x
+    @property
+    def x(self):
+        """
+        Get x coordinates.
+
+        Returns
+        -------
+        numpy.ndarray
+            x coordinates.
+        """
+
+        return self._xyz[:, :, 0]
+
+    # Get y
+    @property
+    def y(self):
+        """
+        Get y coordinates.
+
+        Returns
+        -------
+        numpy.ndarray
+            y coordinates.
+        """
+
+        return self._xyz[:, :, 1]
+
+    # Get z
+    @property
+    def z(self):
+        """
+        Get z coordinates.
+
+        Returns
+        -------
+        numpy.ndarray
+            z coordinates.
+        """
+
+        return self._xyz[:, :, 2]
+
+    # Get XYZ coordinates
+    @property
+    def xyz(self):
+        """
+        Get x, y, and z coordinates.
+
+        Returns
+        -------
+        numpy.ndarray
+            Cartesian coordinates.
+        """
+
+        return self._xyz
+
     # Check topology
     def _check_topology(self):
         """
@@ -431,20 +487,6 @@ class Trajectory(object):
     # https://github.com/arose/nglview
     def view(self):
         pass
-
-    # Get XYZ coordinates
-    @property
-    def xyz(self):
-        """
-        Get x, y, and z coordinates.
-
-        Returns
-        -------
-        numpy.ndarray
-            Cartesian coordinates.
-        """
-
-        return self._xyz
 
 
 # Topology class
