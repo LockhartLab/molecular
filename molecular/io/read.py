@@ -163,7 +163,7 @@ def _read_pdb(records):
     # Renumber atom_id
     if np.mod(len(data), n_structures) != 0:
         raise AttributeError('len(data) must be evenly divisible by n_structures, (%s, %s)' % (len(data), n_structures))
-    data['atom_id'] = np.tile(np.arange(1, len(data) / n_structures + 1), n_structures, dtype='int')
+    data['atom_id'] = np.array(np.tile(np.arange(1, len(data) / n_structures + 1), n_structures), dtype='int')
 
     # Create Topology first
     # TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?
