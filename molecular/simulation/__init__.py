@@ -2,8 +2,11 @@
 import numpy as np
 from sympy.ntheory import factorint
 
+from .replica_exchange import *
+
 __all__ = [
-    'get_pme_size'
+    'get_pme_size',
+    'replica_temperatures',
 ]
 
 
