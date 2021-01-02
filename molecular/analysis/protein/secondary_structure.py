@@ -14,7 +14,7 @@ import os
 import pandas as pd
 
 
-def expand_secondary_structure(data):
+def _expand_secondary_structure(data):
     """
     Expands secondary structure strings from condensed format (ex: CCCC) to expanded format (ex: C C C C, where each
     residue has its own DataFrame column).
@@ -56,20 +56,26 @@ class SecondaryStructure:
     codes = ['H', 'G', 'I', 'E', 'B', 'b', 'T', 'C']
 
     # Initialize instance of SecondaryStructure
-    def __init__(self, data):
+    def __init__(self, data, condensed=False):
         """
         Initialize instance of SecondaryStructure class.
 
         Parameters
         ----------
-        data : pandas.DataFrame
+        data : pandas.Series or pandas.DataFrame
             The secondary structure data from STRIDE. Contains a column for each residue_id, and contains a row for
             each observation. Element represent the secondary structure code from STRIDE.
+        condensed : bool
+            Is `data` condensed as pandas.Series, or expanded as pandas.DataFrame? (Default: False)
         """
 
-        # Type check
+        # Convert condensed Series to expanded DataFrame
+        if condensed:
+            data = _expand_secondary_structure(data)
+
+        # At this point, we must have a DataFrame
         if not isinstance(data, pd.DataFrame):
-            raise AttributeError('must be initialized with instance of pandas DataFrame, not %s' % type(data))
+            raise AttributeError('must be pandas DataFrame, not %s' % type(data))
 
         # Set instance value
         self._data = data
