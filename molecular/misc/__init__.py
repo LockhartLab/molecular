@@ -1,8 +1,6 @@
-
 # import molecular.flags as flags
 import functools
 import warnings
-
 
 __all__ = [
     'deprecated',
@@ -17,6 +15,7 @@ def deprecated(function=None):
     def execute_function(*args, **kwargs):
         warnings.warn('will be deprecated', DeprecationWarning)
         return function(*args, **kwargs)
+
     return execute_function
 
 
@@ -65,6 +64,16 @@ def experimental(obj=None):
 
     @functools.wraps(obj)
     def execute(*args, **kwargs):
-        warnings.warn('%s is experimental' % obj.__name__, ExperimentalWarning)
+        warnings.warn('%s is experimental and is not validated' % obj.__name__, ExperimentalWarning)
         return obj(*args, **kwargs)
+
     return execute
+
+
+if __name__ == '__main__':
+    @experimental
+    def test(x):
+        print(x)
+
+
+    test(5)

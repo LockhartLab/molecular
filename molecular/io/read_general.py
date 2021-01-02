@@ -54,21 +54,29 @@ def loadtxt(fname, dtype=float, glob=False, verbose=False):
     return data
 
 
-def read_table(fname, glob=False, sep='\s+', header=None, verbose=False, **kwargs):
+def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, verbose=False, **kwargs):
     """
     Read table into :class:`pandas.DataFrame`.
 
     Parameters
     ----------
-    fname
-    glob
+    fname : str
+        Name of file.
+    glob : true
+        Should `fname` be treated as a globbed path? (Default: False)
     sep : str
+        Character used to separate columns? (Default: white space)
     header : bool
+        (Default: None)
+    reindex : bool
+        (Default: False)
     verbose
+        (Default: False)
 
     Returns
     -------
-
+    pandas.DataFrame
+        Data read in.
     """
 
     # If glob, change fname to include all globbed files
@@ -110,6 +118,10 @@ def read_table(fname, glob=False, sep='\s+', header=None, verbose=False, **kwarg
     # If header is None and index_col is defined, reset columns
     if header is None and kwargs.get('index_col', None) is not None:
         data.columns = np.arange(len(data.columns))
+
+    # Reindex?
+    if reindex:
+        data = data.reset_index(drop=True)
 
     # Return
     return data
