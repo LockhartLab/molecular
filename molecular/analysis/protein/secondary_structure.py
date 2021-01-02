@@ -14,6 +14,35 @@ import os
 import pandas as pd
 
 
+def expand_secondary_structure(data):
+    """
+    Expands secondary structure strings from condensed format (ex: CCCC) to expanded format (ex: C C C C, where each
+    residue has its own DataFrame column).
+
+    Parameters
+    ----------
+    data : pandas.Series
+        Secondary structure in condensed format.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Secondary structure in expanded format.
+    """
+
+    # This method only works on Series
+    if not isinstance(data, pd.Series):
+        raise AttributeError('data must be Series')
+
+    # Convert from condensed to expanded format
+    data = data.str.join(',').str.split(',', expand=True)
+    data.index.name = 'structure'
+    data.columns.name = 'residue'
+
+    # Return
+    return data
+
+
 # Class to store secondary structure results
 class SecondaryStructure:
     """
@@ -21,8 +50,6 @@ class SecondaryStructure:
 
     By itself, an instance of `SecondaryStructure` is not a `Quantity`. There are several options for converting an
     instance of `SecondaryStructure` to a `Quantity`.
-
-
     """
 
     # STRIDE secondary structure codes

@@ -6,6 +6,7 @@ from .sasa import *
 
 __all__ = [
     'compute_hydrophobic_moment',
+    'expand_secondary_structure',
     'get_relative_sasa',
     'HydrophobicityScale',
     'r1N',
