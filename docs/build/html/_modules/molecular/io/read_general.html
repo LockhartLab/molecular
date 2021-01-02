@@ -5,14 +5,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read_general &#8212; molecular 0.1.dev27 documentation</title>
+    <title>molecular.io.read_general &#8212; molecular 0.1.dev28 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/language_data.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -26,7 +25,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev27 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev28 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read_general</a></li> 
       </ul>
@@ -94,21 +93,29 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="read_table"><a class="viewcode-back" href="../../../api/generated/molecular.io.read_table.html#molecular.io.read_table">[docs]</a><span class="k">def</span> <span class="nf">read_table</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">glob</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="read_table"><a class="viewcode-back" href="../../../api/generated/molecular.io.read_table.html#molecular.io.read_table">[docs]</a><span class="k">def</span> <span class="nf">read_table</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">glob</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reindex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read table into :class:`pandas.DataFrame`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    fname</span>
-<span class="sd">    glob</span>
+<span class="sd">    fname : str</span>
+<span class="sd">        Name of file.</span>
+<span class="sd">    glob : true</span>
+<span class="sd">        Should `fname` be treated as a globbed path? (Default: False)</span>
 <span class="sd">    sep : str</span>
+<span class="sd">        Character used to separate columns? (Default: white space)</span>
 <span class="sd">    header : bool</span>
+<span class="sd">        (Default: None)</span>
+<span class="sd">    reindex : bool</span>
+<span class="sd">        (Default: False)</span>
 <span class="sd">    verbose</span>
+<span class="sd">        (Default: False)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        Data read in.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># If glob, change fname to include all globbed files</span>
@@ -151,6 +158,10 @@
     <span class="k">if</span> <span class="n">header</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;index_col&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
 
+    <span class="c1"># Reindex?</span>
+    <span class="k">if</span> <span class="n">reindex</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">data</span></div>
 </pre></div>
@@ -184,14 +195,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev27 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev28 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read_general</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Lockhart Lab.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.1.
     </div>
   </body>
 </html>
