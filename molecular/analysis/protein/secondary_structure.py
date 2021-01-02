@@ -113,6 +113,52 @@ class SecondaryStructure:
         # Return
         return codes
 
+    # Convert from wide to long
+    def _wide_to_long(self):
+        """
+        Convert from wide to long format.
+
+        Returns
+        -------
+        pandas.DataFrame
+            Secondary structure in long format.
+        """
+
+        # Convert to (residue, structure, code) format
+        data = self._data.stack().to_frame('code').reset_index()
+
+        # Return
+        return data
+
+    # Count
+    def count(self, axis=None, codes=None):
+        # Handle codes
+        codes = self._handle_codes(codes)
+
+        #
+        if axis in [0, 1]:
+            # Convert from wide to long
+            data = self._wide_to_long()
+
+            # axis=0 is residue
+            if axis == 0:
+                df = pd.crosstab(data['residue'], data['code'])
+
+            # axis=1 is structure
+            else:
+                df = pd.crosstab(data['structure'], data['code'])
+
+            return df
+
+        #
+        result = {}
+        for code in codes:
+            if axis in [0, 1]:
+                result[code] = (self._data == code).sum(axis=axis)
+            else:
+                result[code] = (self._data == code).sum(axis=0).sum()
+        return result
+
     # Mean
     def mean(self, axis=None, codes=None):
         """
@@ -135,6 +181,17 @@ class SecondaryStructure:
 
         # Handle codes
         codes = self._handle_codes(codes)
+
+        if axis == 0:
+            # Convert to (residue, structure, code) format
+            data = self._wide_to_long()
+
+            # Cross tab, which gets counts of code for each residue
+            df = pd.crosstab(data['residue'], data['code'])
+
+            # Return average
+            return df.div(df.sum(axis=1), axis=0).fillna(0)
+
 
         #
         result = {}
