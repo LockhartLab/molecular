@@ -79,6 +79,7 @@ class SecondaryStructure:
 
         # Set instance value
         self._data = data
+        self._data_long = None
         self._data_condensed = None
 
     def __getitem__(self, item):
@@ -125,38 +126,50 @@ class SecondaryStructure:
         """
 
         # Convert to (residue, structure, code) format
-        data = self._data.stack().to_frame('code').reset_index()
+        if self._data_long is None:
+            self._data_long = self._data.stack().to_frame('code').reset_index()
 
         # Return
-        return data
+        return self._data_long
 
     # Count
-    def count(self, axis=None, codes=None):
-        # Handle codes
-        codes = self._handle_codes(codes)
+    def count(self, axis=0):
+        """
+        Compute the count of secondary structure types. If axis=0, the count per residue is returned. If axis=1, the
+        count per structure is returned. If count is None
 
-        #
-        if axis in [0, 1]:
-            # Convert from wide to long
-            data = self._wide_to_long()
+        Parameters
+        ----------
+        axis : int or None
+            (Default: 0)
 
-            # axis=0 is residue
-            if axis == 0:
-                df = pd.crosstab(data['residue'], data['code'])
 
-            # axis=1 is structure
-            else:
-                df = pd.crosstab(data['structure'], data['code'])
+        Returns
+        -------
+        pandas.Series or pandas.DataFrame
 
-            return df
+        """
 
-        #
-        result = {}
-        for code in codes:
-            if axis in [0, 1]:
-                result[code] = (self._data == code).sum(axis=axis)
-            else:
-                result[code] = (self._data == code).sum(axis=0).sum()
+        # Convert from wide to long
+        data = self._wide_to_long()
+
+        # axis=0 is residue
+        if axis == 0:
+            result = pd.crosstab(data['residue'], data['code'])
+
+        # axis=1 is structure
+        elif axis == 1:
+            result = pd.crosstab(data['structure'], data['code'])
+
+        # axis is None is count over all residues and structures
+        elif axis is None:
+            result = data.value_counts('code')
+
+        # if we've made it here, something is wrong
+        else:
+            raise AttributeError(f'axis {axis} not understood')
+
+        # Return
         return result
 
     # Mean
