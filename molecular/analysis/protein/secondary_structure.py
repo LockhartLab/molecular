@@ -7,7 +7,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 from molecular.core import Quantity, Trajectory
 from molecular.external import stride
 
-from functools import partial
+from functools import cache, partial
 from glovebox import GloveBox
 import numpy as np
 import os
@@ -133,6 +133,8 @@ class SecondaryStructure:
         return self._data_long
 
     # Count
+    # TODO this could be memoized
+    @cache
     def count(self, axis=0):
         """
         Compute the count of secondary structure types. If axis=0, the count per residue is returned. If axis=1, the
