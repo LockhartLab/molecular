@@ -215,7 +215,7 @@ class SecondaryStructure:
 
         # Convert to long format
         # noinspection PyProtectedMember
-        data = blocks._data.set_index(['structure', 'block']).stack().to_frame('code').reset_index()
+        data = blocks._data.reset_index().set_index(['structure', 'block']).stack().to_frame('code').reset_index()
 
         # Get counts
         counts = data.pivot_table(index=['block', 'residue'], columns='code', values='structure', aggfunc='count')\
@@ -225,7 +225,7 @@ class SecondaryStructure:
         averages = counts.div(counts.sum(axis=1), axis=0).fillna(0.).reset_index()
 
         # Get std
-        std = averages.pivot_table(index='residues', values=counts.columns, aggfunc=partial(np.std, ddof=1, axis=0))
+        std = averages.pivot_table(index='residue', values=counts.columns, aggfunc=partial(np.std, ddof=1, axis=0))
 
         # Compute SEM
         return std / np.sqrt(n_blocks)
