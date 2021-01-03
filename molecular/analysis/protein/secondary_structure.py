@@ -10,9 +10,12 @@ from molecular.statistics import Block
 
 from functools import lru_cache, partial
 from glovebox import GloveBox
+import logging
 import numpy as np
 import os
 import pandas as pd
+
+logger = logging.getLogger('molecular.analysis')
 
 
 def _expand_secondary_structure(data):
@@ -73,6 +76,7 @@ class SecondaryStructure:
         # Convert condensed Series to expanded DataFrame
         if condensed:
             data = _expand_secondary_structure(data)
+            logger.info(f'expanded secondary structure to shape {data.shape}')
 
         # At this point, we must have a DataFrame
         if not isinstance(data, pd.DataFrame):
@@ -91,7 +95,7 @@ class SecondaryStructure:
     def __repr__(self):
         # return str(self._data.agg(''.join, axis=1).values)
         # return self._condense_data()
-        return self._data
+        return str(self._data)
 
     def _condense_data(self):
         if self._data_condensed is None:
@@ -173,6 +177,9 @@ class SecondaryStructure:
         else:
             raise AttributeError(f'axis {axis} not understood')
 
+        # Log
+        logger.info(f'computed secondary structure count')
+
         # Return
         return result
 
@@ -206,6 +213,9 @@ class SecondaryStructure:
         else:
             result = data / data.sum()
 
+        # Log
+        logger.info(f'computed secondary structure mean')
+
         # Return
         return result
 
@@ -228,6 +238,10 @@ class SecondaryStructure:
         >>> ss.replace('G', 'H')
         """
 
+        # Log the changes
+        logger.info(f'replacing secondary structure {old_code} with {new_code}')
+
+        # Replace and store the data
         self._data = self._data.replace(old_code, new_code)
 
     # SEM from block averaging
@@ -250,7 +264,13 @@ class SecondaryStructure:
         std = averages.pivot_table(index='residue', values=counts.columns, aggfunc=partial(np.std, ddof=1, axis=0))
 
         # Compute SEM
-        return std / np.sqrt(n_blocks)
+        sem = std / np.sqrt(n_blocks)
+
+        # Log
+        logger.info(f'computed secondary structure SEM with n_blocks = {n_blocks}')
+
+        # Compute SEM
+        return sem
 
     # Standard deviation
     def std(self, axis=None, codes=None):
