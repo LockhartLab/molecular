@@ -112,7 +112,7 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, verbose
     data = data[0] if len(data) == 1 else pd.concat(data)
 
     # If verbose, note the shape of the data and the runtime
-    logging.info('file loaded with shape {data.shape}')
+    logging.info(f'file loaded with shape {data.shape}')
     if verbose:
         # noinspection PyUnboundLocalVariable
         end_time = time.time()
