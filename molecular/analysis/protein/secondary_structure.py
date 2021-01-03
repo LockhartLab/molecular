@@ -175,7 +175,7 @@ class SecondaryStructure:
         return result
 
     # Mean
-    def mean(self, axis=None, codes=None):
+    def mean(self, axis=None):
         """
         Compute the average secondary structure by code for the entire protein (axis = None), each structure (axis = 0),
         or each residue (axis = 1).
@@ -185,8 +185,6 @@ class SecondaryStructure:
         axis : None or int.
             Designates if the average should be computed for the entire protein (axis = None), each structure
             (axis = 0), or each residue (axis = 1).
-        codes : str
-            The secondary structure codes to compute.
 
         Returns
         -------
@@ -194,30 +192,20 @@ class SecondaryStructure:
             If axis = None, pandas.Series is returned. Otherwise, the result will be pandas.DataFrame.
         """
 
-        # Handle codes
-        codes = self._handle_codes(codes)
+        # Get the axis counts
+        data = self.count(axis=axis)
 
-        if axis == 0:
-            # Convert to (residue, structure, code) format
-            data = self._wide_to_long()
+        # If axis 0 or 1
+        if axis in [0, 1]:
+            # noinspection PyArgumentList
+            result = data.div(data.sum(axis=1), axis=0).fillna(0)
 
-            # Cross tab, which gets counts of code for each residue
-            df = pd.crosstab(data['residue'], data['code'])
+        # Otherwise, if axis is None
+        else:
+            result = data / data.sum()
 
-            # Return average
-            return df.div(df.sum(axis=1), axis=0).fillna(0)
-
-
-        #
-        result = {}
-        for code in codes:
-            if axis in [0, 1]:
-                result[code] = np.mean(self._data == code, axis=axis)
-            else:
-                result[code] = self.sum(axis=None, codes=[code])[code] / np.multiply(*self._data.shape)
-
-        # If axis is not None, coerce to DataFrame; if None, make Series. Return to user
-        return pd.DataFrame(result) if axis is not None else pd.Series(result)
+        # Return
+        return result
 
     # Standard deviation
     def std(self, axis=None, codes=None):
