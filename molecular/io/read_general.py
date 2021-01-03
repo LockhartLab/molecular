@@ -4,6 +4,10 @@ from glob import glob as glob_
 import logging
 import numpy as np
 import pandas as pd
+import time
+
+# Get the io.read logger
+logger = logging.getLogger('io.read')
 
 
 # Globular loadtxt
@@ -56,7 +60,7 @@ def loadtxt(fname, dtype=float, glob=False, verbose=False):
     return data
 
 
-def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, verbose=False, **kwargs):
+def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, **kwargs):
     """
     Read table into :class:`pandas.DataFrame`.
 
@@ -71,8 +75,6 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, verbose
     header : bool
         (Default: None)
     reindex : bool
-        (Default: False)
-    verbose
         (Default: False)
 
     Returns
@@ -96,12 +98,9 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, verbose
     else:
         fnames = [fname]
 
-    # Verbose, print out files and start timer
-    logging.info(f'reading in file(s): {fnames}')
-    if verbose:
-        print(f'file(s): {fnames}')
-        import time
-        start_time = time.time()
+    # Log files and start timer
+    logging.info(f'processing file(s): {fnames}')
+    start_time = time.time()
 
     # Cycle over fnames and read in
     kwargs['sep'] = sep
@@ -111,13 +110,9 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, verbose
     # Concatenate
     data = data[0] if len(data) == 1 else pd.concat(data)
 
-    # If verbose, note the shape of the data and the runtime
-    logging.info(f'file loaded with shape {data.shape}')
-    if verbose:
-        # noinspection PyUnboundLocalVariable
-        end_time = time.time()
-        # noinspection PyUnboundLocalVariable
-        print(f'file loaded with shape {data.shape} in {int(end_time - start_time)} seconds')
+    # Log the shape of the data and the runtime
+    end_time = time.time()
+    logging.info(f'files loaded with shape {data.shape} in {int(end_time - start_time)} seconds')
 
     # If header is None and index_col is defined, reset columns
     if header is None and kwargs.get('index_col', None) is not None:

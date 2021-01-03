@@ -53,3 +53,15 @@ __all__.extend(statistics.__all__)
 import os
 
 include_dir = os.path.abspath(__file__ + '/../../include')
+
+
+# logging
+# TODO let people disable this, or send it to a file
+import logging
+logging.basicConfig(
+    # filename='molecular.log',
+    # filemode='w',
+    format='%(asctime)s %(levelname)s (%(name)s) %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    level=logging.INFO
+)
