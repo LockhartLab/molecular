@@ -1,5 +1,7 @@
+
 from fileinput import input as input_
 from glob import glob as glob_
+import logging
 import numpy as np
 import pandas as pd
 
@@ -95,6 +97,7 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, verbose
         fnames = [fname]
 
     # Verbose, print out files and start timer
+    logging.info(f'reading in file(s): {fnames}')
     if verbose:
         print(f'file(s): {fnames}')
         import time
@@ -109,6 +112,7 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, verbose
     data = data[0] if len(data) == 1 else pd.concat(data)
 
     # If verbose, note the shape of the data and the runtime
+    logging.info('file loaded with shape {data.shape}')
     if verbose:
         # noinspection PyUnboundLocalVariable
         end_time = time.time()
