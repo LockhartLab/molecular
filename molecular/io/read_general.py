@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 import time
 
-# Get the io.read logger
-logger = logging.getLogger('io.read')
+# Get the molecular.io logger
+logger = logging.getLogger('molecular.io')
 
 
 # Globular loadtxt
@@ -99,7 +99,7 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, **kwarg
         fnames = [fname]
 
     # Log files and start timer
-    logging.info(f'processing file(s): {fnames}')
+    logger.info(f'processing file(s): {fnames}')
     start_time = time.time()
 
     # Cycle over fnames and read in
@@ -112,7 +112,7 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, **kwarg
 
     # Log the shape of the data and the runtime
     end_time = time.time()
-    logging.info(f'files loaded with shape {data.shape} in {int(end_time - start_time)} seconds')
+    logger.info(f'files loaded with shape {data.shape} in {int(end_time - start_time)} seconds')
 
     # If header is None and index_col is defined, reset columns
     if header is None and kwargs.get('index_col', None) is not None:
