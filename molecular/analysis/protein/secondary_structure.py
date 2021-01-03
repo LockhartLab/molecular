@@ -6,6 +6,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from molecular.core import Quantity, Trajectory
 from molecular.external import stride
+from molecular.statistics import Block
 
 from functools import lru_cache, partial
 from glovebox import GloveBox
@@ -175,7 +176,7 @@ class SecondaryStructure:
         return result
 
     # Mean
-    def mean(self, axis=None):
+    def mean(self, axis=0):
         """
         Compute the average secondary structure by code for the entire protein (axis = None), each structure (axis = 0),
         or each residue (axis = 1).
@@ -184,7 +185,7 @@ class SecondaryStructure:
         ----------
         axis : None or int.
             Designates if the average should be computed for the entire protein (axis = None), each structure
-            (axis = 0), or each residue (axis = 1).
+            (axis = 0), or each residue (axis = 1). (Default: 0)
 
         Returns
         -------
@@ -206,6 +207,28 @@ class SecondaryStructure:
 
         # Return
         return result
+
+    # SEM from block averaging
+    def sem_block(self, n_blocks=10):
+        # Block data
+        blocks = Block(self._data, n_blocks=n_blocks)
+
+        # Convert to long format
+        # noinspection PyProtectedMember
+        data = blocks._data.set_index(['structure', 'block']).stack().to_frame('code').reset_index()
+
+        # Get counts
+        counts = data.pivot_table(index=['block', 'residue'], columns='code', values='structure', aggfunc='count')\
+            .fillna(0)
+
+        # Get averages
+        averages = counts.div(counts.sum(axis=1), axis=0).fillna(0.).reset_index()
+
+        # Get std
+        std = averages.pivot_table(index='residues', values=counts.columns, aggfunc=partial(np.std, ddof=1, axis=0))
+
+        # Compute SEM
+        return std / np.sqrt(n_blocks)
 
     # Standard deviation
     def std(self, axis=None, codes=None):
