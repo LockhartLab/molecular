@@ -90,7 +90,8 @@ class SecondaryStructure:
     # Override __repr__
     def __repr__(self):
         # return str(self._data.agg(''.join, axis=1).values)
-        return self._condense_data()
+        # return self._condense_data()
+        return self._data
 
     def _condense_data(self):
         if self._data_condensed is None:
@@ -207,6 +208,27 @@ class SecondaryStructure:
 
         # Return
         return result
+
+    # Replace
+    def replace(self, old_code, new_code):
+        """
+        Global replacement of secondary structure type.
+
+        Parameters
+        ----------
+        old_code : str
+        new_code : str
+
+        Returns
+        -------
+
+        Examples
+        --------
+        >>> ss = SecondaryStructure(...)
+        >>> ss.replace('G', 'H')
+        """
+
+        self._data = self._data.replace(old_code, new_code)
 
     # SEM from block averaging
     def sem_block(self, n_blocks=10):
