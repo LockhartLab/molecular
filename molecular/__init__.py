@@ -65,3 +65,5 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S',
     level=logging.INFO
 )
+logger = logging.getLogger('molecular')
+logging.info(f'loaded version {__version__}')

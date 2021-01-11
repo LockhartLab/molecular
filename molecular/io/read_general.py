@@ -60,6 +60,7 @@ def loadtxt(fname, dtype=float, glob=False, verbose=False):
     return data
 
 
+# TODO enable fname to be stored in the DataFrame? Is this a bad idea?
 def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, **kwargs):
     """
     Read table into :class:`pandas.DataFrame`.
