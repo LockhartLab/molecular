@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.core.Trajectory &#8212; molecular 0.1.dev42 documentation</title>
+    <title>molecular.core.Trajectory &#8212; molecular 0.1.dev43 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../core.html" title="molecular.core"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev42 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev43 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../core.html" accesskey="U">molecular.core</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.Trajectory</a></li> 
@@ -157,17 +157,6 @@ second axis must represent the atom, and the third index will represent x, y, or
 </dd></dl>
 
 <dl class="py method">
-<dt id="molecular.core.Trajectory.recenter">
-<code class="sig-name descname">recenter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/core/trajectory.html#Trajectory.recenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.core.Trajectory.recenter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Recenter all structures in the trajectory around the origin.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Make the change in place? (Default: False)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="molecular.core.Trajectory.select">
 <code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/core/trajectory.html#Trajectory.select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.core.Trajectory.select" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -182,6 +171,20 @@ second axis must represent the atom, and the third index will represent x, y, or
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.core.Trajectory.to_center">
+<code class="sig-name descname">to_center</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/core/trajectory.html#Trajectory.to_center"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.core.Trajectory.to_center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recenter all structures in the Trajectory around the origin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weights</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><em>numpy.ndarray</em></a>) – (Optional) Weights for atoms in the trajectory. Follows the definition from <span class="xref std std-ref">numpy.average</span>.</p></li>
+<li><p><strong>inplace</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Make the change in place? (Default: False)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -334,7 +337,7 @@ second axis must represent the atom, and the third index will represent x, y, or
         <li class="right" >
           <a href="../core.html" title="molecular.core"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev42 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev43 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../core.html" >molecular.core</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.Trajectory</a></li> 
