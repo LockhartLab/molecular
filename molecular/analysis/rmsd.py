@@ -30,7 +30,8 @@ def rmsd(a, b=None, paired=False, fit=True):
     a : molecular.Trajectory
     b : molecular.Trajectory
     paired : bool
-        Are a and b paired? That is, should we compute RMSD between (a[0], b[0]), (a[1], b[1]), etc.? (Default: False)
+        Are a and b paired? That is, should we compute RMSD between (a[0], b[0]), (a[1], b[1]), etc.? If False, the
+        Cartesian product of a and b are taken (Default: False)
     fit : bool
         Should structures be fit before RMSD is computed? (Default: True)
 
@@ -43,8 +44,8 @@ def rmsd(a, b=None, paired=False, fit=True):
     http://manual.gromacs.org/documentation/current/onlinehelp/gmx-rms.html
     """
 
-    # If a is None, then select b
-    if a is None:
+    # If b is None, then select a
+    if b is None:
         b = a
 
     # Number of atoms between a and b must be identical
@@ -55,7 +56,7 @@ def rmsd(a, b=None, paired=False, fit=True):
     a_xyz = a.xyz
     b_xyz = b.xyz
 
-    # Compute paired?
+    # Assign indices of pairs from a and b
     if paired:
         if len(a) != len(b):
             raise AttributeError('cannot compute paired RMSD because a and b have different number of structures')
@@ -63,7 +64,6 @@ def rmsd(a, b=None, paired=False, fit=True):
         a_index = range(a.n_structures)
         b_index = range(b.n_structures)
 
-    # Otherwise, compute RMSD taking a x b
     else:
         # FIXME the problem with this that it's memory-intensive to replicate ...
         # iterable = product(range(a.n_structures), range(b.n_structures))

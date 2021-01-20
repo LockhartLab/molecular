@@ -2,23 +2,54 @@
 transform.py
 
 language: Python
-version: 3.7
+version: 3.x
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
+import logging
 from numba import njit
 import numpy as np
+
+# Get the molecular.transform logger
+logger = logging.getLogger('molecular.transform')
+
+
+# Center Trajectory
+def center(a, weights=None):
+    """
+    Compute the center of Trajectory `a`.
+
+    Parameters
+    ----------
+    a : molecular.Trajectory
+    weights : Array-like
+        (Optional) Weights for atoms in the trajectory. Follows the definition from :ref:`numpy.average`.
+
+    Returns
+    -------
+    numpy.ndarray
+        Centers of structures in Trajectory.
+    """
+
+    # Compute center
+    results = np.average(a.xyz, weights=weights, axis=1, returned=False)
+
+    # Update log
+    logging.info(f'computed center of {a.designator}')
+
+    # Return
+    return results
 
 
 def fit(a, b, backend='python'):
     """
-    `a` and `b` must be paired.
+    Fit Trajectory `b` to Trajectory `a` in a pairwise fashion.
 
     Parameters
     ----------
     a : molecular.Trajectory
     b : molecular.Trajectory
-    backend
+    backend : str
 
     Returns
     -------
@@ -47,6 +78,8 @@ def fit(a, b, backend='python'):
     b_xyz_center = np.tile(b_xyz.mean(axis=1), n_atoms).reshape(n_structures, n_atoms, n_dim)
 
     # Move structures to center
+    a_xyz = center(a.xyz)
+    b_xyz = center(b.xyz)
     # a_xyz = to_origin(a.xyz)
     # b_xyz = to_origin(b.xyz)
     a_xyz = a_xyz - a_xyz_center
@@ -69,29 +102,6 @@ def fit(a, b, backend='python'):
 
     # Return
     return b_xyz
-
-
-def to_origin(a):
-    """
-
-    Parameters
-    ----------
-    a
-
-    Returns
-    -------
-
-    """
-
-    # Compute the center
-    # TODO put this in geometry.center ?
-    center = a.xyz.mean(axis=1)
-
-    # Transform
-    a.xyz = a.xyz - center
-
-    # Return
-    return a
 
 
 def _fit(a_xyz, b_xyz, backend='python'):
@@ -145,7 +155,6 @@ def _fit(a_xyz, b_xyz, backend='python'):
     return b_xyz
 
 
-
 @njit
 def _get_rotation_matrix(covariance_matrix):
     """
@@ -169,3 +178,10 @@ def _get_rotation_matrix(covariance_matrix):
         r = np.dot(np.dot(u, s), v)
         rotation_matrix.append(r)
     return rotation_matrix
+
+
+if __name__ == '__main__':
+    import molecular as mol
+    trj = mol.read_pdb('../tests/samples/trajectory.pdb')
+    trj.to_center(inplace=True)
+    assert (trj.center() < 1e-7).max()

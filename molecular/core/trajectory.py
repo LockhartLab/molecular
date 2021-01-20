@@ -6,11 +6,16 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from .errata import pivot
 
+from ..transform import center
+
+import logging
 import numpy as np
 import pandas as pd
 from typelike import ArrayLike, NumberLike
 from tqdm import tqdm
 
+# Get the molecular.core logger
+logger = logging.getLogger('molecular.core')
 
 # Trajectory class
 class Trajectory(object):
@@ -88,6 +93,16 @@ class Trajectory(object):
             # atoms: {1}
             # dimensions: {2}
         """.format(self.n_structures, self.n_atoms, self.n_dim)
+
+    # Trajectory designator
+    @property
+    def designator(self):
+        return f'Trajectory:{self.hex_id}'
+
+    # Hex ID of Trajectory
+    @property
+    def hex_id(self):
+        return hex(id(self))
 
     # Get x
     @property
@@ -185,7 +200,7 @@ class Trajectory(object):
             Center of every structure in the Trajectory.
         """
 
-        return np.mean(self._xyz, axis=1)
+        return center(self, weights=weights)
 
     # Copy
     # TODO
@@ -300,26 +315,6 @@ class Trajectory(object):
         # Return result
         return result
 
-    # Recenter the trjaectory
-    def recenter(self, inplace=False):
-        """
-        Recenter all structures in the trajectory around the origin.
-
-        Parameters
-        ----------
-        inplace : bool
-            Make the change in place? (Default: False)
-        """
-
-        xyz = self._xyz - self.center()
-
-        if inplace:
-            self._xyz = xyz
-        else:
-            trajectory = Trajectory.copy()
-            trajectory._xyz = xyz
-            return trajectory
-
     # Select
     # TODO compare the efficiency of this vs query
     def select(self, **kwargs):
@@ -364,6 +359,34 @@ class Trajectory(object):
         """
 
         return self._xyz.shape
+
+    # Recenter the Trajectory
+    # TODO need to decide if this should be moved to molecular.transform
+    def to_center(self, weights=None, inplace=False):
+        """
+        Recenter all structures in the Trajectory around the origin.
+
+        Parameters
+        ----------
+        weights : numpy.ndarray
+            (Optional) Weights for atoms in the trajectory. Follows the definition from :ref:`numpy.average`.
+        inplace : bool
+            Make the change in place? (Default: False)
+        """
+
+        # Center xyz coordinates
+        # noinspection PyUnresolvedReferences,PyArgumentList
+        xyz = self._xyz - self.center(weights).reshape(self.n_structures, -1, self.n_dim)
+
+        # Center Trajectory in place or return a copy
+        if inplace:
+            logging.info(f'centered {self.designator} at origin in place')
+            self._xyz = xyz
+        else:
+            logging.info(f'centered {self.designator} at origin')
+            trajectory = self.copy()
+            trajectory._xyz = xyz
+            return trajectory
 
     # Convert to pandas DataFrame
     def to_frame(self):
