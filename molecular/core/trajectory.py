@@ -6,7 +6,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from .errata import pivot
 
-from ..transform import center
+from ..transform import center, move
 
 import logging
 import numpy as np
@@ -16,6 +16,15 @@ from tqdm import tqdm
 
 # Get the molecular.core logger
 logger = logging.getLogger('molecular.core')
+
+
+# https://softwareengineering.stackexchange.com/questions/386755/sharing-docstrings-between-similar-functions
+def set_doc(original):
+    def wrapper(target):
+        target.__doc__ = original.__doc__.replace('a : molecular.Trajectory', '')
+        return target
+    return wrapper
+
 
 # Trajectory class
 class Trajectory(object):
@@ -36,7 +45,7 @@ class Trajectory(object):
         topology : Topology
         """
 
-        self._xyz = xyz
+        self._xyz = xyz  # TODO should this be called crd? coord? coor? pos?
         self._box = box
         self._topology = topology
 
@@ -94,6 +103,16 @@ class Trajectory(object):
             # dimensions: {2}
         """.format(self.n_structures, self.n_atoms, self.n_dim)
 
+    # Get coordinates
+    @property
+    def coord(self):
+        return self.xyz
+
+    # Set coordinates
+    @coord.setter
+    def coord(self, coord):
+        self.xyz = coord
+
     # Trajectory designator
     @property
     def designator(self):
@@ -103,6 +122,66 @@ class Trajectory(object):
     @property
     def hex_id(self):
         return hex(id(self))
+
+    # Number of atoms
+    @property
+    def n_atoms(self):
+        """
+        Number of atoms in the `Trajectory`.
+
+        Returns
+        -------
+        int
+            Number of atoms
+        """
+
+        return self.shape[1]
+
+    # Number of dimensions
+    @property
+    def n_dim(self):
+        """
+        Number of dimensions.
+
+        Returns
+        -------
+        int
+            Number of dimensions
+        """
+
+        return self.shape[2]
+
+    # Number of structures
+    @property
+    def n_structures(self):
+        """
+        Number of structures in the `Trajectory`.
+
+        Returns
+        -------
+        int
+            Number of structures
+        """
+
+        return self.shape[0]
+
+    # Get topology
+    @property
+    def topology(self):
+        """
+        Get the `Topology` instance.
+
+        Returns
+        -------
+        Topology
+            `Topology` instance associated with this `Trajectory`.
+        """
+
+        # Check the topology
+        self._check_topology()
+
+        # Return
+        return self._topology
 
     # Get x
     @property
@@ -146,7 +225,7 @@ class Trajectory(object):
 
         return self._xyz[:, :, 2]
 
-    # Get XYZ coordinates
+    # Get xyz coordinates
     @property
     def xyz(self):
         """
@@ -159,6 +238,12 @@ class Trajectory(object):
         """
 
         return self._xyz
+
+    @xyz.setter
+    def xyz(self, xyz):
+        if self._xyz.shape != xyz.shape:
+            raise AttributeError('must be same shape')
+        self._xyz = xyz
 
     # Check topology
     def _check_topology(self):
@@ -188,18 +273,8 @@ class Trajectory(object):
         return result
 
     # Compute the center of the Trajectory
+    @set_doc(center)
     def center(self, weights=None):
-        r"""
-        Compute the center of every structure in the Trajectory.
-
-        .. center = \frac{1}{N} \Epsilon w_i (x_i + y_i + z_i)
-
-        Returns
-        -------
-        numpy.ndarray
-            Center of every structure in the Trajectory.
-        """
-
         return center(self, weights=weights)
 
     # Copy
@@ -236,47 +311,10 @@ class Trajectory(object):
             raise AttributeError('number of atoms do not match ({0} vs {1})'.format(self.n_atoms, structure.n_atoms))
         return structure
 
-    # Number of atoms
-    @property
-    def n_atoms(self):
-        """
-        Number of atoms in the `Trajectory`.
-
-        Returns
-        -------
-        int
-            Number of atoms
-        """
-
-        return self.shape[1]
-
-    # Number of dimensions
-    @property
-    def n_dim(self):
-        """
-        Number of dimensions.
-
-        Returns
-        -------
-        int
-            Number of dimensions
-        """
-
-        return self.shape[2]
-
-    # Number of structures
-    @property
-    def n_structures(self):
-        """
-        Number of structures in the `Trajectory`.
-
-        Returns
-        -------
-        int
-            Number of structures
-        """
-
-        return self.shape[0]
+    # Move
+    @set_doc(move)
+    def move(self, by=None, to=None, return_copy=False):
+        return move(self, by, to, return_copy)
 
     # Query
     def query(self, expr, only_index=False):
@@ -488,23 +526,12 @@ class Trajectory(object):
     def to_universe(self):
         pass
 
-    # Get topology
-    @property
-    def topology(self):
-        """
-        Get the `Topology` instance.
-
-        Returns
-        -------
-        Topology
-            `Topology` instance associated with this `Trajectory`.
-        """
-
-        # Check the topology
-        self._check_topology()
-
-        # Return
-        return self._topology
+    # Update
+    def update(self, xyz=None):
+        if xyz is not None:
+            if self._xyz.shape != xyz.shape:
+                raise AttributeError('must be same shape')
+            self._xyz = xyz
 
     # View
     # https://github.com/arose/nglview
@@ -595,7 +622,7 @@ class Topology:
 
         # Make sure that item a valid atom_id
         if item not in self._data['atom_id']:
-           raise AttributeError('%s not a valid atom_id' % item)
+            raise AttributeError('%s not a valid atom_id' % item)
 
         # Create copy of the row
         data = self._data[self._data['atom_id'] == item].copy()
