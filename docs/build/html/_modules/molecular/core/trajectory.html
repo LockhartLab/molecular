@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.core.trajectory &#8212; molecular 0.1.dev43 documentation</title>
+    <title>molecular.core.trajectory &#8212; molecular 0.1.dev44 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev43 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev44 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.trajectory</a></li> 
       </ul>
@@ -45,7 +45,7 @@
 
 <span class="kn">from</span> <span class="nn">.errata</span> <span class="kn">import</span> <span class="n">pivot</span>
 
-<span class="kn">from</span> <span class="nn">..transform</span> <span class="kn">import</span> <span class="n">center</span>
+<span class="kn">from</span> <span class="nn">..transform</span> <span class="kn">import</span> <span class="n">center</span><span class="p">,</span> <span class="n">move</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -55,6 +55,15 @@
 
 <span class="c1"># Get the molecular.core logger</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;molecular.core&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># https://softwareengineering.stackexchange.com/questions/386755/sharing-docstrings-between-similar-functions</span>
+<span class="k">def</span> <span class="nf">set_doc</span><span class="p">(</span><span class="n">original</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
+        <span class="n">target</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;a : molecular.Trajectory&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">target</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+
 
 <span class="c1"># Trajectory class</span>
 <div class="viewcode-block" id="Trajectory"><a class="viewcode-back" href="../../../api/generated/molecular.core.Trajectory.html#molecular.core.Trajectory">[docs]</a><span class="k">class</span> <span class="nc">Trajectory</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -75,7 +84,7 @@
 <span class="sd">        topology : Topology</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_xyz</span> <span class="o">=</span> <span class="n">xyz</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_xyz</span> <span class="o">=</span> <span class="n">xyz</span>  <span class="c1"># TODO should this be called crd? coord? coor? pos?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_box</span> <span class="o">=</span> <span class="n">box</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_topology</span> <span class="o">=</span> <span class="n">topology</span></div>
 
@@ -133,6 +142,16 @@
 <span class="s2">            # dimensions: </span><span class="si">{2}</span><span class="s2"></span>
 <span class="s2">        &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_structures</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dim</span><span class="p">)</span>
 
+    <span class="c1"># Get coordinates</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">coord</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">xyz</span>
+
+    <span class="c1"># Set coordinates</span>
+    <span class="nd">@coord</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">coord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xyz</span> <span class="o">=</span> <span class="n">coord</span>
+
     <span class="c1"># Trajectory designator</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">designator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -142,6 +161,66 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hex_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hex</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+    <span class="c1"># Number of atoms</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Number of atoms in the `Trajectory`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            Number of atoms</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Number of dimensions</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Number of dimensions.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            Number of dimensions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="c1"># Number of structures</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_structures</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Number of structures in the `Trajectory`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            Number of structures</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Get topology</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">topology</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the `Topology` instance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Topology</span>
+<span class="sd">            `Topology` instance associated with this `Trajectory`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Check the topology</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_topology</span><span class="p">()</span>
+
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_topology</span>
 
     <span class="c1"># Get x</span>
     <span class="nd">@property</span>
@@ -185,7 +264,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xyz</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span>
 
-    <span class="c1"># Get XYZ coordinates</span>
+    <span class="c1"># Get xyz coordinates</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -198,6 +277,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xyz</span>
+
+    <span class="nd">@xyz</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xyz</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;must be same shape&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_xyz</span> <span class="o">=</span> <span class="n">xyz</span>
 
     <span class="c1"># Check topology</span>
     <span class="k">def</span> <span class="nf">_check_topology</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -227,18 +312,8 @@
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="c1"># Compute the center of the Trajectory</span>
-<div class="viewcode-block" id="Trajectory.center"><a class="viewcode-back" href="../../../api/generated/molecular.core.Trajectory.html#molecular.core.Trajectory.center">[docs]</a>    <span class="k">def</span> <span class="nf">center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compute the center of every structure in the Trajectory.</span>
-
-<span class="sd">        .. center = \frac{1}{N} \Epsilon w_i (x_i + y_i + z_i)</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        numpy.ndarray</span>
-<span class="sd">            Center of every structure in the Trajectory.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
+<div class="viewcode-block" id="Trajectory.center"><a class="viewcode-back" href="../../../api/generated/molecular.core.Trajectory.html#molecular.core.Trajectory.center">[docs]</a>    <span class="nd">@set_doc</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span></div>
 
     <span class="c1"># Copy</span>
@@ -275,47 +350,10 @@
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;number of atoms do not match (</span><span class="si">{0}</span><span class="s1"> vs </span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">structure</span>
 
-    <span class="c1"># Number of atoms</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">n_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Number of atoms in the `Trajectory`.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        int</span>
-<span class="sd">            Number of atoms</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-    <span class="c1"># Number of dimensions</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">n_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Number of dimensions.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        int</span>
-<span class="sd">            Number of dimensions</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-
-    <span class="c1"># Number of structures</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">n_structures</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Number of structures in the `Trajectory`.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        int</span>
-<span class="sd">            Number of structures</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Move</span>
+<div class="viewcode-block" id="Trajectory.move"><a class="viewcode-back" href="../../../api/generated/molecular.core.Trajectory.html#molecular.core.Trajectory.move">[docs]</a>    <span class="nd">@set_doc</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">to</span><span class="p">,</span> <span class="n">return_copy</span><span class="p">)</span></div>
 
     <span class="c1"># Query</span>
 <div class="viewcode-block" id="Trajectory.query"><a class="viewcode-back" href="../../../api/generated/molecular.core.Trajectory.html#molecular.core.Trajectory.query">[docs]</a>    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">only_index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -527,23 +565,12 @@
     <span class="k">def</span> <span class="nf">to_universe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="c1"># Get topology</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">topology</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the `Topology` instance.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Topology</span>
-<span class="sd">            `Topology` instance associated with this `Trajectory`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># Check the topology</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_topology</span><span class="p">()</span>
-
-        <span class="c1"># Return</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_topology</span>
+    <span class="c1"># Update</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">xyz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xyz</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;must be same shape&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_xyz</span> <span class="o">=</span> <span class="n">xyz</span>
 
     <span class="c1"># View</span>
     <span class="c1"># https://github.com/arose/nglview</span>
@@ -634,7 +661,7 @@
 
         <span class="c1"># Make sure that item a valid atom_id</span>
         <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]:</span>
-           <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> not a valid atom_id&#39;</span> <span class="o">%</span> <span class="n">item</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> not a valid atom_id&#39;</span> <span class="o">%</span> <span class="n">item</span><span class="p">)</span>
 
         <span class="c1"># Create copy of the row</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -831,7 +858,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev43 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev44 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.trajectory</a></li> 
       </ul>

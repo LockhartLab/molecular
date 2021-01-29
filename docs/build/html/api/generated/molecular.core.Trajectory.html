@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.core.Trajectory &#8212; molecular 0.1.dev43 documentation</title>
+    <title>molecular.core.Trajectory &#8212; molecular 0.1.dev44 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../core.html" title="molecular.core"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev43 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev44 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../core.html" accesskey="U">molecular.core</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.Trajectory</a></li> 
@@ -69,13 +69,19 @@ second axis must represent the atom, and the third index will represent x, y, or
 <dl class="py method">
 <dt id="molecular.core.Trajectory.center">
 <code class="sig-name descname">center</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/core/trajectory.html#Trajectory.center"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.core.Trajectory.center" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the center of every structure in the Trajectory.</p>
+<dd><p>Compute the center <cite>m</cite> of Trajectory <cite>a</cite>.</p>
+<div class="math notranslate nohighlight">
+\[m = \frac{\sum_{i=1}^N w_i (x_i + y_i + z_i)} {\sum_{i=1}^N w_i}\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(w_i\)</span> refers to weights applied to individual atoms <a href="#id1"><span class="problematic" id="id2">:moath:`i`</span></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Center of every structure in the Trajectory.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>weights</strong> (<em>array-like</em>) – (Optional) Weights for atoms in the trajectory. Follows the definition from <span class="xref std std-ref">numpy.average</span>.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Center of the Trajectory.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -90,6 +96,28 @@ second axis must represent the atom, and the third index will represent x, y, or
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>molecular.Trajectory</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.core.Trajectory.move">
+<code class="sig-name descname">move</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">return_copy</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/core/trajectory.html#Trajectory.move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.core.Trajectory.move" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move Trajectory <cite>a</cite> either <cite>by</cite> a constant or <cite>to</cite> a location. The two arguments <cite>by</cite> and <cite>to</cite> cannot be set
+simultaneously.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>by</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – (Optional) Move <cite>a</cite> by a constant.</p></li>
+<li><p><strong>to</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – (Optional) Move <cite>a</cite> to a location.</p></li>
+<li><p><strong>return_copy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Should we perform the translation on a copy of the Trajectory (Default: False)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If <cite>return_copy</cite> is set, we return the moved Trajectory.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)">None</a> or molecular.Trajectory</p>
 </dd>
 </dl>
 </dd></dl>
@@ -198,7 +226,7 @@ second axis must represent the atom, and the third index will represent x, y, or
 <dd class="field-odd"><p>Trajectory represented as pandas DataFrame</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.0)">pandas.DataFrame</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.1)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -337,7 +365,7 @@ second axis must represent the atom, and the third index will represent x, y, or
         <li class="right" >
           <a href="../core.html" title="molecular.core"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev43 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev44 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../core.html" >molecular.core</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.Trajectory</a></li> 
