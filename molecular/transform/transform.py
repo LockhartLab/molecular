@@ -138,6 +138,7 @@ def fit(a, b):
 
 
 # Move Trajectory
+# noinspection PyProtectedMember
 def move(a, by=None, to=None, return_copy=False):
     r"""
     Move Trajectory `a` either `by` a constant or `to` a location. The two arguments `by` and `to` cannot be set
@@ -168,9 +169,10 @@ def move(a, by=None, to=None, return_copy=False):
         m = center(a)
         by = to - m  # xyz - center + to is the idea
 
-    # `by` must be the same shape as n_dim
-    # if by.ndim != 1 or by.shape[0] != a.n_dim:
-    #     raise AttributeError(f'by must contain {a.n_dim} elements')
+    # `by` must be array for ease
+    if not isinstance(by, np.ndarray):
+        # noinspection PyTypeChecker
+        by = np.array(by)
 
     # Should we make a copy?
     if return_copy:
@@ -178,16 +180,25 @@ def move(a, by=None, to=None, return_copy=False):
 
     # Perform translation
     # TODO need to come up with robust tests about when array links are preserved
-    # noinspection PyProtectedMember
-    a._xyz[:] = a._xyz[:] + by  # Preserves the transformation to any linked objects
+    # Simplest case when by.ndim == 1
+    if by.ndim == 1:
+        a._xyz[:] = a._xyz[:] + by
+
+    # If by.ndim == 2, then we have to swap axes
+    # by is shape (n_structures, n_dim) but xyz is (n_structures, n_atoms, n_dim), so we swap the two axes to
+    # broadcast correctly
+    elif by.ndim == 2:
+        a._xyz[:] = np.swapaxes(np.swapaxes(a._xyz, 0, 1) + by, 0, 1)  # [:] to preserve linked arrays
+
+    else:
+        raise AttributeError('cannot perform move')
 
     # Update log
-    logging.info(f'translated {a.designator} by {by}')
+    logging.info(f'translated {a.designator}')
 
     # Return if necessary
     if return_copy:
         return a
-
 
 
 def _fit(a_xyz, b_xyz, backend='python'):
@@ -270,5 +281,9 @@ if __name__ == '__main__':
     import molecular as mol
 
     trj = mol.read_pdb('../tests/samples/trajectory.pdb')
-    trj.to_center(inplace=True)
-    assert (trj.center() < 1e-7).max()
+    print(center(trj))
+    move(trj, to=(0, 0, 0))
+    print(center(trj))
+    move(trj, by=(5, 5, 5))
+    print(center(trj))
+    # assert (trj.center() < 1e-7).max()
