@@ -163,7 +163,9 @@ def _read_pdb(records):
     # Renumber atom_id
     if np.mod(len(data), n_structures) != 0:
         raise AttributeError('len(data) must be evenly divisible by n_structures, (%s, %s)' % (len(data), n_structures))
-    data['atom_id'] = np.array(np.tile(np.arange(1, len(data) / n_structures + 1), n_structures), dtype='int')
+    # TODO, why does this index start at 1? I changed this 1/28/21 but might break something
+    # data['atom_id'] = np.array(np.tile(np.arange(1, len(data) / n_structures + 1), n_structures), dtype='int')
+    data['atom_id'] = np.array(np.tile(np.arange(len(data) / n_structures), n_structures), dtype='int')
 
     # Create Topology first
     # TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?

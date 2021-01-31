@@ -9,6 +9,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 import logging
 from numba import njit
 import numpy as np
+import pandas as pd
 
 # Get the molecular.transform logger
 logger = logging.getLogger('molecular.transform')
@@ -31,12 +32,12 @@ def center(a, weights=None):
 
     Returns
     -------
-    numpy.ndarray
-        Center of the Trajectory.
+    pandas.DataFrame
+        Center of each structure in the Trajectory.
     """
 
     # Compute center
-    m = np.average(a.xyz, weights=weights, axis=1, returned=False)
+    m = a.coordinates.groupby('structure_id').mean()
 
     # Update log
     logging.info(f'computed center of {a.designator}')
@@ -139,7 +140,7 @@ def fit(a, b):
 
 # Move Trajectory
 # noinspection PyProtectedMember
-def move(a, by=None, to=None, return_copy=False):
+def move(a, by=None, to=None, inplace=True):
     r"""
     Move Trajectory `a` either `by` a constant or `to` a location. The two arguments `by` and `to` cannot be set
     simultaneously.
@@ -147,11 +148,11 @@ def move(a, by=None, to=None, return_copy=False):
     Parameters
     ----------
     a : molecular.Trajectory
-    by : tuple
+    by : array-like
         (Optional) Move `a` by a constant.
-    to : tuple
+    to : array-like
         (Optional) Move `a` to a location.
-    return_copy : bool
+    inplace : bool
         Should we perform the translation on a copy of the Trajectory (Default: False)
 
     Returns
@@ -170,34 +171,23 @@ def move(a, by=None, to=None, return_copy=False):
         by = to - m  # xyz - center + to is the idea
 
     # `by` must be array for ease
-    if not isinstance(by, np.ndarray):
+    if not isinstance(by, (np.ndarray, pd.DataFrame)):
         # noinspection PyTypeChecker
         by = np.array(by)
 
     # Should we make a copy?
-    if return_copy:
+    if not inplace:
         a = a.copy()
 
     # Perform translation
     # TODO need to come up with robust tests about when array links are preserved
-    # Simplest case when by.ndim == 1
-    if by.ndim == 1:
-        a._xyz[:] = a._xyz[:] + by
-
-    # If by.ndim == 2, then we have to swap axes
-    # by is shape (n_structures, n_dim) but xyz is (n_structures, n_atoms, n_dim), so we swap the two axes to
-    # broadcast correctly
-    elif by.ndim == 2:
-        a._xyz[:] = np.swapaxes(np.swapaxes(a._xyz, 0, 1) + by, 0, 1)  # [:] to preserve linked arrays
-
-    else:
-        raise AttributeError('cannot perform move')
+    a.coordinates = a.coordinates + by
 
     # Update log
     logging.info(f'translated {a.designator}')
 
     # Return if necessary
-    if return_copy:
+    if not inplace:
         return a
 
 
@@ -281,9 +271,21 @@ if __name__ == '__main__':
     import molecular as mol
 
     trj = mol.read_pdb('../tests/samples/trajectory.pdb')
-    print(center(trj))
     move(trj, to=(0, 0, 0))
+    assert (trj.center().to_numpy() < 1e-7).max()
+
+    # TODO add this to unit tests
+    sel = trj.select(segment='GB1')
+    print(center(sel))
+    move(sel, by=(5, 5, 5))
+    print(center(sel))
     print(center(trj))
-    move(trj, by=(5, 5, 5))
-    print(center(trj))
-    # assert (trj.center() < 1e-7).max()
+
+    # TODO add something like this to unit tests
+    # small = trj.get_structure(0).select(atom_id=[0, 1]).copy()
+    # xyz = np.array(small.xyz)
+    # # sel = small.select(atom_id=0)
+    # # sel = mol.Trajectory(small.get_atoms(np.array(0)))
+    # sel = mol.Trajectory(small._xyz[slice(None), [0], slice(None)])  # when you slice by a list, you always get a copy
+    # sel._xyz[:] = sel._xyz[:] + 5
+    # print(np.max(small.xyz - xyz))

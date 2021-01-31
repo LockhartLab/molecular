@@ -4,9 +4,8 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-from .errata import pivot
-
-from ..transform import center, move
+from molecular.core.errata import pivot
+from molecular.transform import center, move
 
 import logging
 import numpy as np
@@ -33,18 +32,35 @@ class Trajectory(object):
     """
 
     # Initialize instance of Trajectory
-    def __init__(self, xyz, box=None, topology=None):
+    def __init__(self, xyz, box=None, topology=None, copy=False):
         """
 
 
         Parameters
         ----------
-        xyz : ArrayLike, three-dimensional
+        xyz : array-like
             Cartesian coordinates for all atoms and all structures. First axis must represent the structure index,
             second axis must represent the atom, and the third index will represent x, y, or z.
         topology : Topology
         """
 
+        # If copy, make sure that xyz is decoupled from the input
+        if copy or not isinstance(xyz, np.ndarray):
+            xyz = np.array(xyz)
+
+        # Extract dimensions from xyz
+        n_structures, n_atoms, n_dim = xyz.shape
+        if n_dim != 3:
+            raise AttributeError('n_dim must be 3 for the time being')
+
+        # Create DataFrame to store topology coordinates, velocities, force information, box information, etc.
+        self._data = pd.DataFrame({
+            'structure_id': np.repeat(np.arange(n_structures), n_atoms),
+            'atom_id': np.tile(np.arange(n_atoms), n_structures),
+            'x': xyz[:, :, 0].ravel(),
+            'y': xyz[:, :, 1].ravel(),
+            'z': xyz[:, :, 2].ravel()
+        }).set_index(['structure_id', 'atom_id'])
         self._xyz = xyz  # TODO should this be called crd? coord? coor? pos?
         self._box = box
         self._topology = topology
@@ -52,7 +68,7 @@ class Trajectory(object):
     # Add
     def __add__(self, other):
         if isinstance(other, NumberLike):
-            self._xyz = self._xyz + other
+            self._data[['x', 'y', 'z']] = self._data[['x', 'y', 'z']] + other
         return self
 
     # Length of trajectory
@@ -97,11 +113,11 @@ class Trajectory(object):
 
     # Representation of the object
     def __repr__(self):
-        return """
-            # structures: {0}
-            # atoms: {1}
-            # dimensions: {2}
-        """.format(self.n_structures, self.n_atoms, self.n_dim)
+        return "# structures: {0}\n# atoms: {1}\n# dimensions: {2}".format(*self.shape)
+
+    @property
+    def atom_ids(self):
+        return self._data.index.unique('atom_id').to_numpy()
 
     # Get coordinates
     @property
@@ -112,6 +128,14 @@ class Trajectory(object):
     @coord.setter
     def coord(self, coord):
         self.xyz = coord
+
+    @property
+    def coordinates(self):
+        return self._data[['x', 'y', 'z']]
+
+    @coordinates.setter
+    def coordinates(self, coordinates):
+        self._data[['x', 'y', 'z']] = coordinates
 
     # Trajectory designator
     @property
@@ -135,7 +159,7 @@ class Trajectory(object):
             Number of atoms
         """
 
-        return self.shape[1]
+        return len(self.atom_ids)
 
     # Number of dimensions
     @property
@@ -149,7 +173,7 @@ class Trajectory(object):
             Number of dimensions
         """
 
-        return self.shape[2]
+        return 3
 
     # Number of structures
     @property
@@ -163,7 +187,35 @@ class Trajectory(object):
             Number of structures
         """
 
-        return self.shape[0]
+        return len(self.structure_ids)
+
+    # Shape
+    @property
+    def shape(self):
+        """
+        Shape of `Trajectory`
+
+        Returns
+        -------
+        tuple
+            (Number of structures, number of atoms, dimensionality)
+        """
+
+        return self.n_structures, self.n_atoms, self.n_dim
+
+    # Get a list of structures
+    @property
+    def structure_ids(self):
+        """
+        Get a numpy array of structure indices.
+
+        Returns
+        -------
+        numpy.ndarray
+            Structure indices.
+        """
+
+        return self._data.index.unique('structure_id').to_numpy()
 
     # Get topology
     @property
@@ -229,7 +281,7 @@ class Trajectory(object):
     @property
     def xyz(self):
         """
-        Get x, y, and z coordinates.
+        Get x, y, and z coordinates as numpy array.
 
         Returns
         -------
@@ -237,7 +289,7 @@ class Trajectory(object):
             Cartesian coordinates.
         """
 
-        return self._xyz
+        return self._data[['x', 'y', 'z']].values.reshape(*self.shape)
 
     @xyz.setter
     def xyz(self, xyz):
@@ -289,7 +341,7 @@ class Trajectory(object):
             Deep copy of the Trajectory.
         """
 
-        pass
+        return Trajectory(np.array(self._xyz), topology=self._topology.copy())
 
     # Describe
     def describe(self):
@@ -300,7 +352,23 @@ class Trajectory(object):
 
     # Get atoms
     def get_atoms(self, index):
-        return self.xyz[:, index, :]
+        """
+        Get specific atom indices from the Trajectory.
+
+        Parameters
+        ----------
+        index : array-like
+            List of atom indices.
+
+        Returns
+        -------
+        numpy.ndarray
+            Coordinates of specified atom indices for each structure.
+        """
+
+        # xyz will be a view if index is an int, otherwise it will be a copy...
+        # TODO how will this affect behavior?
+        return self._xyz[:, index, :]
 
     # Get structure
     def get_structure(self, index):
@@ -311,10 +379,13 @@ class Trajectory(object):
             raise AttributeError('number of atoms do not match ({0} vs {1})'.format(self.n_atoms, structure.n_atoms))
         return structure
 
+    def keys(self):
+        return self._topology.keys()
+
     # Move
     @set_doc(move)
-    def move(self, by=None, to=None, return_copy=False):
-        return move(self, by, to, return_copy)
+    def move(self, by=None, to=None, inplace=True):
+        return move(self, by, to, inplace)
 
     # Query
     def query(self, expr, only_index=False):
@@ -339,7 +410,7 @@ class Trajectory(object):
 
         # Extract indices
         # noinspection PyProtectedMember
-        index = topology._data.index.values
+        index = topology._data.index.to_numpy()
 
         #
         if only_index:
@@ -368,7 +439,8 @@ class Trajectory(object):
         """
 
         # Save snapshot of topology data
-        data = self.topology.to_frame()
+        # noinspection DuplicatedCode,DuplicatedCode
+        data = self._topology.to_frame()
 
         # Continuously slice the topology data
         for key in kwargs:
@@ -378,25 +450,12 @@ class Trajectory(object):
             data = data[data[key].isin(item)]
 
         # Extract indices and create a new topology
-        index = data.index.values
+        index = data.index.to_numpy()
         topology = Topology(data)
 
         # Return
-        return Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim), topology=topology)
-
-    # Shape
-    @property
-    def shape(self):
-        """
-        Shape of `Trajectory`
-
-        Returns
-        -------
-        tuple
-            (Number of structures, number of atoms, dimensionality)
-        """
-
-        return self._xyz.shape
+        # return Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim), topology=topology)
+        return Trajectory(self.get_atoms(index), topology=topology)
 
     # Recenter the Trajectory
     # TODO need to decide if this should be moved to molecular.transform
@@ -600,7 +659,7 @@ class Topology:
         if item not in self._data:
             raise AttributeError('%s not in Structure' % item)
 
-        return self._data[item].values
+        return self._data[item].to_numpy()
 
     # Get atom from Structure by index
     def __getitem__(self, item):
@@ -618,7 +677,7 @@ class Topology:
 
         # First, try to see if we can ping the DataFrame
         if isinstance(item, str):
-            return self._data[item].values
+            return self._data[item].to_numpy()
 
         # Make sure that item a valid atom_id
         if item not in self._data['atom_id']:
@@ -694,6 +753,9 @@ class Topology:
 
         return Topology(self._data.copy())
 
+    def keys(self):
+        return self._data.columns.to_numpy()
+
     # Number of atoms
     @property
     def n_atoms(self):
@@ -723,7 +785,7 @@ class Topology:
                                     '"SER", "THR", "TRP", "TYR", "VAL"]')
 
         # Get indices and parsed data
-        indices = self._data.query(text).index.values
+        indices = self._data.query(text).index.to_numpy()
         data = self._data.loc[self._data.index.isin(indices), :].copy()
 
         # Return
@@ -747,7 +809,7 @@ class Topology:
         """
 
         data = self._data[['residue_id', 'residue']].drop_duplicates()
-        return data['residue'].values
+        return data['residue'].to_numpy()
 
     # Write to CSV
     def to_csv(self, path, topology=False):
@@ -787,4 +849,10 @@ class Topology:
 
         """
 
-        return self._data[['x', 'y', 'z']].values
+        return self._data[['x', 'y', 'z']].to_numpy()
+
+
+if __name__ == '__main__':
+    import molecular as mol
+
+    trj = mol.read_pdb('../tests/samples/trajectory.pdb')

@@ -4,5 +4,6 @@ from . import transform
 
 __all__ = [
     'center',
-    'fit'
+    'fit',
+    'move'
 ]

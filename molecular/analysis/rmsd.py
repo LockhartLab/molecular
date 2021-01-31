@@ -16,7 +16,7 @@ from itertools import product
 import numpy as np
 
 
-# Compute the RMSD between 2 trajectories
+# Compute the RMSD between 2 Trajectories
 def rmsd(a, b=None, paired=False, fit=True):
     """
     Compute the RMSD.
@@ -29,8 +29,9 @@ def rmsd(a, b=None, paired=False, fit=True):
     ----------
     a : molecular.Trajectory
     b : molecular.Trajectory
+        (Optional)
     paired : bool
-        Are a and b paired? That is, should we compute RMSD between (a[0], b[0]), (a[1], b[1]), etc.? If False, the
+        Are `a` and `b` paired? That is, should we compute RMSD between (a[0], b[0]), (a[1], b[1]), etc.? If False, the
         Cartesian product of a and b are taken (Default: False)
     fit : bool
         Should structures be fit before RMSD is computed? (Default: True)
