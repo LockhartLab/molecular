@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.simulations.temp_schedule &#8212; molecular 0.1.dev49 documentation</title>
+    <title>molecular.simulations.temp_schedule &#8212; molecular 0.1.dev50 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../simulations.html" title="molecular.simulations"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev49 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev50 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../simulations.html" accesskey="U">molecular.simulations</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.temp_schedule</a></li> 
@@ -50,55 +50,42 @@
 <dl class="py function">
 <dt id="molecular.simulations.temp_schedule">
 <code class="sig-prename descclassname">molecular.simulations.</code><code class="sig-name descname">temp_schedule</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">temp_min</span><span class="o">=</span><span class="default_value">300</span></em>, <em class="sig-param"><span class="n">temp_max</span><span class="o">=</span><span class="default_value">440</span></em>, <em class="sig-param"><span class="n">n_temps</span><span class="o">=</span><span class="default_value">40</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'geometric'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#temp_schedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.simulations.temp_schedule" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Create a temperature schedule that could be used, for instance, with replica exchange.</p>
+<dd><p>Create a temperature schedule that could be used, for instance, with replica exchange.</p>
 <dl>
 <dt>There are several choices for <cite>mode</cite>:</dt><dd><ul class="simple">
 <li><p>“geometric”</p></li>
 </ul>
 <div class="math notranslate nohighlight">
-\[T_i = T_1\]</div>
-</dd>
-</dl>
-</div></blockquote>
-<p>rac{T_R}{T_1}^{
-rac{i-1}{R-1}}</p>
-<blockquote>
-<div><ul class="simple">
+\[T_i = T_1 \frac{T_R}{T_1}^{\frac{i-1}{R-1}}\]</div>
+<ul class="simple">
 <li><p>“linear”</p></li>
 </ul>
 <div class="math notranslate nohighlight">
-\[T_i = T_1 + (i-1)\]</div>
-</div></blockquote>
-<p>rac{T_R-T_1}{R-1}</p>
-<blockquote>
-<div><ul class="simple">
+\[T_i = T_1 + (i-1) \frac{T_R-T_1}{R-1}\]</div>
+<ul class="simple">
 <li><p>“parabolic” (Note if <cite>n_replicas</cite> is even, <cite>temp_max</cite> won’t directly be sampled).</p></li>
 </ul>
 <div class="math notranslate nohighlight">
-\[T_i = T_1 -\]</div>
-</div></blockquote>
-<p>rac{T_r-T_1}{
-rac{R-1}{2}^2} (i-1) (i-R)</p>
-<blockquote>
-<div><p>n_temps
-temp_min : float</p>
-<blockquote>
-<div><p>Lowest temperature</p>
-</div></blockquote>
-<dl class="simple">
-<dt>temp_max<span class="classifier">float</span></dt><dd><p>Highest temperature</p>
-</dd>
-<dt>n_temp<span class="classifier">int</span></dt><dd><p>Number of temperatures</p>
-</dd>
-<dt>mode<span class="classifier">str</span></dt><dd><p>Mode to produce schedule. Valid options include “geometric”, “linear”, “parabolic”. (Default: “geometric”)</p>
+\[T_i = T_1 - \frac{T_r-T_1}{\frac{R-1}{2}^2} (i-1) (i-R)\]</div>
 </dd>
 </dl>
-<dl class="simple">
-<dt>numpy.ndarray</dt><dd><p>Temperature schedule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_temps</strong> – </p></li>
+<li><p><strong>temp_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Lowest temperature</p></li>
+<li><p><strong>temp_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Highest temperature</p></li>
+<li><p><strong>n_temp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of temperatures</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode to produce schedule. Valid options include “geometric”, “linear”, “parabolic”. (Default: “geometric”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Temperature schedule</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></p>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 </div>
@@ -152,7 +139,7 @@ temp_min : float</p>
         <li class="right" >
           <a href="../simulations.html" title="molecular.simulations"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev49 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev50 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../simulations.html" >molecular.simulations</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.temp_schedule</a></li> 
