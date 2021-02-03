@@ -46,7 +46,7 @@ setup(
         'molecular.geometry',
         'molecular.io',
         'molecular.misc',
-        'molecular.simulation',
+        'molecular.simulations',
         'molecular.statistics',
         'molecular.transform',
         'molecular.viz'
