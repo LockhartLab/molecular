@@ -10,4 +10,5 @@ API Reference
    api/energy
    api/geometry
    api/io
+   api/simulations
    api/statistics
