@@ -6,7 +6,8 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
     r"""
     Create a temperature schedule that could be used, for instance, with replica exchange.
 
-    There are several choices for `mode`:
+    There are several choices for `mode`. Note that :math:`T` refers to the temperature at :math:`i = {1...R}`, where
+    :math:`T_1` is `temp_min` and :math:`T_R` is `temp_max`. In total, there are :math:`R` temperatures (=`n_temps`).
         * "geometric"
 
         .. math :: T_i = T_1 \frac{T_R}{T_1}^{\frac{i-1}{R-1}}
@@ -15,7 +16,7 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
 
         .. math :: T_i = T_1 + (i-1) \frac{T_R-T_1}{R-1}
 
-        * "parabolic" (Note if `n_replicas` is even, `temp_max` won't directly be sampled).
+        * "parabolic" (Note if `n_temps` is even, `temp_max` won't directly be sampled).
 
         .. math :: T_i = T_1 - \frac{T_R-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)
 
