@@ -3,7 +3,7 @@ import numpy as np
 
 
 def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
-    """
+    r"""
     Create a temperature schedule that could be used, for instance, with replica exchange.
 
     There are several choices for `mode`:
