@@ -22,7 +22,7 @@ def center(a, weights=None):
 
     .. math :: m = \frac{\sum_{i=1}^N w_i (x_i + y_i + z_i)} {\sum_{i=1}^N w_i}
 
-    Here, :math:`w_i` refers to weights applied to individual atoms :moath:`i`.
+    Here, :math:`w_i` refers to weights applied to individual atoms :math:`i`.
 
     Parameters
     ----------

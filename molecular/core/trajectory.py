@@ -88,6 +88,7 @@ class Trajectory(object):
     def __getitem__(self, item):
         """
 
+
         Parameters
         ----------
         item
@@ -97,26 +98,27 @@ class Trajectory(object):
 
         """
 
-        # If item is a slice, convert it to an array
-        if isinstance(item, slice):
-            item = np.arange(item.start, item.stop, item.step)
-
-        # TODO create an IntLike object for typelike
-        if isinstance(item, (int, np.int, np.int64, ArrayLike)):
-            result = self.get_structure(item)
-
-        # If we still don't know what to do, try to get from topology
-        else:
-            result = self.topology[item]
-
-        return result
+        # Return
+        # TODO what if item is in topology? Should we try to retrieve that?
+        # TODO should this return a DataFrame or a Trajectory object?
+        return self._data.loc[item]
 
     # Representation of the object
     def __repr__(self):
         return "# structures: {0}\n# atoms: {1}\n# dimensions: {2}".format(*self.shape)
 
+    # Get unique atom IDs (can be cached)
     @property
-    def atom_ids(self):
+    def atom_ids(self) -> np.ndarray:
+        """
+        Get unique atom IDs in the Trajectory.
+
+        Returns
+        -------
+        numpy.ndarray
+            Array of atom IDs.
+        """
+
         return self._data.index.unique('atom_id').to_numpy()
 
     # Get coordinates
@@ -129,13 +131,45 @@ class Trajectory(object):
     def coord(self, coord):
         self.xyz = coord
 
+    # Get coordinates
     @property
     def coordinates(self):
+        """
+        Get Cartesian coordinates from the Trajectory.
+
+        Returns
+        -------
+        pandas.DataFrame
+            Trajectory Cartesian coordinates.
+        """
+
         return self._data[['x', 'y', 'z']]
 
+    # Set coordinates
     @coordinates.setter
     def coordinates(self, coordinates):
+        """
+        Set Cartesian coordinates for the Trajectory.
+
+        Parameters
+        ----------
+        coordinates : array-like
+            Cartesian coordinates of same shape as Trajectory.
+        """
+
+        # Set coordinates
         self._data[['x', 'y', 'z']] = coordinates
+
+    @property
+    def columns(self):
+        """
+
+        Returns
+        -------
+        numpy.ndarray
+        """
+
+        return self._data.columns.to_numpy()
 
     # Trajectory designator
     @property
@@ -183,6 +217,7 @@ class Trajectory(object):
 
         Returns
         -------
+
         int
             Number of structures
         """
@@ -205,7 +240,7 @@ class Trajectory(object):
 
     # Get a list of structures
     @property
-    def structure_ids(self):
+    def structure_ids(self) -> np.ndarray:
         """
         Get a numpy array of structure indices.
 
@@ -221,6 +256,7 @@ class Trajectory(object):
     @property
     def topology(self):
         """
+
         Get the `Topology` instance.
 
         Returns
@@ -369,6 +405,10 @@ class Trajectory(object):
         # xyz will be a view if index is an int, otherwise it will be a copy...
         # TODO how will this affect behavior?
         return self._xyz[:, index, :]
+
+    # Get column
+    def get_column(self, column):
+        return self._data[column]
 
     # Get structure
     def get_structure(self, index):

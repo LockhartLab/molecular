@@ -10,10 +10,17 @@ author: C. Lockhart
 
 """
 
+
 # noinspection PyProtectedMember
 from molecular.transform.transform import _fit
+
+import logging
 from itertools import product
 import numpy as np
+
+
+# Get the molecular.transform logger
+logger = logging.getLogger('molecular.analysis')
 
 
 # Compute the RMSD between 2 Trajectories
@@ -45,12 +52,16 @@ def rmsd(a, b=None, paired=False, fit=True):
     http://manual.gromacs.org/documentation/current/onlinehelp/gmx-rms.html
     """
 
-    # If b is None, then select a
+    # If `b` is None, then select `a`. Also, make sure we're not paired.
     if b is None:
         b = a
+        if paired:
+            logger.warning('setting paired=False because Trajectory b was not specified')
+        paired = False
 
     # Number of atoms between a and b must be identical
-    if a.n_atoms != b.n_atoms:
+    n_atoms = a.n_atoms
+    if n_atoms != b.n_atoms:
         raise AttributeError('a and b must have same number of atoms')
 
     # Get coordinates
@@ -58,20 +69,18 @@ def rmsd(a, b=None, paired=False, fit=True):
     b_xyz = b.xyz
 
     # Assign indices of pairs from a and b
+    a_index = a.structure_ids
+    b_index = b.structure_ids
     if paired:
         if len(a) != len(b):
             raise AttributeError('cannot compute paired RMSD because a and b have different number of structures')
-        # iterable = zip(range(a.n_structures), range(b.n_structures))
-        a_index = range(a.n_structures)
-        b_index = range(b.n_structures)
 
     else:
-        # FIXME the problem with this that it's memory-intensive to replicate ...
+        # FIXME the problem with this that it's memory-intensive; could move to iterable, but then we'd have to loop
         # iterable = product(range(a.n_structures), range(b.n_structures))
-        ab_product = np.array(list(product(range(a.n_structures), range(b.n_structures))))
-        a_index, b_index = ab_product[:, 0], ab_product[:, 1]
+        a_index, b_index = np.transpose(list(product(a_index, b_index)))
 
-    # Expand a_xyz and b_xyz so they have the same dimensions and are "paired"
+    # Expand a_xyz and b_xyz so they have the same dimensions and become "paired"
     a_xyz = a_xyz[a_index, :, :]
     b_xyz = b_xyz[b_index, :, :]
 
@@ -83,7 +92,7 @@ def rmsd(a, b=None, paired=False, fit=True):
     # diff = a_xyz[a_index, :, :] - b_xyz[b_index, :, :]
 
     # Actually Compute RMSD
-    result = np.sqrt(np.sum(np.square(a_xyz - b_xyz), axis=(1, 2)) / a.n_atoms)
+    result = np.sqrt(np.sum(np.square(a_xyz - b_xyz), axis=(1, 2)) / n_atoms)
     # result = np.zeros((a.n_structures, b.n_structures))
     # for i, j in iterable:
     #     result[i, j] = np.sqrt(np.mean((a_xyz[i, :, :] - b_xyz[j, :, :]) ** 2))
@@ -94,7 +103,8 @@ def rmsd(a, b=None, paired=False, fit=True):
     # cols, col_pos = np.unique(b_index, return_inverse=True)
     # pivot_table = np.zeros((len(rows), len(cols)))
     # pivot_table[row_pos, col_pos] = result
-    result = result.reshape(a.n_structures, b.n_structures)
+    if not paired:
+        result = result.reshape(a.n_structures, b.n_structures)
 
     # Return
     return result
@@ -133,3 +143,14 @@ def rmsd(a, b=None, paired=False, fit=True):
 #         result[i, j] = np.sqrt(np.mean((a_xyz[i, :, :] - b_xyz[j, :, :]) ** 2))
 #
 #     return result
+
+
+if __name__ == '__main__':
+    import molecular as mol
+
+    trj = mol.read_pdb('../tests/samples/trajectory.pdb')
+    print(rmsd(trj, trj[0], paired=False, fit=False).ravel())
+
+    import mdtraj
+    x = mdtraj.load('../tests/samples/trajectory.pdb')
+    print(mdtraj.rmsd(x, x[0]))
