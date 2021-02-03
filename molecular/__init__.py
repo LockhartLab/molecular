@@ -11,8 +11,8 @@ from .core import *
 from . import io
 from .io import *
 
-from . import simulation
-from .simulation import *
+from . import simulations
+from .simulations import *
 
 from . import statistics
 from .statistics import *
@@ -48,7 +48,7 @@ __all__.extend(core.__all__)
 # __all__.extend(external.__all__)
 # __all__.extend(geometry.__all__)
 __all__.extend(io.__all__)
-__all__.extend(simulation.__all__)
+__all__.extend(simulations.__all__)
 __all__.extend(statistics.__all__)
 __all__.extend(transform.__all__)
 # __all__.extend(viz.__all__)
