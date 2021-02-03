@@ -17,16 +17,15 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
 
         * "parabolic" (Note if `n_replicas` is even, `temp_max` won't directly be sampled).
 
-        .. math :: T_i = T_1 - \frac{T_r-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)
+        .. math :: T_i = T_1 - \frac{T_R-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)
 
     Parameters
     ----------
-    n_temps
     temp_min : float
         Lowest temperature
     temp_max : float
         Highest temperature
-    n_temp : int
+    n_temps : int
         Number of temperatures
     mode : str
         Mode to produce schedule. Valid options include "geometric", "linear", "parabolic". (Default: "geometric")
