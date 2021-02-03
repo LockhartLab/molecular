@@ -17,7 +17,7 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
 
         * "parabolic" (Note if `n_replicas` is even, `temp_max` won't directly be sampled).
 
-        .. math :: T_i = T_1 - \frac{T_r-T_1}{\frac{R-1}{2}^2} (i-1) (i-R)
+        .. math :: T_i = T_1 - \frac{T_r-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)
 
     Parameters
     ----------
