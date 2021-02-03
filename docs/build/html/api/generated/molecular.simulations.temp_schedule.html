@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>molecular.simulations.temp_schedule &#8212; molecular 0.1.dev48 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev48 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">molecular.simulations.temp_schedule</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="molecular-simulations-temp-schedule">
+<h1>molecular.simulations.temp_schedule<a class="headerlink" href="#molecular-simulations-temp-schedule" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="molecular.simulations.temp_schedule">
+<code class="sig-prename descclassname">molecular.simulations.</code><code class="sig-name descname">temp_schedule</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">temp_min</span><span class="o">=</span><span class="default_value">300</span></em>, <em class="sig-param"><span class="n">temp_max</span><span class="o">=</span><span class="default_value">440</span></em>, <em class="sig-param"><span class="n">n_temps</span><span class="o">=</span><span class="default_value">40</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'geometric'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#temp_schedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.simulations.temp_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Create a temperature schedule that could be used, for instance, with replica exchange.</p>
+<dl>
+<dt>There are several choices for <cite>mode</cite>:</dt><dd><ul class="simple">
+<li><p>“geometric”</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[T_i = T_1\]</div>
+</dd>
+</dl>
+</div></blockquote>
+<p>rac{T_R}{T_1}^{
+rac{i-1}{R-1}}</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“linear”</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[T_i = T_1 + (i-1)\]</div>
+</div></blockquote>
+<p>rac{T_R-T_1}{R-1}</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“parabolic” (Note if <cite>n_replicas</cite> is even, <cite>temp_max</cite> won’t directly be sampled).</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[T_i = T_1 -\]</div>
+</div></blockquote>
+<p>rac{T_r-T_1}{
+rac{R-1}{2}^2} (i-1) (i-R)</p>
+<blockquote>
+<div><p>n_temps
+temp_min : float</p>
+<blockquote>
+<div><p>Lowest temperature</p>
+</div></blockquote>
+<dl class="simple">
+<dt>temp_max<span class="classifier">float</span></dt><dd><p>Highest temperature</p>
+</dd>
+<dt>n_temp<span class="classifier">int</span></dt><dd><p>Number of temperatures</p>
+</dd>
+<dt>mode<span class="classifier">str</span></dt><dd><p>Mode to produce schedule. Valid options include “geometric”, “linear”, “parabolic”. (Default: “geometric”)</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>Temperature schedule</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/api/generated/molecular.simulations.temp_schedule.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev48 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">molecular.simulations.temp_schedule</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Lockhart Lab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>
