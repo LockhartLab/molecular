@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.simulations.temp_schedule &#8212; molecular 0.1.dev51 documentation</title>
+    <title>molecular.simulations.temp_schedule &#8212; molecular 0.1.dev52 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../simulations.html" title="molecular.simulations"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev51 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev52 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../simulations.html" accesskey="U">molecular.simulations</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.temp_schedule</a></li> 
@@ -66,16 +66,15 @@
 <li><p>“parabolic” (Note if <cite>n_replicas</cite> is even, <cite>temp_max</cite> won’t directly be sampled).</p></li>
 </ul>
 <div class="math notranslate nohighlight">
-\[T_i = T_1 - \frac{T_r-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)\]</div>
+\[T_i = T_1 - \frac{T_R-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)\]</div>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n_temps</strong> – </p></li>
 <li><p><strong>temp_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Lowest temperature</p></li>
 <li><p><strong>temp_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Highest temperature</p></li>
-<li><p><strong>n_temp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of temperatures</p></li>
+<li><p><strong>n_temps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of temperatures</p></li>
 <li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode to produce schedule. Valid options include “geometric”, “linear”, “parabolic”. (Default: “geometric”)</p></li>
 </ul>
 </dd>
@@ -139,7 +138,7 @@
         <li class="right" >
           <a href="../simulations.html" title="molecular.simulations"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev51 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev52 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../simulations.html" >molecular.simulations</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.temp_schedule</a></li> 
