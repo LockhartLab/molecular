@@ -64,7 +64,7 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
        plt.plot(range(n_temps), parabolic, label='parabolic')
        plt.xlabel('index')
        plt.ylabel('temperature')
-       plt.legend()
+       plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
        plt.show()
 
     References
