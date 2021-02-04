@@ -38,8 +38,15 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
 
     References
     ----------
-    .. [#] Nymeyer, H., Gnanakaran, S., & García, A. E. (2004) Atomistic simulations of protein folding, using the replica
-     exchange algorithm. *Methods Enzymol.* **383**: 119-149.
+    .. [#] Nymeyer, H., Gnanakaran, S., & García, A. E. (2004) Atomistic simulations of protein folding, using the
+    replica exchange algorithm. *Methods Enzymol.* **383**: 119-149.
+
+    Examples
+    --------
+    .. code-block ::
+        >>> a = 5
+        >>> print(a)
+        5
     """
 
     mode = mode.lower()

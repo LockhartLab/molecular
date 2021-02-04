@@ -9,6 +9,7 @@ pandas>=1.0.1
 pyyaml>=5.3
 scipy>=1.4.1
 sphinx
+sphinx-copybutton
 statsmodels
 sympy>=1.6.2
 tqdm
