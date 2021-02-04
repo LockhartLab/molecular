@@ -13,6 +13,7 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -50,45 +51,45 @@
 
 <span class="sd">    There are several choices for `mode`. Note that :math:`T` refers to the temperature at :math:`i = 1 ... R`, where</span>
 <span class="sd">    :math:`T_1` is `temp_min` and :math:`T_R` is `temp_max`. In total, there are :math:`R` temperatures (=`n_temps`).</span>
-<span class="sd">        * &quot;geometric&quot; [#]_</span>
 
-<span class="sd">        .. math :: T_i = T_1 \left( \frac{T_R}{T_1} \right)^{\frac{i-1}{R-1}}</span>
+<span class="sd">    * &quot;geometric&quot; [#]_</span>
 
-<span class="sd">        * &quot;linear&quot;</span>
+<span class="sd">    .. math :: T_i = T_1 \left( \frac{T_R}{T_1} \right)^{\frac{i-1}{R-1}}</span>
 
-<span class="sd">        .. math :: T_i = T_1 + (i-1) \frac{T_R-T_1}{R-1}</span>
+<span class="sd">    * &quot;linear&quot;</span>
 
-<span class="sd">        * &quot;parabolic&quot; (Note if `n_temps` is even, `temp_max` won&#39;t directly be sampled).</span>
+<span class="sd">    .. math :: T_i = T_1 + (i-1) \frac{T_R-T_1}{R-1}</span>
 
-<span class="sd">        .. math :: T_i = T_1 - \frac{T_R-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)</span>
+<span class="sd">    * &quot;parabolic&quot; (Note if `n_temps` is even, `temp_max` won&#39;t directly be sampled).</span>
+
+<span class="sd">    .. math :: T_i = T_1 - \frac{T_R-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    temp_min : float</span>
-<span class="sd">        Lowest temperature</span>
+<span class="sd">       Lowest temperature</span>
 <span class="sd">    temp_max : float</span>
-<span class="sd">        Highest temperature</span>
+<span class="sd">       Highest temperature</span>
 <span class="sd">    n_temps : int</span>
-<span class="sd">        Number of temperatures</span>
+<span class="sd">       Number of temperatures</span>
 <span class="sd">    mode : str</span>
-<span class="sd">        Mode to produce schedule. Valid options include &quot;geometric&quot;, &quot;linear&quot;, &quot;parabolic&quot;. (Default: &quot;geometric&quot;)</span>
+<span class="sd">       Mode to produce schedule. Valid options include &quot;geometric&quot;, &quot;linear&quot;, &quot;parabolic&quot;. (Default: &quot;geometric&quot;)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    numpy.ndarray</span>
-<span class="sd">        Temperature schedule</span>
+<span class="sd">       Temperature schedule</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [#] Nymeyer, H., Gnanakaran, S., &amp; García, A. E. (2004) Atomistic simulations of protein folding, using the</span>
-<span class="sd">    replica exchange algorithm. *Methods Enzymol.* **383**: 119-149.</span>
+<span class="sd">       replica exchange algorithm. *Methods Enzymol.* **383**: 119-149.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    .. code-block ::</span>
-<span class="sd">        &gt;&gt;&gt; a = 5</span>
-<span class="sd">        &gt;&gt;&gt; print(a)</span>
-<span class="sd">        5</span>
+<span class="sd">    &gt;&gt;&gt; import molecular as mol</span>
+<span class="sd">    &gt;&gt;&gt; mol.temp_schedule(temp_min=300, temp_max=440, n_temps=5, mode=&#39;geometric&#39;)</span>
+<span class="sd">    [300.         330.14453312 363.31804249 399.82488504 440.        ]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -111,8 +112,8 @@
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="c1"># print(reptemp(temp_min=300, temp_max=440, n_replicas=40, mode=&#39;geometric&#39;))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">temp_schedule</span><span class="p">(</span><span class="n">temp_min</span><span class="o">=</span><span class="mi">310</span><span class="p">,</span> <span class="n">temp_max</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_temps</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;parabolic&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">temp_schedule</span><span class="p">(</span><span class="n">temp_min</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">temp_max</span><span class="o">=</span><span class="mi">440</span><span class="p">,</span> <span class="n">n_temps</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;geometric&#39;</span><span class="p">))</span>
+    <span class="c1"># print(temp_schedule(temp_min=310, temp_max=500, n_temps=5, mode=&#39;parabolic&#39;))</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -151,7 +152,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Lockhart Lab.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.1.
     </div>
   </body>
 </html>

@@ -8,45 +8,45 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
 
     There are several choices for `mode`. Note that :math:`T` refers to the temperature at :math:`i = 1 ... R`, where
     :math:`T_1` is `temp_min` and :math:`T_R` is `temp_max`. In total, there are :math:`R` temperatures (=`n_temps`).
-        * "geometric" [#]_
 
-        .. math :: T_i = T_1 \left( \frac{T_R}{T_1} \right)^{\frac{i-1}{R-1}}
+    * "geometric" [#]_
 
-        * "linear"
+    .. math :: T_i = T_1 \left( \frac{T_R}{T_1} \right)^{\frac{i-1}{R-1}}
 
-        .. math :: T_i = T_1 + (i-1) \frac{T_R-T_1}{R-1}
+    * "linear"
 
-        * "parabolic" (Note if `n_temps` is even, `temp_max` won't directly be sampled).
+    .. math :: T_i = T_1 + (i-1) \frac{T_R-T_1}{R-1}
 
-        .. math :: T_i = T_1 - \frac{T_R-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)
+    * "parabolic" (Note if `n_temps` is even, `temp_max` won't directly be sampled).
+
+    .. math :: T_i = T_1 - \frac{T_R-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)
 
     Parameters
     ----------
     temp_min : float
-        Lowest temperature
+       Lowest temperature
     temp_max : float
-        Highest temperature
+       Highest temperature
     n_temps : int
-        Number of temperatures
+       Number of temperatures
     mode : str
-        Mode to produce schedule. Valid options include "geometric", "linear", "parabolic". (Default: "geometric")
+       Mode to produce schedule. Valid options include "geometric", "linear", "parabolic". (Default: "geometric")
 
     Returns
     -------
     numpy.ndarray
-        Temperature schedule
+       Temperature schedule
 
     References
     ----------
     .. [#] Nymeyer, H., Gnanakaran, S., & García, A. E. (2004) Atomistic simulations of protein folding, using the
-    replica exchange algorithm. *Methods Enzymol.* **383**: 119-149.
+       replica exchange algorithm. *Methods Enzymol.* **383**: 119-149.
 
     Examples
     --------
-    .. code-block ::
-        >>> a = 5
-        >>> print(a)
-        5
+    >>> import molecular as mol
+    >>> mol.temp_schedule(temp_min=300, temp_max=440, n_temps=5, mode='geometric')
+    [300.         330.14453312 363.31804249 399.82488504 440.        ]
     """
 
     mode = mode.lower()
@@ -69,5 +69,5 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
 
 
 if __name__ == '__main__':
-    # print(reptemp(temp_min=300, temp_max=440, n_replicas=40, mode='geometric'))
-    print(temp_schedule(temp_min=310, temp_max=500, n_temps=5, mode='parabolic'))
+    print(temp_schedule(temp_min=300, temp_max=440, n_temps=5, mode='geometric'))
+    # print(temp_schedule(temp_min=310, temp_max=500, n_temps=5, mode='parabolic'))
