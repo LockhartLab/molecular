@@ -17,3 +17,4 @@ typelike>=0.0.29
 matplotlib>=3.1.3
 setuptools>=45.2.0
 privatize~=0.0.30
+uplot

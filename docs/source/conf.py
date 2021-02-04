@@ -89,3 +89,5 @@ html_theme = 'nature'
 # html_static_path = ['_static']
 
 copybutton_prompt_text = ">>> "
+
+plot_pre_code = "import uplot; uplot.set_mpl_theme()"
