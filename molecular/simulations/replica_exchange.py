@@ -14,11 +14,11 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
 
         * "linear"
 
-        .. math :: T_i = T_1 + (i-1) \left( \frac{T_R-T_1}{R-1} \right)
+        .. math :: T_i = T_1 + (i-1) \frac{T_R-T_1}{R-1}
 
         * "parabolic" (Note if `n_temps` is even, `temp_max` won't directly be sampled).
 
-        .. math :: T_i = T_1 - \left( \frac{T_R-T_1}{\left( \frac{R-1}{2} \right) ^2} \right) (i-1) (i-R)
+        .. math :: T_i = T_1 - \frac{T_R-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)
 
     Parameters
     ----------
@@ -38,8 +38,8 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
 
     References
     ----------
-    [1] Nymeyer, H., Gnanakaran, S., & Garcia, A. E. (2004) Atomistic simulations of protein folding, using the replica
-     exchange algorithm. **Meth. Enzymology** __383__, pp. 119-149.
+    [1] Nymeyer, H., Gnanakaran, S., & García, A. E. (2004) Atomistic simulations of protein folding, using the replica
+     exchange algorithm. *Methods Enzymol.* **383**: 119-149.
     """
 
     mode = mode.lower()
