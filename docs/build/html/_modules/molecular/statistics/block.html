@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>molecular.statistics.block &#8212; molecular 0.1.dev61 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev61 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">molecular.statistics.block</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for molecular.statistics.block</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">block.py</span>
+
+<span class="sd">author: C. Lockhart &lt;chris@lockhartlab.org&gt;</span>
+<span class="sd">language: Python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+
+
+<span class="k">class</span> <span class="nc">Block</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">n_blocks</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="c1"># Make sure data is DataFrame</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;data must be pandas.DataFrame&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Create a copy of the DataFrame</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Split into blocks</span>
+        <span class="k">if</span> <span class="s1">&#39;block&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;block cannot be in pandas.DataFrame&#39;</span><span class="p">)</span>
+        <span class="n">block_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_blocks</span>  <span class="c1"># should this be ceiled?</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;block&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">/</span> <span class="n">block_size</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># Make sure that we computed the right number of blocks</span>
+        <span class="k">if</span> <span class="n">n_blocks</span> <span class="o">!=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;block&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;computed wrong number of blocks&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Save data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
+
+    <span class="c1"># def __getattr__(self, item, *args, **kwargs):</span>
+    <span class="c1">#     result = getattr(self._data, item, None)</span>
+    <span class="c1">#     if result is not None:</span>
+    <span class="c1">#         if callable(result):</span>
+    <span class="c1">#             result = result(*args, **kwargs)</span>
+    <span class="c1">#         if result is not None:</span>
+    <span class="c1">#             return result</span>
+
+    <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;block&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">mean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;block&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">sem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Compute standard error around mean</span>
+        <span class="k">return</span> <span class="n">block_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+
+<span class="k">def</span> <span class="nf">block_average</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_blocks</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Block</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_blocks</span><span class="o">=</span><span class="n">n_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+
+<span class="c1"># Shortcut function to compute block error directly from a DataFrame</span>
+<div class="viewcode-block" id="block_error"><a class="viewcode-back" href="../../../api/generated/molecular.statistics.block_error.html#molecular.statistics.block_error">[docs]</a><span class="k">def</span> <span class="nf">block_error</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_blocks</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="c1"># If block is in the DataFrame, assume we&#39;re passed block averages</span>
+    <span class="k">if</span> <span class="s1">&#39;block&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;block&#39;</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;cannot parse DataFrame blocks&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Otherwise, produce the block averages</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">Block</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_blocks</span><span class="o">=</span><span class="n">n_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+    <span class="c1"># Return the block error</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span></div>
+
+
+<span class="c1"># noinspection PyShadowingNames</span>
+<span class="k">def</span> <span class="nf">sem_block</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">indices_or_sections</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the block error around the mean for a 1 or 2D array. If 2D array, the second dimension is taken as a</span>
+<span class="sd">    collection of independent measurements.</span>
+
+<span class="sd">    An array :math:`a` is divided into :math:`N` blocks such that :math:`a = \{a_1, a_2, ..., a_N\}`. For any subset</span>
+<span class="sd">    :math:`a_i`, we can compute the average over all samples :math:`j = 1 ... M_i`,</span>
+
+<span class="sd">    .. math:: \overline{a_i} = \frac{1}{N}\sum_{j=1}^{M_i}a_i(j)</span>
+
+<span class="sd">    This leaves us with a set of block estimators :math:`a_{block} = \{\overline{a_1}, \overline{a_2}, ...,</span>
+<span class="sd">    \overline{a_N}\}`. We can therefore compute the average of all blocks and the sample standard deviation,</span>
+
+<span class="sd">    .. math:: \overline{a_{block}} = \frac{1}{N}\sum_{i=1}^{N}\overline{a_i}</span>
+
+<span class="sd">    .. math:: s = \sqrt{\frac{1}{N-1}\sum_{i=1}^{N}(\overline{a_i}-\overline{a_{block}})^2}</span>
+
+<span class="sd">    Finally, we compute the standard error,</span>
+
+<span class="sd">    .. math:: Standard\ error = \frac{s}{\sqrt{N}}</span>
+
+<span class="sd">    Note that the sample standard deviation is computed instead of the population standard deviation, assuming that</span>
+<span class="sd">    :math:`N` is small.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : numpy.ndarray</span>
+<span class="sd">        One or two-dimensional array. First dimension is taken as independent samples. If there is a second dimension</span>
+<span class="sd">        present, these correspond to independent measurements.</span>
+<span class="sd">    indices_or_sections : int or list of lists</span>
+<span class="sd">        Number of blocks or samples indices to divide into blocks.</span>
+<span class="sd">    errors : str</span>
+<span class="sd">        Should we `warn`, `raise`, or do nothing if the number of samples is indivisible by the number of proposed</span>
+<span class="sd">        blocks?</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or numpy.ndarray</span>
+<span class="sd">        If `a` is one-dimensional, a float will be returned that is the standard error. If two-dimensional, the result</span>
+<span class="sd">        will be an array of standard errors, one for each independent measurement.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    [1] Flyvbjerg, H. &amp; Petersen, H. G. (1989) Error estimates on averages of correlated data. *J. Chem. Phys.* **91**,</span>
+<span class="sd">    461.</span>
+
+<span class="sd">    [2] Frankel and Smit</span>
+<span class="sd">      </span>
+<span class="sd">    [3] Grossfield, A., &amp; Zuckerman, D. M. (2009) Quantifying uncertainty and sampling quality in biomolecular</span>
+<span class="sd">    simulations. *Annu. Rep.Comput. Chem.* **5**, 23-48.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Number of dimensions must be 1 or 2</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;only 1 or 2 dimensional arrays allowed&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Warn, raise, or ignore if n_samples not evenly divisible by number of sections</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">indices_or_sections</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">indices_or_sections</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">n_samples</span><span class="si">}</span><span class="s1"> not divisible by </span><span class="si">{</span><span class="n">indices_or_sections</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">errors</span> <span class="o">==</span> <span class="s1">&#39;warn&#39;</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">errors</span> <span class="o">==</span> <span class="s1">&#39;raise&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">errors</span> <span class="o">!=</span> <span class="s1">&#39;ignore&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;errors=</span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s1"> not understood&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Split</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">indices_or_sections</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Block averages</span>
+    <span class="n">blocks_avg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">block</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">])</span>
+
+    <span class="c1"># Compute error around average</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">blocks_avg</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">blocks</span><span class="p">))</span>
+
+<span class="c1">#</span>
+<span class="c1"># if __name__ == &#39;__main__&#39;:</span>
+<span class="c1">#     # 1D, equal</span>
+<span class="c1">#     a = np.random.rand(10000)</span>
+<span class="c1">#     print(sem_block(a, 10))</span>
+<span class="c1">#</span>
+<span class="c1">#     # 1D, unequal</span>
+<span class="c1">#     # a = np.random.rand(10000)</span>
+<span class="c1">#     # print(block_error(a, 3, errors=&#39;warn&#39;))</span>
+<span class="c1">#</span>
+<span class="c1">#     # 2D, equal</span>
+<span class="c1">#     # a = np.random.rand(10000, 31)</span>
+<span class="c1">#     # print(block_error(a))</span>
+<span class="c1">#</span>
+<span class="c1">#     # 2D, unequal</span>
+<span class="c1">#     # a = np.random.rand(10000, 31)</span>
+<span class="c1">#     # print(block_error(a, 3))</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev61 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">molecular.statistics.block</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Lockhart Lab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>
