@@ -6,9 +6,9 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
     r"""
     Create a temperature schedule that could be used, for instance, with replica exchange.
 
-    There are several choices for `mode`. Note that :math:`T` refers to the temperature at :math:`i = {1...R}`, where
+    There are several choices for `mode`. Note that :math:`T` refers to the temperature at :math:`i = 1 ... R`, where
     :math:`T_1` is `temp_min` and :math:`T_R` is `temp_max`. In total, there are :math:`R` temperatures (=`n_temps`).
-        * "geometric"
+        * "geometric" [1]
 
         .. math :: T_i = T_1 \left( \frac{T_R}{T_1} \right)^{\frac{i-1}{R-1}}
 
@@ -35,6 +35,11 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
     -------
     numpy.ndarray
         Temperature schedule
+
+    References
+    ----------
+    [1] Nymeyer, H., Gnanakaran, S., & Garcia, A. E. (2004) Atomistic simulations of protein folding, using the replica
+     exchange algorithm. **Meth. Enzymology** __383__, pp. 119-149.
     """
 
     mode = mode.lower()
