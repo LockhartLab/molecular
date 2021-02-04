@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.simulations.temp_schedule &#8212; molecular 0.1.dev54 documentation</title>
+    <title>molecular.simulations.temp_schedule &#8212; molecular 0.1.dev55 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../simulations.html" title="molecular.simulations"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev54 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev55 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../simulations.html" accesskey="U">molecular.simulations</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.temp_schedule</a></li> 
@@ -51,11 +51,11 @@
 <dt id="molecular.simulations.temp_schedule">
 <code class="sig-prename descclassname">molecular.simulations.</code><code class="sig-name descname">temp_schedule</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">temp_min</span><span class="o">=</span><span class="default_value">300</span></em>, <em class="sig-param"><span class="n">temp_max</span><span class="o">=</span><span class="default_value">440</span></em>, <em class="sig-param"><span class="n">n_temps</span><span class="o">=</span><span class="default_value">40</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'geometric'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#temp_schedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.simulations.temp_schedule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a temperature schedule that could be used, for instance, with replica exchange.</p>
-<p>There are several choices for <cite>mode</cite>. Note that <span class="math notranslate nohighlight">\(T\)</span> refers to the temperature at <span class="math notranslate nohighlight">\(i = {1...R}\)</span>, where
+<p>There are several choices for <cite>mode</cite>. Note that <span class="math notranslate nohighlight">\(T\)</span> refers to the temperature at <span class="math notranslate nohighlight">\(i = 1 ... R\)</span>, where
 <span class="math notranslate nohighlight">\(T_1\)</span> is <cite>temp_min</cite> and <span class="math notranslate nohighlight">\(T_R\)</span> is <cite>temp_max</cite>. In total, there are <span class="math notranslate nohighlight">\(R\)</span> temperatures (=`n_temps`).</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>“geometric”</p></li>
+<li><p>“geometric” [1]</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[T_i = T_1 \left( \frac{T_R}{T_1} \right)^{\frac{i-1}{R-1}}\]</div>
@@ -84,6 +84,11 @@
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="simple">
+<dt>[1] Nymeyer, H., Gnanakaran, S., &amp; Garcia, A. E. (2004) Atomistic simulations of protein folding, using the replica</dt><dd><p>exchange algorithm. <strong>Meth. Enzymology</strong> __383__, pp. 119-149.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -139,7 +144,7 @@
         <li class="right" >
           <a href="../simulations.html" title="molecular.simulations"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev54 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev55 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../simulations.html" >molecular.simulations</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.temp_schedule</a></li> 
