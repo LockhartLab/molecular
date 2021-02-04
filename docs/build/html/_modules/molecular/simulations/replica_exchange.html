@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.simulations.replica_exchange &#8212; molecular 0.1.dev53 documentation</title>
+    <title>molecular.simulations.replica_exchange &#8212; molecular 0.1.dev54 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev53 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev54 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.replica_exchange</a></li> 
       </ul>
@@ -49,15 +49,15 @@
 <span class="sd">    :math:`T_1` is `temp_min` and :math:`T_R` is `temp_max`. In total, there are :math:`R` temperatures (=`n_temps`).</span>
 <span class="sd">        * &quot;geometric&quot;</span>
 
-<span class="sd">        .. math :: T_i = T_1 \frac{T_R}{T_1}^{\frac{i-1}{R-1}}</span>
+<span class="sd">        .. math :: T_i = T_1 \left( \frac{T_R}{T_1} \right)^{\frac{i-1}{R-1}}</span>
 
 <span class="sd">        * &quot;linear&quot;</span>
 
-<span class="sd">        .. math :: T_i = T_1 + (i-1) \frac{T_R-T_1}{R-1}</span>
+<span class="sd">        .. math :: T_i = T_1 + (i-1) \left( \frac{T_R-T_1}{R-1} \right)</span>
 
 <span class="sd">        * &quot;parabolic&quot; (Note if `n_temps` is even, `temp_max` won&#39;t directly be sampled).</span>
 
-<span class="sd">        .. math :: T_i = T_1 - \frac{T_R-T_1}{\left( \frac{R-1}{2} \right) ^2} (i-1) (i-R)</span>
+<span class="sd">        .. math :: T_i = T_1 - \left( \frac{T_R-T_1}{\left( \frac{R-1}{2} \right) ^2} \right) (i-1) (i-R)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -129,7 +129,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev53 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev54 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.replica_exchange</a></li> 
       </ul>
