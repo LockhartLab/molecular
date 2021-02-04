@@ -13,6 +13,7 @@
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
     <script src="../../../_static/clipboard.min.js"></script>
     <script src="../../../_static/copybutton.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -40,7 +41,14 @@
           <div class="body" role="main">
             
   <h1>Source code for molecular.simulations.replica_exchange</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">replica_exchange.py</span>
+
+<span class="sd">author: C. Lockhart &lt;chris@lockhartlab.org&gt;</span>
+<span class="sd">language: Python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
@@ -66,29 +74,46 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    temp_min : float</span>
-<span class="sd">       Lowest temperature</span>
+<span class="sd">        Lowest temperature</span>
 <span class="sd">    temp_max : float</span>
-<span class="sd">       Highest temperature</span>
+<span class="sd">        Highest temperature</span>
 <span class="sd">    n_temps : int</span>
-<span class="sd">       Number of temperatures</span>
+<span class="sd">        Number of temperatures</span>
 <span class="sd">    mode : str</span>
-<span class="sd">       Mode to produce schedule. Valid options include &quot;geometric&quot;, &quot;linear&quot;, &quot;parabolic&quot;. (Default: &quot;geometric&quot;)</span>
+<span class="sd">        Mode to produce schedule. Valid options include &quot;geometric&quot;, &quot;linear&quot;, &quot;parabolic&quot;. Any substring will match,</span>
+<span class="sd">        but the preference should be to use the full option label. (Default: &quot;geometric&quot;)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    numpy.ndarray</span>
-<span class="sd">       Temperature schedule</span>
+<span class="sd">        Temperature schedule</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+<span class="sd">       :include-source:</span>
+
+<span class="sd">       import matplotlib.pyplot as plt</span>
+<span class="sd">       import molecular as mol</span>
+
+<span class="sd">       n_temps = 10</span>
+<span class="sd">       geometric = mol.temp_schedule(300, 440, n_temps, &#39;geometric&#39;)</span>
+<span class="sd">       linear = mol.temp_schedule(300, 440, n_temps, &#39;linear&#39;)</span>
+<span class="sd">       parabolic = mol.temp_schedule(300, 440, n_temps, &#39;parabolic&#39;)</span>
+
+<span class="sd">       plt.figure()</span>
+<span class="sd">       plt.plot(range(n_temps), geometric, label=&#39;geometric&#39;)</span>
+<span class="sd">       plt.plot(range(n_temps), linear, label=&#39;linear&#39;)</span>
+<span class="sd">       plt.plot(range(n_temps), parabolic, label=&#39;parabolic&#39;)</span>
+<span class="sd">       plt.xlabel(&#39;index&#39;)</span>
+<span class="sd">       plt.ylabel(&#39;temperature&#39;)</span>
+<span class="sd">       plt.legend()</span>
+<span class="sd">       plt.show()</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [#] Nymeyer, H., Gnanakaran, S., &amp; García, A. E. (2004) Atomistic simulations of protein folding, using the</span>
 <span class="sd">       replica exchange algorithm. *Methods Enzymol.* **383**: 119-149.</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; import molecular as mol</span>
-<span class="sd">    &gt;&gt;&gt; mol.temp_schedule(temp_min=300, temp_max=440, n_temps=5, mode=&#39;geometric&#39;)</span>
-<span class="sd">    [300.         330.14453312 363.31804249 399.82488504 440.        ]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -151,7 +176,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Lockhart Lab.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.1.
     </div>
   </body>
 </html>

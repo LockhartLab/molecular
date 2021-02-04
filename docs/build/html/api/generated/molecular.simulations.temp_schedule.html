@@ -13,6 +13,7 @@
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -77,7 +78,8 @@
 <li><p><strong>temp_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Lowest temperature</p></li>
 <li><p><strong>temp_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Highest temperature</p></li>
 <li><p><strong>n_temps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of temperatures</p></li>
-<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode to produce schedule. Valid options include “geometric”, “linear”, “parabolic”. (Default: “geometric”)</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Mode to produce schedule. Valid options include “geometric”, “linear”, “parabolic”. Any substring will match,
+but the preference should be to use the full option label. (Default: “geometric”)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -87,6 +89,29 @@
 <dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">molecular</span> <span class="k">as</span> <span class="nn">mol</span>
+
+<span class="n">n_temps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">geometric</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">temp_schedule</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="n">n_temps</span><span class="p">,</span> <span class="s1">&#39;geometric&#39;</span><span class="p">)</span>
+<span class="n">linear</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">temp_schedule</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="n">n_temps</span><span class="p">,</span> <span class="s1">&#39;linear&#39;</span><span class="p">)</span>
+<span class="n">parabolic</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">temp_schedule</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">440</span><span class="p">,</span> <span class="n">n_temps</span><span class="p">,</span> <span class="s1">&#39;parabolic&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_temps</span><span class="p">),</span> <span class="n">geometric</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;geometric&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_temps</span><span class="p">),</span> <span class="n">linear</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_temps</span><span class="p">),</span> <span class="n">parabolic</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;parabolic&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;temperature&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../../api/generated/molecular-simulations-temp_schedule-1.py">Source code</a>, <a class="reference external" href="../../api/generated/molecular-simulations-temp_schedule-1.png">png</a>, <a class="reference external" href="../../api/generated/molecular-simulations-temp_schedule-1.hires.png">hires.png</a>, <a class="reference external" href="../../api/generated/molecular-simulations-temp_schedule-1.pdf">pdf</a>)</p>
+<div class="figure align-default">
+<img alt="../../_images/molecular-simulations-temp_schedule-1.png" src="../../_images/molecular-simulations-temp_schedule-1.png" />
+</div>
 <p class="rubric">References</p>
 <dl class="footnote brackets">
 <dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
@@ -94,12 +119,6 @@
 replica exchange algorithm. <em>Methods Enzymol.</em> <strong>383</strong>: 119-149.</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">molecular</span> <span class="k">as</span> <span class="nn">mol</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span><span class="o">.</span><span class="n">temp_schedule</span><span class="p">(</span><span class="n">temp_min</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">temp_max</span><span class="o">=</span><span class="mi">440</span><span class="p">,</span> <span class="n">n_temps</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;geometric&#39;</span><span class="p">)</span>
-<span class="go">[300.         330.14453312 363.31804249 399.82488504 440.        ]</span>
-</pre></div>
-</div>
 </dd></dl>
 
 </div>
@@ -161,7 +180,7 @@ replica exchange algorithm. <em>Methods Enzymol.</em> <strong>383</strong>: 119-
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Lockhart Lab.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.1.
     </div>
   </body>
 </html>
