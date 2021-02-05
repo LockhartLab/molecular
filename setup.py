@@ -5,6 +5,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 """
 
 from setuptools import setup
+from numpy.distutils.command.sdist import sdist
 
 # Read version
 with open('version.yml', 'r') as f:
@@ -62,7 +63,6 @@ setup(
 )
 
 from numpy.distutils.core import Extension, setup
-from numpy.distutils.command.sdist import sdist
 
 setup(
     ext_modules=[
