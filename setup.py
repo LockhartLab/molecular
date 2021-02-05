@@ -6,10 +6,14 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 # from setuptools import setup as _setup
 from setuptools import dist
-from numpy.distutils.core import Extension, setup
+from numpy.distutils.core import Extension, numpy_cmdclass, sdist, setup
 
 # Make sure numpy is installed
 dist.Distribution().fetch_build_egg('numpy')
+
+# Fix cmdclass
+cmdclass = numpy_cmdclass
+cmdclass['sdist'] = sdist
 
 # Read version
 with open('version.yml', 'r') as f:
@@ -68,6 +72,7 @@ setup(
     # ],
     # include_package_data=True,
     # zip_safe=True,
+    cmdclass=cmdclass,
     ext_modules=[
         Extension('molecular.io.fortran.read_dcd', ['molecular/io/src/read_dcd.f90'])
     ]
