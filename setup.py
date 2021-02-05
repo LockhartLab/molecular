@@ -4,8 +4,8 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-from setuptools import setup
 from numpy.distutils.command.sdist import sdist
+from setuptools import setup
 
 cmdclass = {'sdist': sdist}
 
