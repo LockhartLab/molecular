@@ -7,6 +7,8 @@ author: C. Lockhart <chris@lockhartlab.org>
 from setuptools import setup
 from numpy.distutils.command.sdist import sdist
 
+cmdclass = {'sdist': sdist}
+
 # Read version
 with open('version.yml', 'r') as f:
     data = f.read().splitlines()
