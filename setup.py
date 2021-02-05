@@ -4,11 +4,8 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-from numpy.distutils.command.sdist import sdist
+from setuptools import setup as _setup
 from numpy.distutils.core import Extension, setup
-# import setuptools
-
-# cmdclass = {'sdist': sdist}
 
 # Read version
 with open('version.yml', 'r') as f:
@@ -29,7 +26,10 @@ with open('requirements.txt', 'r') as stream:
 with open('README.rst', 'r') as stream:
     long_description = stream.read()
 
-# Setup
+# First make sure numpy is installed
+_setup(install_requires=['numpy'])
+
+# Then, install molecular
 setup(
     name='molecular',
     version=version,
@@ -53,15 +53,17 @@ setup(
         'molecular.transform',
         'molecular.viz'
     ],
-    install_requires=[
-        'glovebox',
-        'numpy',
-        'pandas',
-        'privatize',
-        'typelike', 'hypothesis', 'numba'
-    ],
-    include_package_data=True,
-    zip_safe=True,
+    # install_requires=[
+    #     'glovebox',
+    #     'numpy',
+    #     'pandas',
+    #     'privatize',
+    #     'typelike',
+    #     'hypothesis',
+    #     'numba'
+    # ],
+    # include_package_data=True,
+    # zip_safe=True,
     ext_modules=[
         Extension('molecular.io.fortran.read_dcd', ['molecular/io/src/read_dcd.f90'])
     ]
