@@ -6,7 +6,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from numpy.distutils.command.sdist import sdist
 from numpy.distutils.core import Extension, setup
-import setuptools
+# import setuptools
 
 # cmdclass = {'sdist': sdist}
 
