@@ -5,7 +5,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 """
 
 from numpy.distutils.command.sdist import sdist
-from setuptools import setup
+from numpy.distutils.core import Extension, setup
 
 cmdclass = {'sdist': sdist}
 
@@ -62,11 +62,6 @@ setup(
     ],
     include_package_data=True,
     zip_safe=True,
-)
-
-from numpy.distutils.core import Extension, setup
-
-setup(
     ext_modules=[
         Extension('molecular.io.fortran.read_dcd', ['molecular/io/src/read_dcd.f90'])
     ]
