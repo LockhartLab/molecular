@@ -4,8 +4,12 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-from setuptools import setup as _setup
+# from setuptools import setup as _setup
+from setuptools import dist
 from numpy.distutils.core import Extension, setup
+
+# Make sure numpy is installed
+dist.Distribution().fetch_build_egg('numpy')
 
 # Read version
 with open('version.yml', 'r') as f:
@@ -27,7 +31,7 @@ with open('README.rst', 'r') as stream:
     long_description = stream.read()
 
 # First make sure numpy is installed
-_setup(install_requires=['numpy'])
+# _setup(install_requires=['numpy'])
 
 # Then, install molecular
 setup(
