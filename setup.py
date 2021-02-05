@@ -25,7 +25,7 @@ with open('requirements.txt', 'r') as stream:
     requirements = stream.read().splitlines()
 
 # Long description
-with open('README.md', 'r') as stream:
+with open('README.rst', 'r') as stream:
     long_description = stream.read()
 
 # Setup
@@ -36,7 +36,6 @@ setup(
     author_email='chris@lockhartlab.org',
     description='A toolkit for molecular dynamics simulations',
     long_description=long_description,
-    long_description_content_type='text/markdown',
     url="https://www.lockhartlab.org",
     packages=[
         'molecular',
