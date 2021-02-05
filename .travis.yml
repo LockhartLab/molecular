@@ -47,7 +47,10 @@ jobs:
             secure: "H1izncpSp+yWMAwKYiEZAQYWXMO1ilTFjhxb1N9i0MYWIJb7TquuelUlVDwff1B+7BeGb3wxX5gZTwjGQn8R5hJLl7pRsW7d3w1Gsz/kmowv6LTCvU39VFsyKq5GNtia4CqYSDt1GwYaaa7bxrVpW2JaQN4zH2fjSrYHkcPSKdKKFFbOjCyaqe/PTAAlP2umJdTdB74xxPj/ZoYQ3xCggQI1In4vTBMeKy6lI+PAckgGFZVoZQ3hLo2+JNxG6hLqLxym7pevWlCl4wSWNN6mFUehWzMUHOx2bxdG0/nO+udX04pQD+vOWfcKn69dgXFvCLsadaG6lGm8dffp+MEl/fkBCpVO31ADWHE0VNEplq4Ws0g+g3Ack9ITlC/GY12Fhm8SIeQOBgpr8UMqY3+0O5VU1PcTbzRQh9E4lTaozqjsnHrr+I6OlLNl7K5thgEcMbdWrEFUAynIMC988216bjQiwL9xlvCohBAqZypxTDYMvU6Lo94fFb/ffaUuiQh9Qc/Li4CdaBFS+cpCAapsPoWs4loBs3fcLeqfhGYfvQ6IKabStkb9QjM2aWZSeOgx/9FFYDsg7T9gA/XxQbjFQDoY0uEIMLmK6TrE5iPk741h12d83DBG1gLbuevnuySKzuPpTqazivSaPjij2AHnFjtYtV4ackUbpjePFAwLcsQ="
           twine_check: true
           skip_cleanup: true
-#          on:
+          on:
+            branches:
+              only:
+                - main
 #            tags: true
 
 notifications:
