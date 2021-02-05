@@ -48,9 +48,7 @@ jobs:
           twine_check: true
           skip_cleanup: true
           on:
-            branches:
-              only:
-                - main
+            branch: main
 #            tags: true
 
 notifications:
