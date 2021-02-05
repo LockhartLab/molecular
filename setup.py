@@ -5,9 +5,10 @@ author: C. Lockhart <chris@lockhartlab.org>
 """
 
 from numpy.distutils.command.sdist import sdist
-from numpy.distutils.core import Extension, setup
+from setuptools import setup
 
-cmdclass = {'sdist': sdist}
+
+# cmdclass = {'sdist': sdist}
 
 # Read version
 with open('version.yml', 'r') as f:
@@ -57,10 +58,18 @@ setup(
         'numpy',
         'pandas',
         'privatize',
-        'typelike', 'hypothesis', 'numba'
+        'typelike',
+        'hypothesis',
+        'numba'
     ],
     include_package_data=True,
     zip_safe=True,
+    cmdclass={'sdist': sdist}
+)
+
+from numpy.distutils.core import Extension, setup
+
+setup(
     ext_modules=[
         Extension('molecular.io.fortran.read_dcd', ['molecular/io/src/read_dcd.f90'])
     ]
