@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read &#8212; molecular 0.1.dev64 documentation</title>
+    <title>molecular.io.read &#8212; molecular 0.1.dev65 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev64 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev65 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
@@ -58,7 +58,7 @@
 
 <span class="c1"># Read PDB</span>
 <span class="c1"># TODO currently the only backend will by pandas; in future, expand to Cython or C or Fortran backend</span>
-<div class="viewcode-block" id="read_pdb"><a class="viewcode-back" href="../../../api/generated/molecular.io.read_pdb.html#molecular.io.read_pdb">[docs]</a><span class="k">def</span> <span class="nf">read_pdb</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="read_pdb"><a class="viewcode-back" href="../../../api/generated/molecular.io.read_pdb.html#molecular.io.read_pdb">[docs]</a><span class="k">def</span> <span class="nf">read_pdb</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read PDB file and return Trajectory</span>
 
@@ -66,10 +66,10 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    filename : str</span>
+<span class="sd">    fname : str</span>
 <span class="sd">        Name of PDB file to be read</span>
 <span class="sd">    backend : str</span>
-<span class="sd">        (Default: &#39;pandas&#39;).</span>
+<span class="sd">        (Default: &#39;pandas&#39;)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -82,7 +82,7 @@
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;only python backend presently supported&#39;</span><span class="p">)</span>
 
     <span class="c1"># Open file, read in all records</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
         <span class="n">records</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="c1"># records = _atom_reader(buffer)</span>
 
@@ -236,28 +236,29 @@
 <span class="c1">#     return result</span>
 
 <span class="c1"># Read DCD</span>
-<div class="viewcode-block" id="read_dcd"><a class="viewcode-back" href="../../../api/generated/molecular.io.read_dcd.html#molecular.io.read_dcd">[docs]</a><span class="k">def</span> <span class="nf">read_dcd</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="c1"># FIXME this function is so slow</span>
+<div class="viewcode-block" id="read_dcd"><a class="viewcode-back" href="../../../api/generated/molecular.io.read_dcd.html#molecular.io.read_dcd">[docs]</a><span class="k">def</span> <span class="nf">read_dcd</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Read in DCD file with `filename`. This function is partially based off James Phillips&#39; code MDTools that is no </span>
+<span class="sd">    Read in DCD file with `fname`. This function is partially based off James Phillips&#39; code MDTools that is no</span>
 <span class="sd">    longer in development. See http://www.ks.uiuc.edu/Development/MDTools/Python/</span>
 
 <span class="sd">    https://www.ks.uiuc.edu/Research/namd/wiki/index.cgi?ReadingDCDinFortran</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    filename : str</span>
+<span class="sd">    fname : str</span>
 <span class="sd">        Name of DCD file.</span>
-<span class="sd">    topology : molecular.Topology</span>
+<span class="sd">    topology : Topology</span>
 <span class="sd">        (Optional) Topology file to load for coordinates.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    molecular.Trajectory</span>
+<span class="sd">    Trajectory</span>
 <span class="sd">        Instance of Trajectory object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Open binary DCD file for reading</span>
-    <span class="n">stream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+    <span class="n">stream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
 
     <span class="c1"># Read first part of header and choose endianness</span>
     <span class="c1"># File is Fortran unformatted, which tells us the number of bytes</span>
@@ -268,7 +269,7 @@
     <span class="k">if</span> <span class="n">n_byte</span> <span class="o">!=</span> <span class="mi">84</span> <span class="ow">or</span> <span class="n">title</span> <span class="o">!=</span> <span class="s1">&#39;CORD&#39;</span><span class="p">:</span>
         <span class="n">endian</span> <span class="o">=</span> <span class="s1">&#39;&lt;&#39;</span>
         <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">stream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+        <span class="n">stream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
         <span class="n">n_byte</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">title</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="mi">4</span><span class="p">,),</span> <span class="n">endian</span> <span class="o">+</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">tostring</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ASCII&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">n_byte</span> <span class="o">!=</span> <span class="mi">84</span> <span class="ow">or</span> <span class="n">title</span> <span class="o">!=</span> <span class="s1">&#39;CORD&#39;</span><span class="p">:</span>
@@ -366,7 +367,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev64 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev65 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
