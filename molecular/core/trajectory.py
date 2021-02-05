@@ -119,7 +119,8 @@ class Trajectory(object):
             Array of atom IDs.
         """
 
-        return self._data.index.unique('atom_id').to_numpy()
+        # noinspection PyUnresolvedReferences
+        return self._data.index.levels[1]
 
     # Get coordinates
     @property
@@ -193,7 +194,8 @@ class Trajectory(object):
             Number of atoms
         """
 
-        return len(self.atom_ids)
+        # noinspection PyUnresolvedReferences
+        return self._data.index.levshape[1]
 
     # Number of dimensions
     @property
@@ -207,7 +209,7 @@ class Trajectory(object):
             Number of dimensions
         """
 
-        return 3
+        return self._data.shape[1]
 
     # Number of structures
     @property
@@ -222,7 +224,8 @@ class Trajectory(object):
             Number of structures
         """
 
-        return len(self.structure_ids)
+        # noinspection PyUnresolvedReferences
+        return self._data.index.levshape[0]
 
     # Shape
     @property
@@ -250,7 +253,8 @@ class Trajectory(object):
             Structure indices.
         """
 
-        return self._data.index.unique('structure_id').to_numpy()
+        # noinspection PyUnresolvedReferences
+        return self._data.index.levels[0]
 
     # Get topology
     @property

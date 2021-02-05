@@ -16,7 +16,7 @@ from typelike import ArrayLike
 
 # Read PDB
 # TODO currently the only backend will by pandas; in future, expand to Cython or C or Fortran backend
-def read_pdb(filename, backend='python'):
+def read_pdb(fname, backend='python'):
     """
     Read PDB file and return Trajectory
 
@@ -24,10 +24,10 @@ def read_pdb(filename, backend='python'):
 
     Parameters
     ----------
-    filename : str
+    fname : str
         Name of PDB file to be read
     backend : str
-        (Default: 'pandas').
+        (Default: 'pandas')
 
     Returns
     -------
@@ -40,7 +40,7 @@ def read_pdb(filename, backend='python'):
         raise AttributeError('only python backend presently supported')
 
     # Open file, read in all records
-    with open(filename, 'r') as stream:
+    with open(fname, 'r') as stream:
         records = stream.read()
         # records = _atom_reader(buffer)
 
@@ -194,28 +194,29 @@ def _read_pdb(records):
 #     return result
 
 # Read DCD
-def read_dcd(filename, topology=None):
+# FIXME this function is so slow
+def read_dcd(fname, topology=None):
     """
-    Read in DCD file with `filename`. This function is partially based off James Phillips' code MDTools that is no 
+    Read in DCD file with `fname`. This function is partially based off James Phillips' code MDTools that is no
     longer in development. See http://www.ks.uiuc.edu/Development/MDTools/Python/
 
     https://www.ks.uiuc.edu/Research/namd/wiki/index.cgi?ReadingDCDinFortran
     
     Parameters
     ----------
-    filename : str
+    fname : str
         Name of DCD file.
-    topology : molecular.Topology
+    topology : Topology
         (Optional) Topology file to load for coordinates.
 
     Returns
     -------
-    molecular.Trajectory
+    Trajectory
         Instance of Trajectory object.
     """
 
     # Open binary DCD file for reading
-    stream = open(filename, 'rb')
+    stream = open(fname, 'rb')
 
     # Read first part of header and choose endianness
     # File is Fortran unformatted, which tells us the number of bytes
@@ -226,7 +227,7 @@ def read_dcd(filename, topology=None):
     if n_byte != 84 or title != 'CORD':
         endian = '<'
         stream.close()
-        stream = open(filename, 'rb')
+        stream = open(fname, 'rb')
         n_byte = np.ndarray((1,), endian + 'i', stream.read(4))[0]
         title = np.ndarray((4,), endian + 'B', stream.read(4)).tostring().decode('ASCII')
         if n_byte != 84 or title != 'CORD':
