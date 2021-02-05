@@ -9,6 +9,10 @@ branches:
 jobs:
   include:
     - if: commit_message !~ /\[deploy\]/
+      # install dependencies
+      install:
+        - skip
+
       # run all tests
       script:
         - cp -r molecular/tests/samples ./samples
