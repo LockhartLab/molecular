@@ -62,7 +62,7 @@ setup(
 )
 
 from numpy.distutils.core import Extension, setup
-from numpy.distutils.command import sdist
+from numpy.distutils.command.sdist import sdist
 
 setup(
     ext_modules=[
