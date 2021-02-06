@@ -22,7 +22,7 @@ jobs:
       # install dependencies
       install:
         - which gfortran
-        - python -m pip install --no-build-isolation -e .
+        - python -m pip install -e .
 
       # run all tests
       script:
