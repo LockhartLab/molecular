@@ -22,10 +22,11 @@ jobs:
       # generate pyproject.toml for dependencies
       before_install:
         - python _scripts/generate_pyproject_toml.py
+        - pip install -r requirements.txt
 
       # install the package and dependencies
-#      install:
-#        - python -m pip install -e .
+      install:
+        - python -m pip install -e .
 #        - pip install -r requirements_dev.txt
 
       # make sure all development requirements are loaded

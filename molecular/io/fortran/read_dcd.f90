@@ -26,7 +26,7 @@ subroutine read_dcd(fname, box, x, y, z)
   open(24, file=trim(fname), status='old', form='unformatted')
   read(24) dcdhdr, nstr, dumi(1:8), dumr, dumi(1:9)
   read(24) ntitle, title(1:ntitle)
-  if(ntitle /= 2) then
+  if (ntitle /= 2) then
    print*, 'Error: ntitle /= 2.'
    stop
   end if
@@ -44,14 +44,14 @@ subroutine read_dcd(fname, box, x, y, z)
 
   ! header
   read(24) dcdhdr, nstr0, dumi(1:8), dumr, dumi(1:9)
-  if (nstr /= nstr0)
+  if (nstr /= nstr0) then
     print*, 'Error: nstr /= nstr0.'
     stop
   end if
   read(24) ntitle, title(1:ntitle)
   read(24) natom0
-  if (natom /= natom0)
-    print*, 'Error: natom /= natom0.
+  if (natom /= natom0) then
+    print*, 'Error: natom /= natom0.'
     stop
   end if
 
