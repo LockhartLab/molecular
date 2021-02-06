@@ -47,6 +47,7 @@ setup(
         'molecular.external',
         'molecular.geometry',
         'molecular.io',
+        'molecular.io.fortran',
         'molecular.misc',
         'molecular.simulations',
         'molecular.statistics',
@@ -66,6 +67,6 @@ setup(
     # include_package_data=True,
     # zip_safe=True,
     ext_modules=[
-        Extension('molecular.io.src.read_dcd', ['molecular/io/src/read_dcd.f90'])
+        Extension('molecular.io.fortran.read_dcd', ['molecular/io/src/read_dcd.f90'])
     ]
 )
