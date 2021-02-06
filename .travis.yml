@@ -19,13 +19,14 @@ branches:
 jobs:
   include:
     - if: commit_message !~ /\[deploy\]/
+      # generate pyproject.toml for dependencies
       before_install:
         - python _scripts/generate_pyproject_toml.py
 
-      # install
+      # install the package and dependencies
       install:
-        - which gfortran
         - python -m pip install -e .
+        - pip install -r requirements_dev.txt
 
       # run all tests
       script:
@@ -37,6 +38,7 @@ jobs:
 
       # after a successful test, update to codecov
       after_success:
+        - pip install codecov
         - bash <(curl -s https://codecov.io/bash)
         - |
           version=$(python _scripts/increment_version.py)
