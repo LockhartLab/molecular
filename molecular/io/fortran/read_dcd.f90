@@ -1,13 +1,18 @@
 
-subroutine read_dcd(fname, box, x, y, z)
+subroutine read_dcd(fname, nstr, natom, box, x, y, z)
   implicit none
 
   ! input variables
   character(len=256), intent(in) :: fname
 
   ! output variables
-  real(kind=8), dimension(:, :), allocatable, intent(out) :: box
-  real, dimension(:, :), allocatable, intent(out) :: x, y, z
+  real(kind=8), dimension(nstr, 3), intent(out) :: box
+  real, dimension(nstr, natom), intent(out) :: x, y, z
+
+  !f2py box intent(out)
+  !f2py x intent(out)
+  !f2py y intent(out)
+  !f2py z intent(out)
 
   ! temporary variables
   character(len=80), dimension(1:2) :: title
@@ -15,24 +20,7 @@ subroutine read_dcd(fname, box, x, y, z)
   integer, dimension(1:9) :: dumi
   real :: dumr
   real(kind=8) :: dumr8
-  integer :: nstr, nstr0, ntitle, natom, natom0, i
-
-  ! open dcd file to get nstr and natom
-  open(24, file=trim(fname), status='old', form='unformatted')
-  read(24) dcdhdr, nstr, dumi(1:8), dumr, dumi(1:9)
-  read(24) ntitle, title(1:ntitle)
-  if (ntitle /= 2) then
-   print*, 'Error: ntitle /= 2.'
-   stop
-  end if
-  read(24) natom
-  close(24)
-
-  ! allocate output variables
-  allocate(box(1:nstr, 1:3))
-  allocate(x(1:nstr, 1:natom))
-  allocate(y(1:nstr, 1:natom))
-  allocate(z(1:nstr, 1:natom))
+  integer :: nstr0, ntitle, natom0, i
 
   ! open dcd file
   open(24, file=trim(fname), status='old', form='unformatted')
@@ -44,6 +32,10 @@ subroutine read_dcd(fname, box, x, y, z)
     stop
   end if
   read(24) ntitle, title(1:ntitle)
+  if (ntitle /= 2) then
+   print*, 'Error: ntitle /= 2.'
+   stop
+  end if
   read(24) natom0
   if (natom /= natom0) then
     print*, 'Error: natom /= natom0.'
