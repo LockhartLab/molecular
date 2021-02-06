@@ -8,4 +8,5 @@ with open('pyproject.toml', 'w') as buffer:
     buffer.write('requires = [\n')
     for line in data:
         buffer.write(f'    \'{line.strip()}\',\n')
-    buffer.write(']')
+    buffer.write(']\n')
+    buffer.write('build-backend = \'setuptools.build_meta\'\n')
