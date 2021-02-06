@@ -11,7 +11,7 @@ jobs:
     - if: commit_message !~ /\[deploy\]/
       # install dependencies
       install:
-        - skip
+        - python install -e .
 
       # run all tests
       script:
