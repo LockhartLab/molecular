@@ -26,6 +26,7 @@ jobs:
 
       # run all tests
       script:
+        - pip install coverage
         - cp -r molecular/tests/samples ./samples
         - cp molecular/tests/test.py .
       #  - python -m coverage run test.py
