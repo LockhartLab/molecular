@@ -19,14 +19,16 @@ branches:
 jobs:
   include:
     - if: commit_message !~ /\[deploy\]/
-      # install dependencies
+      before_install:
+        - python _scripts/generate_pyproject_toml.py
+
+      # install
       install:
         - which gfortran
         - python -m pip install -e .
 
       # run all tests
       script:
-        - pip install coverage
         - cp -r molecular/tests/samples ./samples
         - cp molecular/tests/test.py .
       #  - python -m coverage run test.py
