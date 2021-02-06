@@ -54,16 +54,16 @@ setup(
         'molecular.transform',
         'molecular.viz'
     ],
-    install_requires=[
-    #     'glovebox',
-    #     'numpy',
-    #     'pandas',
-    #     'privatize',
-    #     'typelike',
-    #     'hypothesis',
-    #     'numba'
-        'poetry'
-    ],
+    # install_requires=[
+    # #     'glovebox',
+    # #     'numpy',
+    # #     'pandas',
+    # #     'privatize',
+    # #     'typelike',
+    # #     'hypothesis',
+    # #     'numba'
+    #     'poetry'
+    # ],
     # include_package_data=True,
     # zip_safe=True,
     ext_modules=[

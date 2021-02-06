@@ -4,7 +4,7 @@ subroutine read_dcd(fname, nstr, natom, box, x, y, z)
 
   ! input variables
   character(len=256), intent(in) :: fname
-  integer, intent(int) :: nstr, natom
+  integer, intent(in) :: nstr, natom
 
   ! output variables
   real(kind=8), dimension(nstr, 3), intent(out) :: box
