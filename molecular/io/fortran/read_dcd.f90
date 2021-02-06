@@ -9,18 +9,13 @@ subroutine read_dcd(fname, box, x, y, z)
   real(kind=8), dimension(:, :), allocatable, intent(out) :: box
   real, dimension(:, :), allocatable, intent(out) :: x, y, z
 
-  !f2py intent(out) box
-  !f2py intent(out) x
-  !f2py intent(out) y
-  !f2py intent(out) z
-
   ! temporary variables
   character(len=80), dimension(1:2) :: title
   character(len=4) :: dcdhdr
   integer, dimension(1:9) :: dumi
   real :: dumr
   real(kind=8) :: dumr8
-  integer :: nstr, nstr0, ntitle, natom, natom0, i, j
+  integer :: nstr, nstr0, ntitle, natom, natom0, i
 
   ! open dcd file to get nstr and natom
   open(24, file=trim(fname), status='old', form='unformatted')
