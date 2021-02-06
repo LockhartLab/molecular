@@ -1,5 +1,4 @@
 
-
 language: python
 python: 3.8
 
@@ -28,6 +27,10 @@ jobs:
 #      install:
 #        - python -m pip install -e .
 #        - pip install -r requirements_dev.txt
+
+      # make sure all development requirements are loaded
+      before_script:
+        - pip install -r requirements_dev.txt
 
       # run all tests
       script:

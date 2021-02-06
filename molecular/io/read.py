@@ -7,6 +7,9 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from molecular.core import Topology, Trajectory
 
+# noinspection PyUnresolvedReferences
+from molecular.io.fortran.read_dcd import read_dcd as _read_dcd
+
 import numpy as np
 # from numpy.lib.recfunctions import drop_fields, structured_to_unstructured
 import pandas as pd
@@ -214,6 +217,8 @@ def read_dcd(fname, topology=None):
     Trajectory
         Instance of Trajectory object.
     """
+
+    box, x, y, z = _read_dcd()
 
     # Open binary DCD file for reading
     stream = open(fname, 'rb')
