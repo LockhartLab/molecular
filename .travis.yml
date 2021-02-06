@@ -11,7 +11,7 @@ jobs:
     - if: commit_message !~ /\[deploy\]/
       # install dependencies
       install:
-        - pip install -e .
+        - python -m pip install --no-build-isolation -e .
 
       # run all tests
       script:
