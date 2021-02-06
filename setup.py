@@ -61,11 +61,11 @@ setup(
     #     'typelike',
     #     'hypothesis',
     #     'numba'
-        'scikit-learn'
+        'poetry'
     ],
     # include_package_data=True,
     # zip_safe=True,
     ext_modules=[
-        Extension('molecular.io.fortran.read_dcd', ['molecular/io/src/read_dcd.f90'])
+        Extension('molecular.io.src.read_dcd', ['molecular/io/src/read_dcd.f90'])
     ]
 )
