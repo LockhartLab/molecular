@@ -14,6 +14,7 @@ jobs:
     - if: commit_message !~ /\[deploy\]/
       # install dependencies
       install:
+        - which gfortran
         - python -m pip install --no-build-isolation -e .
 
       # run all tests
