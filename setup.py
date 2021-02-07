@@ -4,7 +4,7 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-# import setuptools # noqa
+import setuptools # noqa
 from numpy.distutils.core import Extension, setup
 
 # Read version
@@ -54,7 +54,7 @@ setup(
         'molecular.transform',
         'molecular.viz'
     ],
-    # install_requires=[
+    install_requires=[
     # #     'glovebox',
     # #     'numpy',
     # #     'pandas',
@@ -62,8 +62,8 @@ setup(
     # #     'typelike',
     # #     'hypothesis',
     # #     'numba'
-    #     'poetry'
-    # ],
+        'poetry'
+    ],
     # include_package_data=True,
     # zip_safe=True,
     ext_modules=[
