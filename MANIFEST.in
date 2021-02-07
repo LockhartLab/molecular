@@ -3,3 +3,4 @@ include version.yml
 include molecular/_include/protein/relative_sasa.yml
 include molecular/io/fortran/read_dcd.f90
 include pyproject.toml
+include *.c
