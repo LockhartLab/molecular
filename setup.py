@@ -19,12 +19,12 @@ if version_dict['micro'] != 0:
 print(version)
 
 # Read in requirements.txt
-with open('requirements.txt', 'r') as stream:
-    requirements = stream.read().splitlines()
+with open('requirements.txt', 'r') as buffer:
+    requirements = buffer.read().splitlines()
 
 # Long description
-with open('README.rst', 'r') as stream:
-    long_description = stream.read()
+with open('README.rst', 'r') as buffer:
+    long_description = buffer.read()
 
 # First make sure numpy is installed
 # _setup(install_requires=['numpy'])
@@ -54,20 +54,11 @@ setup(
         'molecular.transform',
         'molecular.viz'
     ],
-    install_requires=[
-    # #     'glovebox',
-    # #     'numpy',
-    # #     'pandas',
-    # #     'privatize',
-    # #     'typelike',
-    # #     'hypothesis',
-    # #     'numba'
-        'poetry'
-    ],
+    install_requires=requirements,
     # include_package_data=True,
     # zip_safe=True,
     ext_modules=[
         Extension('molecular.io.fortran.read_dcd', ['molecular/io/fortran/read_dcd.f90']),
-        # Extension('molecular.io.fortran.read_dcd_header', ['molecular/io/fortran/read_dcd_header.f90'])
+        Extension('molecular.io.fortran.read_dcd_header', ['molecular/io/fortran/read_dcd_header.f90'])
     ]
 )

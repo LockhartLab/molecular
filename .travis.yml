@@ -21,7 +21,7 @@ jobs:
     - if: commit_message !~ /\[deploy\]/
       # generate pyproject.toml for dependencies
       before_install:
-        - python _scripts/generate_pyproject_toml.py
+#        - python _scripts/generate_pyproject_toml.py
         - python -c "import numpy; print(numpy.__version__)"
         - pip uninstall numpy -y
         - pip install -r requirements.txt
