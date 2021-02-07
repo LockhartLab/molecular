@@ -22,6 +22,7 @@ jobs:
       # generate pyproject.toml for dependencies
       before_install:
         - python _scripts/generate_pyproject_toml.py
+        - pip uninstall numpy -y
         - pip install -r requirements.txt
 
       # install the package and dependencies
