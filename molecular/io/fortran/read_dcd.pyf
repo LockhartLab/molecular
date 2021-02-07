@@ -3,12 +3,12 @@
 
 python module read_dcd ! in 
     interface  ! in :read_dcd
-        subroutine read_dcd_header(fname,nstr,natom) ! in :read_dcd:fortran/read_dcd.f90
+        subroutine read_dcd_header(fname,nstr,natom) ! in :read_dcd:read_dcd.f90
             character*256 intent(in) :: fname
             integer intent(out) :: nstr
             integer intent(out) :: natom
         end subroutine read_dcd_header
-        subroutine read_dcd(fname,nstr,natom,box,x,y,z) ! in :read_dcd:fortran/read_dcd.f90
+        subroutine read_dcd(fname,nstr,natom,box,x,y,z) ! in :read_dcd:read_dcd.f90
             character*256 intent(in) :: fname
             integer intent(in) :: nstr
             integer intent(in) :: natom
