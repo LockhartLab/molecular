@@ -5,7 +5,7 @@ requires = [
     'hypothesis>=5.6.0',
     'izzy>=0.3.23',
     'numba>=0.48.0',
-    'numpy',
+    'numpy==1.20.0',
     'pandas>=1.0.1',
     'pyyaml>=5.3',
     'scipy',
