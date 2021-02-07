@@ -58,7 +58,9 @@ setup(
     # include_package_data=True,
     # zip_safe=True,
     ext_modules=[
-        Extension('molecular.io.fortran.read_dcd', ['molecular/io/fortran/read_dcd.f90']),
-        Extension('molecular.io.fortran.read_dcd_header', ['molecular/io/fortran/read_dcd_header.f90'])
+        Extension('molecular.io.fortran', [
+            'molecular/io/fortran/read_dcd.f90',
+            'molecular/io/fortran/read_dcd_header.f90'
+        ]),
     ]
 )
