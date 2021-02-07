@@ -60,7 +60,7 @@ setup(
     ext_modules=[
         Extension('molecular.io.fortran', [
             'molecular/io/fortran/read_dcd.f90',
-            'molecular/io/fortran/read_dcd_header.f90'
+            'molecular/io/read_dcd.pyf'
         ]),
     ]
 )
