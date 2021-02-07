@@ -27,5 +27,8 @@ at this stage, I'm only building thing as they come to mind
 version 1.0 will be the first major release  
 until then, consider this code heavily volatile
 
+Note: portions of this code have Fortran backends that may need to be built prior to successful use of the code. We
+have it on our to-do list to compile OS-specific wheels.
+
 yet, install simply by calling `pip install molecular` or `pip install --pre molecular` for the latest development
 release.
