@@ -5,6 +5,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 """
 
 import setuptools # noqa
+import numpy as np
 from numpy.distutils.core import Extension, setup
 
 from Cython.Build import cythonize
@@ -61,7 +62,7 @@ setup(
     zip_safe=True,
     ext_modules=[
         cythonize([
-            Extension('molecular.io._read_dcd', ['molecular/io/_read_dcd.pyx'])
+            Extension('molecular.io._read_dcd', sources=['molecular/io/_read_dcd.pyx'], include_dirs=np.get_include())
         ], compiler_directives={'language_level' : "3"})
     #     Extension('molecular.io.fortran.read_dcd', [
     #         'molecular/io/fortran/read_dcd.f90',
