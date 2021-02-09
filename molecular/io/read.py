@@ -197,12 +197,9 @@ def _read_pdb(records):
 #     return result
 
 # Read DCD
-# FIXME this function is so slow
 def read_dcd(fname, topology=None, backend='scipy'):
     """
-    Read in DCD file with `fname`. This function is partially based off James Phillips' code MDTools that is no
-    longer in development. See http://www.ks.uiuc.edu/Development/MDTools/Python/
-
+    Read in DCD file with `fname`. This function is partially based off
     https://www.ks.uiuc.edu/Research/namd/wiki/index.cgi?ReadingDCDinFortran
     
     Parameters
@@ -225,46 +222,48 @@ def read_dcd(fname, topology=None, backend='scipy'):
 
     # Our home-grown Scipy backend
     if backend in 'scipy':
-        f = FortranFile('system.job0.0.sort.dcd', 'r')
+        # Open FortranFile buffer
+        buffer = FortranFile('system.job0.0.sort.dcd', 'r')
 
-        header, n_str, _, fixed, _ = f.read_record('4a', 'i', '7i', 'i', '11i')
+        # Header
+        header, n_str, _, fixed, _ = buffer.read_record('4a', 'i', '7i', 'i', '11i')
         if header[0].decode('ASCII') != 'CORD' or fixed[0] != 0:
             raise IOError('cannot parse DCD file')
         n_str = n_str[0]
 
-        n_titles, titles = f.read_record('i', '2a80')
+        # Title
+        n_titles, titles = buffer.read_record('i', '2a80')
         if n_titles != 2:
             raise IOError('cannot parse DCD file')
 
-        n_atoms = f.read_record('i')
+        # Atoms
+        n_atoms = buffer.read_record('i')
         n_atoms = n_atoms[0]
 
+        # Box and coordinate information
         box = np.zeros((n_str, 3))
         xyz = np.zeros((n_str, n_atoms, 3))
-
         for i in range(n_str):
-            box[i, 0], _, box[i, 1], _, box[i, 2] = f.read_record('f8', 'f8', 'f8', '2f8', 'f8')
-            xyz[i, :, 0] = f.read_record(f'{n_atoms}f')
-            xyz[i, :, 1] = f.read_record(f'{n_atoms}f')
-            xyz[i, :, 2] = f.read_record(f'{n_atoms}f')
+            box[i, 0], _, box[i, 1], _, box[i, 2] = buffer.read_record('f8', 'f8', 'f8', '2f8', 'f8')
+            xyz[i, :, 0] = buffer.read_record(f'{n_atoms}f')
+            xyz[i, :, 1] = buffer.read_record(f'{n_atoms}f')
+            xyz[i, :, 2] = buffer.read_record(f'{n_atoms}f')
 
-        f.close()
+        # Close out buffer
+        buffer.close()
 
-        # Build Trajecto`ry
-        return Trajectory(xyz, box=box, topology=topology)
-
-    # MDAnalysis for comparison
+    # MDAnalysis for comparison and error checking
     elif backend in 'mdanalysis':
-        from MDAnalysis import Universe
+        from MDAnalysis import Universe  # noqa
 
-        # MDAnalysis has a Cython backend...
+        # MDAnalysis has a Cython backend
         universe = Universe(fname, in_memory=True)
         box = universe.trajectory.dimensions_array[:, :3]
         xyz = universe.trajectory.coordinate_array
 
-        # Build Trajectory
-        return Trajectory(xyz, box=box, topology=topology)
-
     # Unknown
     else:
         raise AttributeError(f'unknown backend {backend}')
+
+    # Build Trajectory
+    return Trajectory(xyz, box=box, topology=topology)
