@@ -8,7 +8,6 @@ author: C. Lockhart <chris@lockhartlab.org>
 from molecular.core import Topology, Trajectory
 
 from molecular.io.fortran.read_dcd import read_dcd as _read_dcd  # noqa
-from molecular.io.fortran.read_dcd import read_dcd_header as _read_dcd_header  # noqa
 
 import numpy as np
 # from numpy.lib.recfunctions import drop_fields, structured_to_unstructured
