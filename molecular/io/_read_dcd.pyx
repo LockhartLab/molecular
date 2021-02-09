@@ -1,4 +1,6 @@
 
+#cython: language_level=3
+
 import numpy as np
 from scipy.io import FortranFile
 

@@ -61,9 +61,7 @@ setup(
     include_package_data=True,
     zip_safe=True,
     ext_modules=[
-        cythonize([
-            Extension('molecular.io._read_dcd', sources=['molecular/io/_read_dcd.pyx'], include_dirs=np.get_include())
-        ], compiler_directives={'language_level' : "3"})
+        Extension('molecular.io._read_dcd', sources=['molecular/io/_read_dcd.pyx'], include_dirs=np.get_include())
     #     Extension('molecular.io.fortran.read_dcd', [
     #         'molecular/io/fortran/read_dcd.f90',
     #         'molecular/io/fortran/read_dcd.pyf'
