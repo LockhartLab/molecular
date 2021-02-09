@@ -14,6 +14,7 @@ import numpy as np
 # from numpy.lib.recfunctions import drop_fields, structured_to_unstructured
 import pandas as pd
 import re
+from scipy.io import FortranFile
 from typelike import ArrayLike
 
 
@@ -198,7 +199,7 @@ def _read_pdb(records):
 
 # Read DCD
 # FIXME this function is so slow
-def read_dcd(fname, topology=None, backend='fortran'):
+def read_dcd(fname, topology=None, backend='scipy'):
     """
     Read in DCD file with `fname`. This function is partially based off James Phillips' code MDTools that is no
     longer in development. See http://www.ks.uiuc.edu/Development/MDTools/Python/
@@ -212,7 +213,7 @@ def read_dcd(fname, topology=None, backend='fortran'):
     topology : Topology
         (Optional) Topology file to load for coordinates.
     backend : str
-        How to load the DCD? (Default: "fortran")
+        How to load the DCD? (Default: "scipy")
 
     Returns
     -------
@@ -223,8 +224,51 @@ def read_dcd(fname, topology=None, backend='fortran'):
     # Convert backend to lowercase
     backend = backend.lower()
 
+    # Our home-grown Scipy backend
+    if backend in 'scipy':
+        f = FortranFile('system.job0.0.sort.dcd', 'r')
+
+        header, n_str, _, fixed, _ = f.read_record('4a', 'i', '7i', 'i', '11i')
+        if header[0].decode('ASCII') != 'CORD' or fixed[0] != 0:
+            raise IOError('cannot parse DCD file')
+        n_str = n_str[0]
+
+        n_titles, titles = f.read_record('i', '2a80')
+        if n_titles != 2:
+            raise IOError('cannot parse DCD file')
+
+        n_atoms = f.read_record('i')
+        n_atoms = n_atoms[0]
+
+        bx = []
+        by = []
+        bz = []
+
+        x = []
+        y = []
+        z = []
+
+        for i in range(n_str):
+            _bx, _, _by, _, _bz = f.read_record('f8', 'f8', 'f8', '2f8', 'f8')
+            _x = f.read_record(f'{n_atoms}f')
+            _y = f.read_record(f'{n_atoms}f')
+            _z = f.read_record(f'{n_atoms}f')
+
+            bx.append(_bx[0])
+            by.append(_by[0])
+            bz.append(_bz[0])
+
+            x.append(_x)
+            y.append(_y)
+            z.append(_z)
+
+        f.close()
+
+        # Build Trajectory
+        return Trajectory(np.dstack([x, y, z]), box=np.vstack([bx, by, bz]).T, topology=topology)
+
     # Our home-grown Fortran backend
-    if backend in 'fortran':
+    elif backend in 'fortran':
         # Read in header
         with open(fname, 'rb') as buffer:
             buffer.seek(20, 0)
@@ -243,6 +287,7 @@ def read_dcd(fname, topology=None, backend='fortran'):
     elif backend in 'mdanalysis':
         from MDAnalysis import Universe
 
+        # MDAnalysis has a Cython backend...
         universe = Universe(fname, in_memory=True)
         box = universe.trajectory.dimensions_array[:, :3]
         xyz = universe.trajectory.coordinate_array
