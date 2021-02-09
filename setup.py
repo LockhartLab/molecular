@@ -55,12 +55,12 @@ setup(
         'molecular.viz'
     ],
     install_requires=requirements,
-    # include_package_data=True,
-    # zip_safe=True,
-    ext_modules=[
-        Extension('molecular.io.fortran.read_dcd', [
-            'molecular/io/fortran/read_dcd.f90',
-            'molecular/io/fortran/read_dcd.pyf'
-        ]),
-    ]
+    include_package_data=True,
+    zip_safe=True,
+    # ext_modules=[
+    #     Extension('molecular.io.fortran.read_dcd', [
+    #         'molecular/io/fortran/read_dcd.f90',
+    #         'molecular/io/fortran/read_dcd.pyf'
+    #     ]),
+    # ]
 )

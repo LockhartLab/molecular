@@ -7,7 +7,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from molecular.core import Topology, Trajectory
 
-from molecular.io.fortran.read_dcd import read_dcd as _read_dcd  # noqa
+# from molecular.io.fortran.read_dcd import read_dcd as _read_dcd  # noqa
 
 import numpy as np
 # from numpy.lib.recfunctions import drop_fields, structured_to_unstructured
@@ -239,48 +239,19 @@ def read_dcd(fname, topology=None, backend='scipy'):
         n_atoms = f.read_record('i')
         n_atoms = n_atoms[0]
 
-        bx = []
-        by = []
-        bz = []
-
-        x = []
-        y = []
-        z = []
+        box = np.zeros((n_str, 3))
+        xyz = np.zeros((n_str, n_atoms, 3))
 
         for i in range(n_str):
-            _bx, _, _by, _, _bz = f.read_record('f8', 'f8', 'f8', '2f8', 'f8')
-            _x = f.read_record(f'{n_atoms}f')
-            _y = f.read_record(f'{n_atoms}f')
-            _z = f.read_record(f'{n_atoms}f')
-
-            bx.append(_bx[0])
-            by.append(_by[0])
-            bz.append(_bz[0])
-
-            x.append(_x)
-            y.append(_y)
-            z.append(_z)
+            box[i, 0], _, box[i, 1], _, box[i, 2] = f.read_record('f8', 'f8', 'f8', '2f8', 'f8')
+            xyz[i, :, 0] = f.read_record(f'{n_atoms}f')
+            xyz[i, :, 1] = f.read_record(f'{n_atoms}f')
+            xyz[i, :, 2] = f.read_record(f'{n_atoms}f')
 
         f.close()
 
-        # Build Trajectory
-        return Trajectory(np.dstack([x, y, z]), box=np.vstack([bx, by, bz]).T, topology=topology)
-
-    # Our home-grown Fortran backend
-    elif backend in 'fortran':
-        # Read in header
-        with open(fname, 'rb') as buffer:
-            buffer.seek(20, 0)
-            n_structures = np.fromfile(buffer, dtype='<i', count=1)[0]
-            buffer.seek(244, 1)
-            n_atoms = np.fromfile(buffer, dtype='<i', count=1)[0]
-            # TODO probably need to do the endian fix here
-
-        # Get box and coordinate information
-        box, x, y, z = _read_dcd(fname, n_structures, n_atoms)
-
-        # Build Trajectory
-        return Trajectory(np.dstack([x, y, z]), box=box, topology=topology)
+        # Build Trajecto`ry
+        return Trajectory(xyz, box=box, topology=topology)
 
     # MDAnalysis for comparison
     elif backend in 'mdanalysis':
@@ -294,85 +265,6 @@ def read_dcd(fname, topology=None, backend='scipy'):
         # Build Trajectory
         return Trajectory(xyz, box=box, topology=topology)
 
-    # Numpy backend
-    # TODO please clean this up
+    # Unknown
     else:
-        # Open binary DCD file for reading
-        stream = open(fname, 'rb')
-
-        # Read first part of header and choose endianness
-        # File is Fortran unformatted, which tells us the number of bytes
-        # in each part. This first section should contain 84 bytes.
-        endian = '>'
-        n_byte = np.ndarray((1,), endian + 'i', stream.read(4))[0]
-        title = np.ndarray((4,), endian + 'B', stream.read(4)).tostring().decode('ASCII')
-        if n_byte != 84 or title != 'CORD':
-            endian = '<'
-            stream.close()
-            stream = open(fname, 'rb')
-            n_byte = np.ndarray((1,), endian + 'i', stream.read(4))[0]
-            title = np.ndarray((4,), endian + 'B', stream.read(4)).tostring().decode('ASCII')
-            if n_byte != 84 or title != 'CORD':
-                raise IOError('cannot read DCD header')
-
-        # Continue reading rest of header
-        n_structures = np.ndarray((1,), endian + 'i', stream.read(4))[0]
-        stream.read(28)
-        fixed = np.ndarray((1,), endian + 'i', stream.read(4))[0]
-        if fixed != 0:
-            raise IOError('failed reading DCD file')
-        stream.read(44)
-        if np.ndarray((1,), endian + 'i', stream.read(4))[0] != n_byte:
-            raise IOError('failed reading DCD file')
-
-        # Read next section, which contains 164 bytes
-        n_byte = np.ndarray((1,), endian + 'i', stream.read(4))[0]
-        if n_byte != 164:
-            raise IOError('failed reading DCD file')
-        n_titles = np.ndarray((1,), endian + 'i', stream.read(4))[0]
-        for i in range(n_titles):
-            title = np.ndarray((80,), endian + 'B', stream.read(80)).tostring().decode('ASCII')
-        if np.ndarray((1,), endian + 'i', stream.read(4))[0] != n_byte:
-            raise IOError('failed reading DCD file')
-
-        # Read next section, which contains 4 bytes
-        n_byte = np.ndarray((1,), endian + 'i', stream.read(4))[0]
-        if n_byte != 4:
-            raise IOError('failed reading DCD file')
-        n_atoms = np.ndarray((1,), endian + 'i', stream.read(4))[0]
-        if n_atoms == 0:
-            raise ValueError('structure empty')
-        if np.ndarray((1,), endian + 'i', stream.read(4))[0] != n_byte:
-            raise IOError('failed reading DCD file')
-
-        # Get information from structures
-        buffer = stream.read()
-
-        # Box information
-        n_byte = np.ndarray((n_structures,), endian + 'i', buffer, strides=(80 + 12 * n_atoms))
-        if any(n_byte != 48):
-            raise IOError('failed reading DCD file')
-        box_x = np.ndarray((n_structures,), endian + 'f8', buffer, offset=4, strides=(80 + 12 * n_atoms))
-        box_y = np.ndarray((n_structures,), endian + 'f8', buffer, offset=20, strides=(80 + 12 * n_atoms))
-        box_z = np.ndarray((n_structures,), endian + 'f8', buffer, offset=44, strides=(80 + 12 * n_atoms))
-        if any(np.ndarray((n_structures,), endian + 'i', buffer, offset=52, strides=(80 + 12 * n_atoms)) != n_byte):
-            raise IOError('failed reading DCD file')
-
-        # xyz
-        # TODO there might be a way to clean this up
-        # noinspection PyShadowingNames
-        def _xyz(off1, off2, off3):
-            n_byte = np.ndarray((n_structures,), endian + 'i', buffer, offset=off1, strides=(80 + 12 * n_atoms))
-            if any(n_byte != 4 * n_atoms):
-                raise IOError('failed reading DCD file')
-            r = np.ndarray((n_structures, n_atoms), endian + 'f', buffer, offset=off2, strides=(80 + 12 * n_atoms, 4))
-            if any(np.ndarray((n_structures,), endian + 'i', buffer, offset=off3, strides=(80 + 12 * n_atoms)) != n_byte):
-                raise IOError('failed reading DCD file')
-            return r
-
-        x = _xyz(56 + 0 * n_atoms, 60 + 0 * n_atoms, 60 + 4 * n_atoms)
-        y = _xyz(64 + 4 * n_atoms, 68 + 4 * n_atoms, 68 + 8 * n_atoms)
-        z = _xyz(72 + 8 * n_atoms, 76 + 8 * n_atoms, 76 + 12 * n_atoms)
-
-        # Create Trajectory and return
-        return Trajectory(np.dstack([x, y, z]), box=np.vstack([box_x, box_y, box_z]).T, topology=topology)
+        raise AttributeError(f'unknown backend {backend}')
