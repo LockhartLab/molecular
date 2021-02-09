@@ -245,7 +245,7 @@ def read_dcd(fname, topology=None, backend='fortran'):
 
         universe = Universe(fname, in_memory=True)
         box = universe.trajectory.dimensions_array[:, :3]
-        xyz = universe.trajectory.coordinates_array
+        xyz = universe.trajectory.coordinate_array
 
         # Build Trajectory
         return Trajectory(xyz, box=box, topology=topology)
