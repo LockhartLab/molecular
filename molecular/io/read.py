@@ -7,6 +7,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 
 from molecular.core import Topology, Trajectory
 
+from molecular.io._read_dcd import _read_dcd
 # from molecular.io.fortran.read_dcd import read_dcd as _read_dcd  # noqa
 
 import numpy as np
@@ -221,9 +222,8 @@ def read_dcd(fname, topology=None, backend='scipy'):
     # Convert backend to lowercase
     backend = backend.lower()
 
-    # Our Scipy backend
-    # TODO FortranFile is just based on numpy.fromfile ... we can implement this in Cython
-    if backend in 'scipy':
+    # Our Python backend
+    if backend in 'python':
         # Open FortranFile buffer
         buffer = FortranFile(fname, 'r')
 
@@ -253,6 +253,10 @@ def read_dcd(fname, topology=None, backend='scipy'):
 
         # Close out buffer
         buffer.close()
+
+    # Our Cython backend
+    elif backend in 'cython':
+        box, xyz = _read_dcd(fname)
 
     # MDAnalysis for comparison and error checking
     elif backend in 'mdanalysis':

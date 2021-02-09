@@ -5,35 +5,44 @@ from scipy.io import FortranFile
 cimport numpy as np
 
 def _read_dcd(fname):
+    return _get_box_and_coordinates(fname)
+
+cdef tuple _get_box_and_coordinates(fname):
+    # Declarations
+    cdef np.ndarray[np.int32_t, ndim=1] iarr
+    cdef np.int32_t n_str, n_atoms, i
+    cdef np.ndarray[np.float64_t, ndim=2] box
+    cdef np.ndarray[np.float32_t, ndim=3] xyz
+    cdef np.ndarray[np.float64_t, ndim=1] r8arr
+
     # Open FortranFile buffer
     buffer = FortranFile(fname, 'r')
 
     # Header
-    cdef int n_str, fixed
-    header, n_str, _, fixed, _ = buffer.read_record('4a', 'i', '7i', 'i', '11i')
-    if header[0] != b'CORD' or fixed[0] != 0:
+    iarr = buffer.read_record('i')
+    if iarr[0] != 1146244931 or iarr[9] != 0:  # iarr[0] == int.from_bytes(bytes(b'CORD'), 'little')
         raise IOError('cannot parse DCD file')
-    n_str = n_str[0]
+    n_str = iarr[1]
 
     # Title
-    cdef int n_titles
-    n_titles, titles = buffer.read_record('i', '2a80')
-    if n_titles != 2:
+    iarr = buffer.read_record('i')
+    if iarr[0] != 2:
         raise IOError('cannot parse DCD file')
 
     # Atoms
-    cdef n_atoms
-    n_atoms = buffer.read_record('i')
-    n_atoms = n_atoms[0]
+    iarr = buffer.read_record('i')
+    n_atoms = iarr[0]
 
     # Box and coordinate information
-    cdef np.ndarray box = np.zeros((n_str, 3))
-    cdef np.ndarray xyz = np.zeros((n_str, n_atoms, 3))
+    box = np.zeros((n_str, 3), dtype=np.float64)
+    xyz = np.zeros((n_str, n_atoms, 3), dtype=np.float32)
     for i in range(n_str):
-        box[i, 0], _, box[i, 1], _, box[i, 2] = buffer.read_record('f8', 'f8', 'f8', '2f8', 'f8')
-        xyz[i, :, 0] = buffer.read_record(f'{n_atoms}f')
-        xyz[i, :, 1] = buffer.read_record(f'{n_atoms}f')
-        xyz[i, :, 2] = buffer.read_record(f'{n_atoms}f')
+        r8arr = buffer.read_record('f8')
+        box[i, :] = r8arr[[0, 2, 5]]
+
+        xyz[i, :, 0] = buffer.read_record('f')
+        xyz[i, :, 1] = buffer.read_record('f')
+        xyz[i, :, 2] = buffer.read_record('f')
 
     # Close out buffer
     buffer.close()
