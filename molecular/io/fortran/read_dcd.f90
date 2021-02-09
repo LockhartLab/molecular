@@ -1,4 +1,8 @@
 
+! https://numpy.org/devdocs/f2py/python-usage.html
+! https://stackoverflow.com/questions/53637455/fortran-matrix-product-slows-when-called-with-f2py-by-python
+! https://sites.engineering.ucsb.edu/~shell/che210d/f2py.pdf
+
 subroutine read_dcd(fname, nstr, natom, box, x, y, z)
   implicit none
 

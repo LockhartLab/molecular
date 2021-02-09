@@ -32,3 +32,5 @@ have it on our to-do list to compile OS-specific wheels.
 
 yet, install simply by calling `pip install molecular` or `pip install --pre molecular` for the latest development
 release.
+
+we endeavor to follow https://scikit-learn.org/stable/developers/performance.html

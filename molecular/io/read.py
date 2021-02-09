@@ -197,6 +197,7 @@ def _read_pdb(records):
 #     return result
 
 # Read DCD
+# could https://www.pytables.org/usersguide/tutorials.html speed this up?
 def read_dcd(fname, topology=None, backend='scipy'):
     """
     Read in DCD file with `fname`. This function is partially based off
@@ -227,7 +228,7 @@ def read_dcd(fname, topology=None, backend='scipy'):
 
         # Header
         header, n_str, _, fixed, _ = buffer.read_record('4a', 'i', '7i', 'i', '11i')
-        if header[0].decode('ASCII') != 'CORD' or fixed[0] != 0:
+        if header[0] != b'CORD' or fixed[0] != 0:
             raise IOError('cannot parse DCD file')
         n_str = n_str[0]
 
