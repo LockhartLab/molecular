@@ -223,7 +223,7 @@ def read_dcd(fname, topology=None, backend='scipy'):
     # Our home-grown Scipy backend
     if backend in 'scipy':
         # Open FortranFile buffer
-        buffer = FortranFile('system.job0.0.sort.dcd', 'r')
+        buffer = FortranFile(fname, 'r')
 
         # Header
         header, n_str, _, fixed, _ = buffer.read_record('4a', 'i', '7i', 'i', '11i')
