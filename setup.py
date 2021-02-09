@@ -7,6 +7,8 @@ author: C. Lockhart <chris@lockhartlab.org>
 import setuptools # noqa
 from numpy.distutils.core import Extension, setup
 
+from Cython.Build import cythonize
+
 # Read version
 with open('version.yml', 'r') as f:
     data = f.read().splitlines()
@@ -57,10 +59,13 @@ setup(
     install_requires=requirements,
     include_package_data=True,
     zip_safe=True,
-    # ext_modules=[
+    ext_modules=[
+        cythonize([
+            Extension('molecular.io._read_dcd', ['molecular/io/_read_dcd.pyx'])
+        ], compiler_directives={'language_level' : "3"})
     #     Extension('molecular.io.fortran.read_dcd', [
     #         'molecular/io/fortran/read_dcd.f90',
     #         'molecular/io/fortran/read_dcd.pyf'
     #     ]),
-    # ]
+    ]
 )

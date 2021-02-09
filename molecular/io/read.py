@@ -221,7 +221,8 @@ def read_dcd(fname, topology=None, backend='scipy'):
     # Convert backend to lowercase
     backend = backend.lower()
 
-    # Our home-grown Scipy backend
+    # Our Scipy backend
+    # TODO FortranFile is just based on numpy.fromfile ... we can implement this in Cython
     if backend in 'scipy':
         # Open FortranFile buffer
         buffer = FortranFile(fname, 'r')
