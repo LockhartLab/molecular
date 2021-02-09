@@ -234,7 +234,7 @@ def read_dcd(fname, topology=None, backend='fortran'):
             # TODO probably need to do the endian fix here
 
         # Get box and coordinate information
-        box, x, y, z = _read_dcd(fname)
+        box, x, y, z = _read_dcd(fname, n_structures, n_atoms)
 
         # Build Trajectory
         return Trajectory(np.dstack([x, y, z]), box=box, topology=topology)
