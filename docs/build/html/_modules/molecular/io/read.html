@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read &#8212; molecular 0.1.dev101 documentation</title>
+    <title>molecular.io.read &#8212; molecular 0.1.dev102 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev101 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev102 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
@@ -265,7 +265,7 @@
     <span class="c1"># Our home-grown Scipy backend</span>
     <span class="k">if</span> <span class="n">backend</span> <span class="ow">in</span> <span class="s1">&#39;scipy&#39;</span><span class="p">:</span>
         <span class="c1"># Open FortranFile buffer</span>
-        <span class="n">buffer</span> <span class="o">=</span> <span class="n">FortranFile</span><span class="p">(</span><span class="s1">&#39;system.job0.0.sort.dcd&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="n">FortranFile</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
 
         <span class="c1"># Header</span>
         <span class="n">header</span><span class="p">,</span> <span class="n">n_str</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">fixed</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">read_record</span><span class="p">(</span><span class="s1">&#39;4a&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;7i&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;11i&#39;</span><span class="p">)</span>
@@ -340,7 +340,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev101 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev102 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
