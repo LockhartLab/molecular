@@ -199,7 +199,7 @@ def _read_pdb(records):
 
 # Read DCD
 # could https://www.pytables.org/usersguide/tutorials.html speed this up?
-def read_dcd(fname, topology=None, backend='scipy'):
+def read_dcd(fname, topology=None, backend='cython'):
     """
     Read in DCD file with `fname`. This function is partially based off
     https://www.ks.uiuc.edu/Research/namd/wiki/index.cgi?ReadingDCDinFortran
