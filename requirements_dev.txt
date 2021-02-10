@@ -1,4 +1,5 @@
 codecov
 coverage
+Cython
 sphinx
 sphinx-copybutton
