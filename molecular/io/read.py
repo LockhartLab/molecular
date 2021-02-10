@@ -10,12 +10,17 @@ from molecular.core import Topology, Trajectory
 from molecular.io._read_dcd import _read_dcd
 # from molecular.io.fortran.read_dcd import read_dcd as _read_dcd  # noqa
 
+import logging
 import numpy as np
 # from numpy.lib.recfunctions import drop_fields, structured_to_unstructured
 import pandas as pd
 import re
 from scipy.io import FortranFile
 from typelike import ArrayLike
+
+
+# Get the molecular.io logger
+logger = logging.getLogger('molecular.io')
 
 
 # Read PDB
@@ -39,8 +44,10 @@ def read_pdb(fname, backend='python'):
         Trajectory of PDB
     """
 
+    backend = backend.lower()
+
     # Make sure we know we're using the pandas backend
-    if backend.lower() != 'python':
+    if backend not in 'python':
         raise AttributeError('only python backend presently supported')
 
     # Open file, read in all records
@@ -48,8 +55,14 @@ def read_pdb(fname, backend='python'):
         records = stream.read()
         # records = _atom_reader(buffer)
 
+    # Get trajectory
+    a = _read_pdb(records)
+
+    # Logging
+    logger.info(f'read in {a.designator}')
+
     # Return
-    return _read_pdb(records)
+    return a
 
 
 def read_peptide_sequence(residues):
@@ -272,4 +285,11 @@ def read_dcd(fname, topology=None, backend='cython'):
         raise AttributeError(f'unknown backend {backend}')
 
     # Build Trajectory
-    return Trajectory(xyz, box=box, topology=topology)
+    a = Trajectory(xyz, box=box, topology=topology)
+
+    # Logging
+    logger.info(f'read in {a.designator}')
+
+    # Return
+    return a
+

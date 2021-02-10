@@ -1,6 +1,8 @@
 
 #cython: language_level=3
 
+# see http://www.ks.uiuc.edu/Research/vmd/plugins/doxygen/dcdplugin_8c-source.html
+
 import numpy as np
 from scipy.io import FortranFile
 
@@ -23,6 +25,7 @@ cdef tuple _get_box_and_coordinates(fname):
     # Header
     iarr = buffer.read_record('i')
     if iarr[0] != 1146244931 or iarr[9] != 0:  # iarr[0] == int.from_bytes(bytes(b'CORD'), 'little')
+        # TODO flip byte order
         raise IOError('cannot parse DCD file')
     n_str = iarr[1]
 

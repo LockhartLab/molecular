@@ -19,7 +19,7 @@ from itertools import product
 import numpy as np
 
 
-# Get the molecular.transform logger
+# Get the logger
 logger = logging.getLogger('molecular.analysis')
 
 
