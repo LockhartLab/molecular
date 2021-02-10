@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read &#8212; molecular 0.1.dev103 documentation</title>
+    <title>molecular.io.read &#8212; molecular 0.1.dev104 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev103 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev104 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
@@ -49,6 +49,7 @@
 
 <span class="kn">from</span> <span class="nn">molecular.core</span> <span class="kn">import</span> <span class="n">Topology</span><span class="p">,</span> <span class="n">Trajectory</span>
 
+<span class="kn">from</span> <span class="nn">molecular.io._read_dcd</span> <span class="kn">import</span> <span class="n">_read_dcd</span>
 <span class="c1"># from molecular.io.fortran.read_dcd import read_dcd as _read_dcd  # noqa</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -263,8 +264,8 @@
     <span class="c1"># Convert backend to lowercase</span>
     <span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-    <span class="c1"># Our home-grown Scipy backend</span>
-    <span class="k">if</span> <span class="n">backend</span> <span class="ow">in</span> <span class="s1">&#39;scipy&#39;</span><span class="p">:</span>
+    <span class="c1"># Our Python backend</span>
+    <span class="k">if</span> <span class="n">backend</span> <span class="ow">in</span> <span class="s1">&#39;python&#39;</span><span class="p">:</span>
         <span class="c1"># Open FortranFile buffer</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="n">FortranFile</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
 
@@ -294,6 +295,10 @@
 
         <span class="c1"># Close out buffer</span>
         <span class="n">buffer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Our Cython backend</span>
+    <span class="k">elif</span> <span class="n">backend</span> <span class="ow">in</span> <span class="s1">&#39;cython&#39;</span><span class="p">:</span>
+        <span class="n">box</span><span class="p">,</span> <span class="n">xyz</span> <span class="o">=</span> <span class="n">_read_dcd</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
 
     <span class="c1"># MDAnalysis for comparison and error checking</span>
     <span class="k">elif</span> <span class="n">backend</span> <span class="ow">in</span> <span class="s1">&#39;mdanalysis&#39;</span><span class="p">:</span>
@@ -341,7 +346,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev103 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev104 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
