@@ -2,7 +2,7 @@
 Functions related to time series analysis.
 """
 
-from numba import njit
+# from numba import njit
 import numpy as np
 
 
@@ -191,7 +191,7 @@ def _acorr_test(a, decimal=7, plot=True):
     np.testing.assert_almost_equal(rho0, rho1, decimal=decimal)
 
 
-@njit
+# @njit
 def _acov(a):
     n = len(a)
     u = np.mean(a)
