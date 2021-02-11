@@ -7,7 +7,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 """
 
 import logging
-from numba import njit
+# from numba import njit
 import numpy as np
 import pandas as pd
 
@@ -242,7 +242,7 @@ def _fit(a_xyz, b_xyz, backend='python'):
     return b_xyz
 
 
-@njit
+# @njit
 def _get_rotation_matrix(covariance_matrix):
     """
     Compute the rotation matrix from the method from Kabsch (1976) Acta Cryst. A32.

@@ -59,7 +59,7 @@ def read_pdb(fname, backend='python'):
     a = _read_pdb(records)
 
     # Logging
-    logger.info(f'read in {a.designator}')
+    logger.info(f'read in {fname} as {a.designator}')
 
     # Return
     return a
@@ -288,7 +288,7 @@ def read_dcd(fname, topology=None, backend='cython'):
     a = Trajectory(xyz, box=box, topology=topology)
 
     # Logging
-    logger.info(f'read in {a.designator}')
+    logger.info(f'read in {fname} as {a.designator}')
 
     # Return
     return a
