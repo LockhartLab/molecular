@@ -1,7 +1,4 @@
 
-import numpy as np
-from sympy.ntheory import factorint
-
 from .replica_exchange import *
 
 __all__ = [
@@ -27,6 +24,10 @@ def get_pme_size(a):
     int
         Size of PME grid length.
     """
+
+    # To reduce runtime, import this here
+    # TODO can this be replaced with a numpy or scipy package?
+    from sympy.ntheory import factorint
 
     # If a is a decimal, round up
     a = int(np.ceil(a))
