@@ -586,7 +586,7 @@ class Trajectory(object):
         trajectory = self.to_frame().reset_index()
 
         # Merge trajectory and topology
-        data = trajectory.merge(topology.reset_index(), how='inner', on='atom_id').set_index('atom_id')
+        data = trajectory.merge(topology.reset_index(), how='inner', on='atom_id').set_index('atom_id').reset_index()
 
         # Sort by structure_id and then atom_id
         data = data.sort_values(['structure_id', 'atom_id'])
