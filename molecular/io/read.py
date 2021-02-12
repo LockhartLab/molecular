@@ -242,7 +242,8 @@ def _read_pdb_pandas(fname):
     # Infer the number of structures from length of atoms and number of atoms
     atom_record_count = len(is_atom)
     if np.mod(atom_record_count, n_atoms) != 0:
-        raise IOError('PDB file ATOM record count must be divisible by number of atoms in a structure')
+        raise AssertionError(f'PDB file ATOM record count ({atom_record_count}) must be divisible by number of atoms '
+                             f'in a structure ({n_atoms})')
     n_structures = atom_record_count // n_atoms
 
     # Subset DataFrame to only atom records
