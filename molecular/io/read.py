@@ -185,7 +185,9 @@ def _read_pdb(records):
         raise AttributeError('len(data) must be evenly divisible by n_structures, (%s, %s)' % (len(data), n_structures))
     # TODO, why does this index start at 1? I changed this 1/28/21 but might break something
     # data['atom_id'] = np.array(np.tile(np.arange(1, len(data) / n_structures + 1), n_structures), dtype='int')
-    data['atom_id'] = np.array(np.tile(np.arange(len(data) / n_structures), n_structures), dtype='int')
+    data['atom_id'] = np.array(np.tile(np.arange(len(data) / n_structures, dtype='int'), n_structures))
+    n_atoms = data['atom_id'].nunique()
+    data['structure_id'] = np.repeat(np.arange(n_structures, dtype='int'), n_atoms)
 
     # Create Topology first
     # TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?
@@ -196,7 +198,7 @@ def _read_pdb(records):
 
     # Next create Trajectory (the result)
     # n_atoms = len(np.unique(data['atom_id'].values))
-    n_atoms = data['atom_id'].nunique()
+    # n_atoms = data['atom_id'].nunique()
     # result = Trajectory(structured_to_unstructured(data[dynamical_columns]).reshape(n_structures, n_atoms, 3),
     #                     topology=topology)
     result = Trajectory(data[dynamical_columns].set_index(['structure_id', 'atom_id']), topology=topology)
@@ -256,8 +258,9 @@ def _read_pdb_pandas(fname):
     dynamic_columns = ['x', 'y', 'z']
     static_columns = [column for column in df.columns if column not in dynamic_columns]
 
-    # Renumber atom_id
-    df['atom_id'] = np.array(np.tile(np.arange(len(df) / n_structures), n_structures), dtype='int')
+    # Renumber structure_id, atom_id
+    df['structure_id'] = np.repeat(np.arange(n_structures, dtype='int'), n_atoms)
+    df['atom_id'] = np.array(np.tile(np.arange(n_atoms, dtype='int'), n_structures))
 
     # Create Topology first
     # TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?
