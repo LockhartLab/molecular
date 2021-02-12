@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read &#8212; molecular 0.1.dev115 documentation</title>
+    <title>molecular.io.read &#8212; molecular 0.1.dev116 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev115 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev116 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
@@ -159,7 +159,7 @@
     <span class="n">topology</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;residue_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">residues</span><span class="p">)),</span> <span class="s1">&#39;residue&#39;</span><span class="p">:</span> <span class="n">residues</span><span class="p">})</span>
 
     <span class="c1"># Create Trajectory</span>
-    <span class="n">trajectory</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">residues</span><span class="p">),</span> <span class="mi">3</span><span class="p">)),</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
+    <span class="n">trajectory</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">residues</span><span class="p">),</span> <span class="mi">3</span><span class="p">)),</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
 
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">trajectory</span>
@@ -227,7 +227,9 @@
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;len(data) must be evenly divisible by n_structures, (</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">n_structures</span><span class="p">))</span>
     <span class="c1"># TODO, why does this index start at 1? I changed this 1/28/21 but might break something</span>
     <span class="c1"># data[&#39;atom_id&#39;] = np.array(np.tile(np.arange(1, len(data) / n_structures + 1), n_structures), dtype=&#39;int&#39;)</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_structures</span><span class="p">),</span> <span class="n">n_structures</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_structures</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">),</span> <span class="n">n_structures</span><span class="p">))</span>
+    <span class="n">n_atoms</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;structure_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_structures</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">),</span> <span class="n">n_atoms</span><span class="p">)</span>
 
     <span class="c1"># Create Topology first</span>
     <span class="c1"># TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?</span>
@@ -238,10 +240,10 @@
 
     <span class="c1"># Next create Trajectory (the result)</span>
     <span class="c1"># n_atoms = len(np.unique(data[&#39;atom_id&#39;].values))</span>
-    <span class="n">n_atoms</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+    <span class="c1"># n_atoms = data[&#39;atom_id&#39;].nunique()</span>
     <span class="c1"># result = Trajectory(structured_to_unstructured(data[dynamical_columns]).reshape(n_structures, n_atoms, 3),</span>
     <span class="c1">#                     topology=topology)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">dynamical_columns</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_structures</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;structure_id&#39;</span><span class="p">,</span> <span class="s1">&#39;atom_id&#39;</span><span class="p">])[</span><span class="n">dynamical_columns</span><span class="p">],</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
 
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">result</span>
@@ -298,18 +300,19 @@
     <span class="n">dynamic_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]</span>
     <span class="n">static_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">column</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dynamic_columns</span><span class="p">]</span>
 
-    <span class="c1"># Renumber atom_id</span>
-    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_structures</span><span class="p">),</span> <span class="n">n_structures</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+    <span class="c1"># Renumber structure_id, atom_id</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;structure_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_structures</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">),</span> <span class="n">n_atoms</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_atoms</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">),</span> <span class="n">n_structures</span><span class="p">))</span>
 
     <span class="c1"># Create Topology first</span>
     <span class="c1"># TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?</span>
     <span class="n">df</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
     <span class="n">df</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
     <span class="c1"># topology = Topology(np.unique(data[static_columns]))</span>
-    <span class="n">topology</span> <span class="o">=</span> <span class="n">Topology</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">static_columns</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">())</span>
+    <span class="n">topology</span> <span class="o">=</span> <span class="n">Topology</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">static_columns</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">())</span>  <span class="c1"># duplicates here are from structures</span>
 
     <span class="c1"># Next create Trajectory (the result)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">dynamic_columns</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_structures</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;structure_id&#39;</span><span class="p">,</span> <span class="s1">&#39;atom_id&#39;</span><span class="p">])[</span><span class="n">dynamic_columns</span><span class="p">],</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
 
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">result</span>
@@ -397,8 +400,11 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;unknown backend </span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
+    <span class="c1"># Build</span>
+
     <span class="c1"># Build Trajectory</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
+    <span class="c1"># FIXME is this the best way to write this?</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="n">xyz</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
 
     <span class="c1"># Logging</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;read in </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> as </span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">designator</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -437,7 +443,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev115 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev116 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>

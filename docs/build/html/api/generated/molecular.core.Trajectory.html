@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.core.Trajectory &#8212; molecular 0.1.dev115 documentation</title>
+    <title>molecular.core.Trajectory &#8212; molecular 0.1.dev116 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../core.html" title="molecular.core"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev115 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev116 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../core.html" accesskey="U">molecular.core</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.Trajectory</a></li> 
@@ -52,18 +52,20 @@
 <h1>molecular.core.Trajectory<a class="headerlink" href="#molecular-core-trajectory" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="molecular.core.Trajectory">
-<em class="property">class </em><code class="sig-prename descclassname">molecular.core.</code><code class="sig-name descname">Trajectory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xyz</span></em>, <em class="sig-param"><span class="n">box</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">topology</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/core/trajectory.html#Trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.core.Trajectory" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">molecular.core.</code><code class="sig-name descname">Trajectory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">coordinates</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">box</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">topology</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/core/trajectory.html#Trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.core.Trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p><cite>Trajectory</cite> stores instantaneous data for a <cite>Topology</cite>, i.e., atomic coordinates, box information, velocity, etc.</p>
 <p class="rubric">Methods:</p>
 <dl class="py method">
 <dt id="molecular.core.Trajectory.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xyz</span></em>, <em class="sig-param"><span class="n">box</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">topology</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">copy</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/core/trajectory.html#Trajectory.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.core.Trajectory.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">coordinates</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">box</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">topology</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/core/trajectory.html#Trajectory.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.core.Trajectory.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>xyz</strong> (<em>array-like</em>) – Cartesian coordinates for all atoms and all structures. First axis must represent the structure index,
-second axis must represent the atom, and the third index will represent x, y, or z.</p></li>
-<li><p><strong>topology</strong> (<em>Topology</em>) – </p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.2)"><em>pandas.DataFrame</em></a>) – (Optional) Structured information about Trajectory. Columns must include “structure_id”, “atom_id”, “x”,
+“y”, and “z”.</p></li>
+<li><p><strong>coordinates</strong> – </p></li>
+<li><p><strong>box</strong> – </p></li>
+<li><p><strong>topology</strong> (<em>Topology</em>) – (Optional) Topology that includes information about atoms.</p></li>
 </ul>
 </dd>
 </dl>
@@ -147,10 +149,27 @@ second axis must represent the atom, and the third index will represent x, y, or
 <dd class="field-odd"><p><strong>index</strong> (<em>array-like</em>) – List of atom indices.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Coordinates of specified atom indices for each structure.</p>
+<dd class="field-even"><p>Trajectory information for atom indices.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.2)">pandas.DataFrame</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.core.Trajectory.get_structure">
+<code class="sig-name descname">get_structure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/core/trajectory.html#Trajectory.get_structure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular.core.Trajectory.get_structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get specific structure indices from the Trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>array-like</em>) – List of structure indices.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Trajectory information for structure indices.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.2)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -342,13 +361,13 @@ simultaneously.</p>
 <dl class="py method">
 <dt id="molecular.core.Trajectory.xyz">
 <em class="property">property </em><code class="sig-name descname">xyz</code><a class="headerlink" href="#molecular.core.Trajectory.xyz" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get x, y, and z coordinates as numpy array.</p>
+<dd><p>Get x, y, and z coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Cartesian coordinates.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.20)">numpy.ndarray</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.2)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -434,7 +453,7 @@ simultaneously.</p>
         <li class="right" >
           <a href="../core.html" title="molecular.core"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev115 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev116 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../core.html" >molecular.core</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.Trajectory</a></li> 
