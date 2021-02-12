@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read &#8212; molecular 0.1.dev113 documentation</title>
+    <title>molecular.io.read &#8212; molecular 0.1.dev114 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev113 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev114 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
@@ -284,7 +284,8 @@
     <span class="c1"># Infer the number of structures from length of atoms and number of atoms</span>
     <span class="n">atom_record_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">is_atom</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">atom_record_count</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;PDB file ATOM record count must be divisible by number of atoms in a structure&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;PDB file ATOM record count (</span><span class="si">{</span><span class="n">atom_record_count</span><span class="si">}</span><span class="s1">) must be divisible by number of atoms &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;in a structure (</span><span class="si">{</span><span class="n">n_atoms</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
     <span class="n">n_structures</span> <span class="o">=</span> <span class="n">atom_record_count</span> <span class="o">//</span> <span class="n">n_atoms</span>
 
     <span class="c1"># Subset DataFrame to only atom records</span>
@@ -436,7 +437,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev113 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev114 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
