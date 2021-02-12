@@ -117,7 +117,7 @@ def read_peptide_sequence(residues):
     topology._data = pd.DataFrame({'residue_id': np.arange(len(residues)), 'residue': residues})
 
     # Create Trajectory
-    trajectory = Trajectory(xyz=np.zeros((1, len(residues), 3)), topology=topology)
+    trajectory = Trajectory(coordinates=np.zeros((1, len(residues), 3)), topology=topology)
 
     # Return
     return trajectory
@@ -355,8 +355,11 @@ def read_dcd(fname, topology=None, backend='cython'):
     else:
         raise AttributeError(f'unknown backend {backend}')
 
+    # Build
+
     # Build Trajectory
-    a = Trajectory(xyz, box=box, topology=topology)
+    # FIXME is this the best way to write this?
+    a = Trajectory(coordinates=xyz, box=box, topology=topology)
 
     # Logging
     logger.info(f'read in {fname} as {a.designator}')

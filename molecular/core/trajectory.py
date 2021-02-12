@@ -22,6 +22,7 @@ def set_doc(original):
     def wrapper(target):
         target.__doc__ = original.__doc__.replace('a : molecular.Trajectory', '')
         return target
+
     return wrapper
 
 
@@ -32,7 +33,7 @@ class Trajectory(object):
     """
 
     # Initialize instance of Trajectory
-    def __init__(self, data=None, topology=None):
+    def __init__(self, data=None, coordinates=None, box=None, topology=None):
         """
 
 
@@ -41,6 +42,8 @@ class Trajectory(object):
         data : pandas.DataFrame
             (Optional) Structured information about Trajectory. Columns must include "structure_id", "atom_id", "x",
             "y", and "z".
+        coordinates
+        box
         topology : Topology
             (Optional) Topology that includes information about atoms.
         """
@@ -53,6 +56,18 @@ class Trajectory(object):
             data.set_index(['structure_id', 'atom_id'], inplace=True)
         elif data is not None:
             raise AttributeError('data must be pandas.DataFrame')
+
+        # Process coordinates if set
+        if coordinates is not None and isinstance(coordinates, np.ndarray):
+            if data is not None:
+                data = _trajectory_data_shape(*coordinates)
+            data[['x', 'y', 'z']] = coordinates
+
+        # Process box if set
+        if box is not None and isinstance(box, np.ndarray):
+            if data is not None:
+                data = _trajectory_data_shape(*box)
+            data[['bx', 'by', 'bz']] = box
 
         # Check topology is Topology
         if topology is not None and not isinstance(topology, Topology):
@@ -893,6 +908,13 @@ class Topology:
         """
 
         return self._data[['x', 'y', 'z']].to_numpy()
+
+
+def _trajectory_data_shape(n_structures, n_atoms, *args):
+    return pd.DataFrame({
+        'structure_id': np.repeat(np.arange(n_structures), n_atoms),
+        'atom_id': np.tile(np.arange(n_atoms), n_structures),
+    }).set_index(['structure_id', 'atom_id'])
 
 
 if __name__ == '__main__':
