@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read &#8212; molecular 0.1.dev112 documentation</title>
+    <title>molecular.io.read &#8212; molecular 0.1.dev113 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev112 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev113 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
@@ -66,7 +66,7 @@
 
 
 <span class="c1"># Read PDB</span>
-<span class="c1"># TODO currently the only backend will by pandas; in future, expand to Cython or C or Fortran backend</span>
+<span class="c1"># TODO currently the only backend will by python; in future, expand to Cython or C or Fortran backend</span>
 <div class="viewcode-block" id="read_pdb"><a class="viewcode-back" href="../../../api/generated/molecular.io.read_pdb.html#molecular.io.read_pdb">[docs]</a><span class="k">def</span> <span class="nf">read_pdb</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read PDB file and return Trajectory</span>
@@ -88,17 +88,20 @@
 
     <span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-    <span class="c1"># Make sure we know we&#39;re using the pandas backend</span>
-    <span class="k">if</span> <span class="n">backend</span> <span class="ow">not</span> <span class="ow">in</span> <span class="s1">&#39;python&#39;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;only python backend presently supported&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">backend</span> <span class="ow">in</span> <span class="s1">&#39;pandas&#39;</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">_read_pdb_pandas</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
 
-    <span class="c1"># Open file, read in all records</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
-        <span class="n">records</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="c1"># records = _atom_reader(buffer)</span>
+    <span class="k">elif</span> <span class="n">backend</span> <span class="ow">in</span> <span class="s1">&#39;python&#39;</span><span class="p">:</span>
+        <span class="c1"># Open file, read in all records</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="n">records</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="c1"># records = _atom_reader(buffer)</span>
 
-    <span class="c1"># Get trajectory</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">_read_pdb</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+        <span class="c1"># Get trajectory</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">_read_pdb</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;unknown backend </span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1"># Logging</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;read in </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> as </span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">designator</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -244,6 +247,73 @@
     <span class="k">return</span> <span class="n">result</span>
 
 
+<span class="k">def</span> <span class="nf">_read_pdb_pandas</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="c1"># Sections of PDB</span>
+    <span class="n">sections</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">(</span><span class="s1">&#39;record&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;atom_id&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;atom&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;residue&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;chain&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;residue_id&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;blank&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;segment&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;U10&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;i1&#39;</span><span class="p">)])</span>
+
+    <span class="c1"># Read as FWF</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_fwf</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">widths</span><span class="o">=</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;column&#39;</span><span class="p">],</span> <span class="n">error_bad_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Get a list of records; keep only ATOM and END records</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;record&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="n">records</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;ATOM&#39;</span><span class="p">,</span> <span class="s1">&#39;END&#39;</span><span class="p">])]</span>
+
+    <span class="c1"># Infer the number of atoms from END or file end</span>
+    <span class="n">is_atom</span> <span class="o">=</span> <span class="n">records</span> <span class="o">==</span> <span class="s1">&#39;ATOM&#39;</span>
+    <span class="n">is_end</span> <span class="o">=</span> <span class="n">records</span> <span class="o">==</span> <span class="s1">&#39;END&#39;</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">is_end</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">n_atoms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">is_end</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n_atoms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">is_atom</span><span class="p">)</span>
+
+    <span class="c1"># Infer the number of structures from length of atoms and number of atoms</span>
+    <span class="n">atom_record_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">is_atom</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">atom_record_count</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;PDB file ATOM record count must be divisible by number of atoms in a structure&#39;</span><span class="p">)</span>
+    <span class="n">n_structures</span> <span class="o">=</span> <span class="n">atom_record_count</span> <span class="o">//</span> <span class="n">n_atoms</span>
+
+    <span class="c1"># Subset DataFrame to only atom records</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;record == &quot;ATOM&quot;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Drop extraneous columns</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;blank&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Separate out dynamic columns for Trajectory and static Topology data</span>
+    <span class="n">dynamic_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]</span>
+    <span class="n">static_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">column</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">column</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dynamic_columns</span><span class="p">]</span>
+
+    <span class="c1"># Renumber atom_id</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;atom_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_structures</span><span class="p">),</span> <span class="n">n_structures</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create Topology first</span>
+    <span class="c1"># TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;beta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="c1"># topology = Topology(np.unique(data[static_columns]))</span>
+    <span class="n">topology</span> <span class="o">=</span> <span class="n">Topology</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">static_columns</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">())</span>
+
+    <span class="c1"># Next create Trajectory (the result)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">dynamic_columns</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_structures</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
 <span class="c1"># @jit(nopython=False)</span>
 <span class="c1"># def _atom_reader(buffer):</span>
 <span class="c1">#     result = &#39;&#39;</span>
@@ -366,7 +436,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev112 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev113 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
