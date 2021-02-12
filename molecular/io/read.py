@@ -24,7 +24,7 @@ logger = logging.getLogger('molecular.io')
 
 
 # Read PDB
-# TODO currently the only backend will by pandas; in future, expand to Cython or C or Fortran backend
+# TODO currently the only backend will by python; in future, expand to Cython or C or Fortran backend
 def read_pdb(fname, backend='python'):
     """
     Read PDB file and return Trajectory
@@ -46,17 +46,20 @@ def read_pdb(fname, backend='python'):
 
     backend = backend.lower()
 
-    # Make sure we know we're using the pandas backend
-    if backend not in 'python':
-        raise AttributeError('only python backend presently supported')
+    if backend in 'pandas':
+        a = _read_pdb_pandas(fname)
 
-    # Open file, read in all records
-    with open(fname, 'r') as stream:
-        records = stream.read()
-        # records = _atom_reader(buffer)
+    elif backend in 'python':
+        # Open file, read in all records
+        with open(fname, 'r') as stream:
+            records = stream.read()
+            # records = _atom_reader(buffer)
 
-    # Get trajectory
-    a = _read_pdb(records)
+        # Get trajectory
+        a = _read_pdb(records)
+
+    else:
+        raise AttributeError(f'unknown backend {backend}')
 
     # Logging
     logger.info(f'read in {fname} as {a.designator}')
@@ -197,6 +200,73 @@ def _read_pdb(records):
     # result = Trajectory(structured_to_unstructured(data[dynamical_columns]).reshape(n_structures, n_atoms, 3),
     #                     topology=topology)
     result = Trajectory(data[dynamical_columns].values.reshape(n_structures, n_atoms, 3), topology=topology)
+
+    # Return
+    return result
+
+
+def _read_pdb_pandas(fname):
+    # Sections of PDB
+    sections = np.array([
+        ('record', 6),
+        ('atom_id', 5),
+        ('atom', 5),
+        ('residue', 5),
+        ('chain', 1),
+        ('residue_id', 4),
+        ('blank', 4),
+        ('x', 8),
+        ('y', 8),
+        ('z', 8),
+        ('alpha', 6),
+        ('beta', 6),
+        ('segment', 10),
+        ('element', 2)
+    ], dtype=[('column', '<U10'), ('width', 'i1')])
+
+    # Read as FWF
+    df = pd.read_fwf(fname, header=None, widths=sections['width'], names=sections['column'], error_bad_lines=False)
+
+    # Get a list of records; keep only ATOM and END records
+    records = df['record'].values
+    records = records[np.in1d(records, ['ATOM', 'END'])]
+
+    # Infer the number of atoms from END or file end
+    is_atom = records == 'ATOM'
+    is_end = records == 'END'
+    if np.sum(is_end) > 0:
+        n_atoms = np.argmax(is_end)
+    else:
+        n_atoms = np.sum(is_atom)
+
+    # Infer the number of structures from length of atoms and number of atoms
+    atom_record_count = len(is_atom)
+    if np.mod(atom_record_count, n_atoms) != 0:
+        raise IOError('PDB file ATOM record count must be divisible by number of atoms in a structure')
+    n_structures = atom_record_count // n_atoms
+
+    # Subset DataFrame to only atom records
+    df.query('record == "ATOM"', inplace=True)
+
+    # Drop extraneous columns
+    df.drop(columns='blank', inplace=True)
+
+    # Separate out dynamic columns for Trajectory and static Topology data
+    dynamic_columns = ['x', 'y', 'z']
+    static_columns = [column for column in df.columns if column not in dynamic_columns]
+
+    # Renumber atom_id
+    df['atom_id'] = np.array(np.tile(np.arange(len(df) / n_structures), n_structures), dtype='int')
+
+    # Create Topology first
+    # TODO what happens when alpha and beta differ by structures? Should these be stored in Trajectory?
+    df['alpha'] = 0.
+    df['beta'] = 0.
+    # topology = Topology(np.unique(data[static_columns]))
+    topology = Topology(df[static_columns].drop_duplicates())
+
+    # Next create Trajectory (the result)
+    result = Trajectory(df[dynamic_columns].values.reshape(n_structures, n_atoms, 3), topology=topology)
 
     # Return
     return result
