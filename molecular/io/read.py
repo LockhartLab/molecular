@@ -201,7 +201,7 @@ def _read_pdb(records):
     # n_atoms = data['atom_id'].nunique()
     # result = Trajectory(structured_to_unstructured(data[dynamical_columns]).reshape(n_structures, n_atoms, 3),
     #                     topology=topology)
-    result = Trajectory(data[dynamical_columns].set_index(['structure_id', 'atom_id']), topology=topology)
+    result = Trajectory(data.set_index(['structure_id', 'atom_id'])[dynamical_columns], topology=topology)
 
     # Return
     return result
@@ -270,7 +270,7 @@ def _read_pdb_pandas(fname):
     topology = Topology(df[static_columns].drop_duplicates())
 
     # Next create Trajectory (the result)
-    result = Trajectory(df[dynamic_columns].set_index(['structure_id', 'atom_id']), topology=topology)
+    result = Trajectory(df.set_index(['structure_id', 'atom_id'])[dynamic_columns], topology=topology)
 
     # Return
     return result
