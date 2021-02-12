@@ -32,37 +32,34 @@ class Trajectory(object):
     """
 
     # Initialize instance of Trajectory
-    def __init__(self, xyz, box=None, topology=None, copy=False):
+    def __init__(self, data=None, topology=None):
         """
 
 
         Parameters
         ----------
-        xyz : array-like
-            Cartesian coordinates for all atoms and all structures. First axis must represent the structure index,
-            second axis must represent the atom, and the third index will represent x, y, or z.
+        data : pandas.DataFrame
+            (Optional) Structured information about Trajectory. Columns must include "structure_id", "atom_id", "x",
+            "y", and "z".
         topology : Topology
+            (Optional) Topology that includes information about atoms.
         """
 
-        # If copy, make sure that xyz is decoupled from the input
-        if copy or not isinstance(xyz, np.ndarray):
-            xyz = np.array(xyz)
+        # Make sure data has correct columns if available
+        if isinstance(data, pd.DataFrame):
+            data.reset_index(inplace=True)
+            if not np.in1d(data.columns, ['structure_id', 'atom_id', 'x', 'y', 'z']):
+                raise AttributeError('data must include structure_id, atom_id, x, y, and z')
+            data.set_index(['structure_id', 'atom_id'], inplace=True)
+        elif data is not None:
+            raise AttributeError('data must be pandas.DataFrame')
 
-        # Extract dimensions from xyz
-        n_structures, n_atoms, n_dim = xyz.shape
-        if n_dim != 3:
-            raise AttributeError('n_dim must be 3 for the time being')
+        # Check topology is Topology
+        if topology is not None and not isinstance(topology, Topology):
+            raise AttributeError('topology must be Topology instance')
 
-        # Create DataFrame to store topology coordinates, velocities, force information, box information, etc.
-        self._data = pd.DataFrame({
-            'structure_id': np.repeat(np.arange(n_structures), n_atoms),
-            'atom_id': np.tile(np.arange(n_atoms), n_structures),
-            'x': xyz[:, :, 0].ravel(),
-            'y': xyz[:, :, 1].ravel(),
-            'z': xyz[:, :, 2].ravel()
-        }).set_index(['structure_id', 'atom_id'])
-        self._xyz = xyz  # TODO should this be called crd? coord? coor? pos?
-        self._box = box
+        # Save Trajectory data elements
+        self._data = data
         self._topology = topology
 
     # Add
@@ -125,12 +122,12 @@ class Trajectory(object):
     # Get coordinates
     @property
     def coord(self):
-        return self.xyz
+        return self.coordinates
 
     # Set coordinates
     @coord.setter
     def coord(self, coord):
-        self.xyz = coord
+        self.coordinates = coord
 
     # Get coordinates
     @property
@@ -287,7 +284,7 @@ class Trajectory(object):
             x coordinates.
         """
 
-        return self._xyz[:, :, 0]
+        return self._data['x']
 
     # Get y
     @property
@@ -301,7 +298,7 @@ class Trajectory(object):
             y coordinates.
         """
 
-        return self._xyz[:, :, 1]
+        return self._data['y']
 
     # Get z
     @property
@@ -315,27 +312,25 @@ class Trajectory(object):
             z coordinates.
         """
 
-        return self._xyz[:, :, 2]
+        return self._data['z']
 
     # Get xyz coordinates
     @property
     def xyz(self):
         """
-        Get x, y, and z coordinates as numpy array.
+        Get x, y, and z coordinates.
 
         Returns
         -------
-        numpy.ndarray
+        pandas.DataFrame
             Cartesian coordinates.
         """
 
-        return self._data[['x', 'y', 'z']].values.reshape(*self.shape)
+        return self.coordinates
 
     @xyz.setter
     def xyz(self, xyz):
-        if self._xyz.shape != xyz.shape:
-            raise AttributeError('must be same shape')
-        self._xyz = xyz
+        self.coordinates = xyz
 
     # Check topology
     def _check_topology(self):
@@ -381,7 +376,7 @@ class Trajectory(object):
             Deep copy of the Trajectory.
         """
 
-        return Trajectory(np.array(self._xyz), topology=self._topology.copy())
+        return Trajectory(data=self._data.copy(), topology=self._topology.copy())
 
     # Describe
     def describe(self):
@@ -402,13 +397,15 @@ class Trajectory(object):
 
         Returns
         -------
-        numpy.ndarray
-            Coordinates of specified atom indices for each structure.
+        pandas.DataFrame
+            Trajectory information for atom indices.
         """
 
         # xyz will be a view if index is an int, otherwise it will be a copy...
         # TODO how will this affect behavior?
-        return self._xyz[:, index, :]
+        # return self._xyz[:, index, :]
+        match = np.in1d(self._data.index.get_level_values('atom_id'), index)
+        return self._data[match]
 
     # Get column
     def get_column(self, column):
@@ -416,12 +413,22 @@ class Trajectory(object):
 
     # Get structure
     def get_structure(self, index):
-        index = np.array([index]).ravel()  # this sucks
-        structure = Trajectory(self.xyz[index, :, :].reshape(len(index), self.n_atoms, self.n_dim),
-                               topology=self.topology)
-        if self.n_atoms != structure.n_atoms:
-            raise AttributeError('number of atoms do not match ({0} vs {1})'.format(self.n_atoms, structure.n_atoms))
-        return structure
+        """
+        Get specific structure indices from the Trajectory.
+
+        Parameters
+        ----------
+        index : array-like
+            List of structure indices.
+
+        Returns
+        -------
+        pandas.DataFrame
+            Trajectory information for structure indices.
+        """
+
+        match = np.in1d(self._data.index.get_level_values('structure_id'), index)
+        return self._data[match]
 
     def keys(self):
         return self._topology.keys()
@@ -462,8 +469,7 @@ class Trajectory(object):
 
         else:
             # TODO does this work for when multiple structures should be returned?
-            result = Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim),
-                                topology=topology)
+            result = Trajectory(self.get_atoms(index), topology=topology)  # noqa
 
         # Return result
         return result
@@ -494,12 +500,13 @@ class Trajectory(object):
             data = data[data[key].isin(item)]
 
         # Extract indices and create a new topology
+        # Remember: Topology index is atom_id
         index = data.index.to_numpy()
         topology = Topology(data)
 
         # Return
         # return Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim), topology=topology)
-        return Trajectory(self.get_atoms(index), topology=topology)
+        return Trajectory(data=self.get_atoms(index), topology=topology)  # noqa
 
     # Recenter the Trajectory
     # TODO need to decide if this should be moved to molecular.transform
@@ -517,16 +524,17 @@ class Trajectory(object):
 
         # Center xyz coordinates
         # noinspection PyUnresolvedReferences,PyArgumentList
-        xyz = self._xyz - self.center(weights).reshape(self.n_structures, -1, self.n_dim)
+        xyz = self.xyz - self.center(weights).reshape(self.n_structures, -1, self.n_dim)
 
         # Center Trajectory in place or return a copy
         if inplace:
             logging.info(f'centered {self.designator} at origin in place')
-            self._xyz = xyz
+            self.xyz = xyz
+
         else:
             logging.info(f'centered {self.designator} at origin')
             trajectory = self.copy()
-            trajectory._xyz = xyz
+            trajectory.xyz = xyz
             return trajectory
 
     # Convert to pandas DataFrame
@@ -540,17 +548,8 @@ class Trajectory(object):
             Trajectory represented as pandas DataFrame
         """
 
-        # Prepare the data as DataFrame
-        result = pd.DataFrame({
-            'index': np.tile(np.arange(self.n_atoms), self.n_structures),
-            'structure_id': np.repeat(np.arange(self.n_structures), self.n_atoms),
-            'x': self._xyz[:, :, 0].ravel(),
-            'y': self._xyz[:, :, 1].ravel(),
-            'z': self._xyz[:, :, 2].ravel(),
-        })
-
         # Return
-        return result
+        return self._data
 
     # Show
     def show(self):
@@ -568,11 +567,11 @@ class Trajectory(object):
         """
 
         # Convert topology and trajectory to DataFrame
-        topology = self.topology.to_frame()
-        trajectory = self.to_frame()
+        topology = self.topology.to_frame().reset_index()
+        trajectory = self.to_frame().reset_index()
 
         # Merge trajectory and topology
-        data = trajectory.merge(topology.reset_index(), how='inner', on='index').set_index('index')
+        data = trajectory.merge(topology.reset_index(), how='inner', on='atom_id').set_index('atom_id')
 
         # Sort by structure_id and then atom_id
         data = data.sort_values(['structure_id', 'atom_id'])
@@ -596,7 +595,7 @@ class Trajectory(object):
                 raise ValueError('cannot hex atom_id')
 
         # Format atom names
-        i = data['atom'].str.len() == 1
+        i = data['atom'].str.len() == 1  # noqa
         data.loc[i, 'atom'] = ' ' + data.loc[i, 'atom'] + '  '
 
         i = data['atom'].str.len() == 2
@@ -632,9 +631,9 @@ class Trajectory(object):
     # Update
     def update(self, xyz=None):
         if xyz is not None:
-            if self._xyz.shape != xyz.shape:
+            if self.xyz.shape != xyz.shape:
                 raise AttributeError('must be same shape')
-            self._xyz = xyz
+            self.xyz = xyz
 
     # View
     # https://github.com/arose/nglview
@@ -724,7 +723,7 @@ class Topology:
             return self._data[item].to_numpy()
 
         # Make sure that item a valid atom_id
-        if item not in self._data['atom_id']:
+        if item not in self._data['atom_id']:  # noqa
             raise AttributeError('%s not a valid atom_id' % item)
 
         # Create copy of the row
