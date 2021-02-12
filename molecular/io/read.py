@@ -267,7 +267,7 @@ def _read_pdb_pandas(fname):
     df['alpha'] = 0.
     df['beta'] = 0.
     # topology = Topology(np.unique(data[static_columns]))
-    topology = Topology(df[static_columns].drop_duplicates())
+    topology = Topology(df[static_columns].drop_duplicates())  # duplicates here are from structures
 
     # Next create Trajectory (the result)
     result = Trajectory(df.set_index(['structure_id', 'atom_id'])[dynamic_columns], topology=topology)

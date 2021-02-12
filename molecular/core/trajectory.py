@@ -51,7 +51,7 @@ class Trajectory(object):
         # Make sure data has correct columns if available
         if isinstance(data, pd.DataFrame):
             data.reset_index(inplace=True)
-            if not np.in1d(data.columns, ['structure_id', 'atom_id', 'x', 'y', 'z']):
+            if not np.in1d(['structure_id', 'atom_id', 'x', 'y', 'z'], data.columns).any():
                 raise AttributeError('data must include structure_id, atom_id, x, y, and z')
             data.set_index(['structure_id', 'atom_id'], inplace=True)
         elif data is not None:
