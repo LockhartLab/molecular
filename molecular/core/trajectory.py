@@ -60,13 +60,13 @@ class Trajectory(object):
         # Process coordinates if set
         if coordinates is not None and isinstance(coordinates, np.ndarray):
             if data is None:
-                data = _dummy_trajectory_data(*coordinates)
+                data = _dummy_trajectory_data(*coordinates.shape)
             data[['x', 'y', 'z']] = coordinates
 
         # Process box if set
         if box is not None and isinstance(box, np.ndarray):
             if data is None:
-                data = _dummy_trajectory_data(*box)
+                data = _dummy_trajectory_data(*box.shape)
             data[['bx', 'by', 'bz']] = box
 
         # Check topology is Topology
