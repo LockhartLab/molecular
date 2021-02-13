@@ -67,6 +67,7 @@ class Trajectory(object):
         if box is not None and isinstance(box, np.ndarray):
             if data is None:
                 data = _dummy_trajectory_data(*box.shape)
+            print(box.shape)
             data[['bx', 'by', 'bz']] = box.reshape(-1, 3)
 
         # Check topology is Topology
