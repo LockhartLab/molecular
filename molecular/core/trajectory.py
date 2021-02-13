@@ -61,13 +61,13 @@ class Trajectory(object):
         if coordinates is not None and isinstance(coordinates, np.ndarray):
             if data is None:
                 data = _dummy_trajectory_data(*coordinates.shape)
-            data[['x', 'y', 'z']] = coordinates
+            data[['x', 'y', 'z']] = coordinates.reshape(-1, 3)
 
         # Process box if set
         if box is not None and isinstance(box, np.ndarray):
             if data is None:
                 data = _dummy_trajectory_data(*box.shape)
-            data[['bx', 'by', 'bz']] = box
+            data[['bx', 'by', 'bz']] = box.reshape(-1, 3)
 
         # Check topology is Topology
         if topology is not None and not isinstance(topology, Topology):
@@ -910,10 +910,12 @@ class Topology:
         return self._data[['x', 'y', 'z']].to_numpy()
 
 
-def _dummy_trajectory_data(n_structures, n_atoms, *args):
+def _dummy_trajectory_data(n_structures, n_atoms, n_dim):
     # Sanity
-    if not isinstance(n_structures, int) or not isinstance(n_atoms, int):
-        raise AttributeError(f'n_structures = {n_structures}; n_atoms = {n_atoms}')
+    if not isinstance(n_structures, int) or not isinstance(n_atoms, int) or not isinstance(n_dim, int):
+        raise AttributeError(f'n_structures = {n_structures}; n_atoms = {n_atoms}; n_dim = {n_dim}')
+    if n_dim != 3:
+        raise AttributeError('can only process 3D information for now')
 
     # Turn record counts into arrays of indices
     structure_ids = np.arange(n_structures)
