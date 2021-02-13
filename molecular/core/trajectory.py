@@ -59,13 +59,13 @@ class Trajectory(object):
 
         # Process coordinates if set
         if coordinates is not None and isinstance(coordinates, np.ndarray):
-            if data is not None:
+            if data is None:
                 data = _trajectory_data_shape(*coordinates)
             data[['x', 'y', 'z']] = coordinates
 
         # Process box if set
         if box is not None and isinstance(box, np.ndarray):
-            if data is not None:
+            if data is None:
                 data = _trajectory_data_shape(*box)
             data[['bx', 'by', 'bz']] = box
 
