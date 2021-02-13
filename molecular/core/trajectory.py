@@ -911,10 +911,9 @@ class Topology:
 
 
 def _trajectory_data_shape(n_structures, n_atoms, *args):
-    return pd.DataFrame({
-        'structure_id': np.repeat(np.arange(n_structures), n_atoms),
-        'atom_id': np.tile(np.arange(n_atoms), n_structures),
-    }).set_index(['structure_id', 'atom_id'])
+    structure_ids = np.arange(n_structures)
+    atom_ids = np.arange(n_atoms)
+    return pd.DataFrame(index=pd.MultiIndex.from_product([structure_ids, atom_ids], names=['structure_id', 'atom_id']))
 
 
 if __name__ == '__main__':

@@ -70,4 +70,4 @@ logging.basicConfig(
     level=logging.INFO
 )
 logger = logging.getLogger('molecular')
-logging.info(f'loaded version {__version__}')
+logger.info(f'loaded version {__version__}')
