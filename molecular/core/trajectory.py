@@ -60,13 +60,13 @@ class Trajectory(object):
         # Process coordinates if set
         if coordinates is not None and isinstance(coordinates, np.ndarray):
             if data is None:
-                data = _trajectory_data_shape(*coordinates)
+                data = _dummy_trajectory_data(*coordinates)
             data[['x', 'y', 'z']] = coordinates
 
         # Process box if set
         if box is not None and isinstance(box, np.ndarray):
             if data is None:
-                data = _trajectory_data_shape(*box)
+                data = _dummy_trajectory_data(*box)
             data[['bx', 'by', 'bz']] = box
 
         # Check topology is Topology
@@ -910,7 +910,7 @@ class Topology:
         return self._data[['x', 'y', 'z']].to_numpy()
 
 
-def _trajectory_data_shape(n_structures, n_atoms, *args):
+def _dummy_trajectory_data(n_structures, n_atoms, *args):
     # Sanity
     if not isinstance(n_structures, int) or not isinstance(n_atoms, int):
         raise AttributeError(f'n_structures = {n_structures}; n_atoms = {n_atoms}')
