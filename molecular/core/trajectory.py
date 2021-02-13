@@ -911,8 +911,15 @@ class Topology:
 
 
 def _trajectory_data_shape(n_structures, n_atoms, *args):
+    # Sanity
+    if not isinstance(n_structures, int) or not isinstance(n_atoms, int):
+        raise AttributeError(f'n_structures = {n_structures}; n_atoms = {n_atoms}')
+
+    # Turn record counts into arrays of indices
     structure_ids = np.arange(n_structures)
     atom_ids = np.arange(n_atoms)
+
+    # Return
     return pd.DataFrame(index=pd.MultiIndex.from_product([structure_ids, atom_ids], names=['structure_id', 'atom_id']))
 
 
