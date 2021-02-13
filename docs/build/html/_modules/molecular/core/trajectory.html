@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.core.trajectory &#8212; molecular 0.1.dev118 documentation</title>
+    <title>molecular.core.trajectory &#8212; molecular 0.1.dev119 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev118 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev119 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.trajectory</a></li> 
       </ul>
@@ -102,13 +102,13 @@
         <span class="c1"># Process coordinates if set</span>
         <span class="k">if</span> <span class="n">coordinates</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">_trajectory_data_shape</span><span class="p">(</span><span class="o">*</span><span class="n">coordinates</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">_dummy_trajectory_data</span><span class="p">(</span><span class="o">*</span><span class="n">coordinates</span><span class="p">)</span>
             <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">coordinates</span>
 
         <span class="c1"># Process box if set</span>
         <span class="k">if</span> <span class="n">box</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">_trajectory_data_shape</span><span class="p">(</span><span class="o">*</span><span class="n">box</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">_dummy_trajectory_data</span><span class="p">(</span><span class="o">*</span><span class="n">box</span><span class="p">)</span>
             <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;bx&#39;</span><span class="p">,</span> <span class="s1">&#39;by&#39;</span><span class="p">,</span> <span class="s1">&#39;bz&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">box</span>
 
         <span class="c1"># Check topology is Topology</span>
@@ -952,9 +952,16 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">_trajectory_data_shape</span><span class="p">(</span><span class="n">n_structures</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_dummy_trajectory_data</span><span class="p">(</span><span class="n">n_structures</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="c1"># Sanity</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_structures</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_atoms</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;n_structures = </span><span class="si">{</span><span class="n">n_structures</span><span class="si">}</span><span class="s1">; n_atoms = </span><span class="si">{</span><span class="n">n_atoms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Turn record counts into arrays of indices</span>
     <span class="n">structure_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_structures</span><span class="p">)</span>
     <span class="n">atom_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_atoms</span><span class="p">)</span>
+
+    <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">([</span><span class="n">structure_ids</span><span class="p">,</span> <span class="n">atom_ids</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;structure_id&#39;</span><span class="p">,</span> <span class="s1">&#39;atom_id&#39;</span><span class="p">]))</span>
 
 
@@ -993,7 +1000,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev118 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev119 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.trajectory</a></li> 
       </ul>
