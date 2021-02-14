@@ -89,6 +89,7 @@ class Trajectory(object):
             data[['x', 'y', 'z']] = coordinates.reshape(-1, 3)
 
         # Process box if set
+        # TODO other names could be metadata... Ensemble class? System class? these names are bad SimulationParameters?
         configuration = None
         if box is not None and isinstance(box, np.ndarray):
             configuration = pd.DataFrame({
@@ -98,9 +99,12 @@ class Trajectory(object):
                 'bz': box[:, 2]
             })
 
-        # Check topology is Topology
-        if topology is not None and not isinstance(topology, Topology):
-            raise AttributeError('topology must be Topology instance')
+        # Process topology
+        if topology is not None:
+            if isinstance(topology, Trajectory):
+                topology = topology.topology
+            elif not isinstance(topology, Topology):
+                raise AttributeError('topology must be Topology instance')
 
         # Save Trajectory data elements
         self._data = data
