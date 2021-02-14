@@ -57,6 +57,8 @@ class Trajectory(object):
 
     """
 
+    __slots__ = ['_data', '_configuration', '_topology']
+
     # Initialize instance of Trajectory
     def __init__(self, data=None, coordinates=None, box=None, topology=None):
         """
