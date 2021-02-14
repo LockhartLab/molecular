@@ -30,6 +30,31 @@ def set_doc(original):
 class Trajectory(object):
     """
     `Trajectory` stores instantaneous data for a `Topology`, i.e., atomic coordinates, box information, velocity, etc.
+
+
+    data:
+        - structure_id
+        - atom_id
+        - x
+        - y
+        - z
+        - vx
+        - vy
+        - vz
+        - fx
+        - fy
+        - fz
+        - alpha
+        - beta
+        - user
+
+    config
+        - structure_id
+        - bx
+        - by
+        - bz
+
+
     """
 
     # Initialize instance of Trajectory
@@ -64,11 +89,14 @@ class Trajectory(object):
             data[['x', 'y', 'z']] = coordinates.reshape(-1, 3)
 
         # Process box if set
+        configuration = None
         if box is not None and isinstance(box, np.ndarray):
-            if data is None:
-                data = _dummy_trajectory_data(*box.shape)
-            print(box.shape)
-            data[['bx', 'by', 'bz']] = box.reshape(-1, 3)
+            configuration = pd.DataFrame({
+                'structure_id': np.arange(box.shape[0]),
+                'bx': box[:, 0],
+                'by': box[:, 1],
+                'bz': box[:, 2]
+            })
 
         # Check topology is Topology
         if topology is not None and not isinstance(topology, Topology):
@@ -76,6 +104,7 @@ class Trajectory(object):
 
         # Save Trajectory data elements
         self._data = data
+        self._configuration = configuration
         self._topology = topology
 
     # Add
