@@ -5,7 +5,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 """
 
 # from molecular import include_dir
-from molecular.geometry import distance
+# from molecular.geometry import distance
 from typelike import ListLike
 
 import numpy as np
@@ -14,7 +14,7 @@ import pandas as pd
 import sys
 
 # TODO move this to root
-include_dir = os.path.abspath(__file__ + '/../../include')
+include_dir = os.path.abspath(__file__ + '/../../../_include')
 
 # Reference to this module
 this = sys.modules[__name__]
@@ -217,7 +217,10 @@ def compute_hydrophobic_moment(sequence, offset=100., scale='wimley-white'):
     vector[:, 1] = scale[sequence] * np.sin(angles)
 
     # Return the hydrophobic moment
-    return distance(vector, method='euclidean')
+    # return distance(vector, method='euclidean')
+    return np.sqrt(np.sum(np.square(vector)))
+
+hydrophobic_moment = compute_hydrophobic_moment
 
 
 # RMSD
@@ -243,6 +246,17 @@ def rmsd(coord1, coord2, align=True):
     return np.linalg.norm(coord1 - coord2)/np.sqrt(coord1.shape[0])
 
 
+if __name__ == '__main__':
+    print(np.sum(hydrophobic_moment('GAIIGLMVGGVV')))
 
-
-
+    # sequence = ['GLY', 'ALA', 'ILE', 'ILE', 'GLY', 'LEU', 'MET', 'VAL', 'GLY', 'GLY', 'VAL', 'VAL']
+    sequence = ['GLY', 'SER', 'ASN', 'LYS', 'GLY', 'ALA', 'ILE', 'ILE', 'GLY', 'LEU', 'MET']
+    scale = _load_hydrophobicity_scale('wimley-white')
+    moment = [0., 0.]
+    angle = 0.
+    for s in sequence:
+        moment[0] = moment[0] + scale[s] * np.cos(angle)
+        moment[1] = moment[1] + scale[s] * np.sin(angle)
+        angle = angle - np.radians(100.)
+    print(moment)
+    print(np.sqrt(np.sum(np.square(moment))))

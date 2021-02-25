@@ -12,6 +12,8 @@ import numpy as np
 
 # TODO allow computation to work with only distances? Need a way to speed up calculations using REMD
 
+def lennard_jones(epsilon, r_min, r):
+    return epsilon * ((r_min / r) ** 12. - 2 * (r_min / r) ** 6.)
 
 # Metaclass that defines structure of each energy term
 class EnergyTerm(metaclass=ABCMeta):
