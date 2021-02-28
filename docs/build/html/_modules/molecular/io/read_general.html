@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read_general &#8212; molecular 0.1.dev126 documentation</title>
+    <title>molecular.io.read_general &#8212; molecular 0.1.dev127 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -27,7 +27,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev126 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev127 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read_general</a></li> 
       </ul>
@@ -52,7 +52,7 @@
 
 
 <span class="c1"># Globular loadtxt</span>
-<div class="viewcode-block" id="loadtxt"><a class="viewcode-back" href="../../../api/generated/molecular.io.loadtxt.html#molecular.io.loadtxt">[docs]</a><span class="k">def</span> <span class="nf">loadtxt</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">glob</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="loadtxt"><a class="viewcode-back" href="../../../api/generated/molecular.io.loadtxt.html#molecular.io.loadtxt">[docs]</a><span class="k">def</span> <span class="nf">loadtxt</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">glob</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A refactoring of :ref:`numpy.loadtxt` that allows for globbing files.</span>
 
@@ -60,12 +60,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    fname : file, str, or pathlib.Path</span>
 <span class="sd">        Name of file.</span>
-<span class="sd">    dtype : str or object</span>
-<span class="sd">        File type.</span>
 <span class="sd">    glob : bool</span>
 <span class="sd">        Does `fname` need to be globbed?</span>
 <span class="sd">    verbose : bool</span>
 <span class="sd">        Should information about the read-in be displayed?</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional keyword parameters to pass to :ref:`numpy.loadtxt`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -91,7 +91,7 @@
         <span class="n">fname</span> <span class="o">=</span> <span class="n">input_</span><span class="p">(</span><span class="n">fname_glob</span><span class="p">)</span>
 
     <span class="c1"># Utilize numpy to read-in the file(s)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="c1"># If verbose, note the shape of the data</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
@@ -197,7 +197,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev126 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev127 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read_general</a></li> 
       </ul>
