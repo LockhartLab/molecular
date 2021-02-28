@@ -106,7 +106,7 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, **kwarg
     # Cycle over fnames and read in
     kwargs['sep'] = sep
     kwargs['header'] = header
-    data = [pd.read_table(_, **kwargs).assign('_source', _) for _ in fnames]
+    data = [pd.read_table(fname, **kwargs).assign(_source=fname) for fname in fnames]
 
     # Concatenate
     data = data[0] if len(data) == 1 else pd.concat(data)
