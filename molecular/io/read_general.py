@@ -11,7 +11,7 @@ logger = logging.getLogger('molecular.io')
 
 
 # Globular loadtxt
-def loadtxt(fname, dtype=float, glob=False, verbose=False):
+def loadtxt(fname, glob=False, verbose=False, **kwargs):
     """
     A refactoring of :ref:`numpy.loadtxt` that allows for globbing files.
 
@@ -19,12 +19,12 @@ def loadtxt(fname, dtype=float, glob=False, verbose=False):
     ----------
     fname : file, str, or pathlib.Path
         Name of file.
-    dtype : str or object
-        File type.
     glob : bool
         Does `fname` need to be globbed?
     verbose : bool
         Should information about the read-in be displayed?
+    **kwargs
+        Optional keyword parameters to pass to :ref:`numpy.loadtxt`.
 
     Returns
     -------
@@ -50,7 +50,7 @@ def loadtxt(fname, dtype=float, glob=False, verbose=False):
         fname = input_(fname_glob)
 
     # Utilize numpy to read-in the file(s)
-    data = np.loadtxt(fname, dtype=dtype)
+    data = np.loadtxt(fname, **kwargs)
 
     # If verbose, note the shape of the data
     if verbose:
