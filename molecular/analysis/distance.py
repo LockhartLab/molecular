@@ -10,6 +10,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 import numpy as np
 
 
+# Compute the distance between two Trajectories
 def distance(a, b):
     """
     Compute the distance between two Trajectory instances.
@@ -25,4 +26,8 @@ def distance(a, b):
         Distance between every frame in the trajectory.
     """
 
-    return np.sqrt(np.sum(np.square(a.xyz - b.xyz), axis=(1, 2)))
+    # TODO there must be a better way
+    a_xyz = a.xyz.to_numpy().reshape(*a.shape)
+    b_xyz = b.xyz.to_numpy().reshape(*b.shape)
+
+    return np.sqrt(np.sum(np.square(a_xyz - b_xyz), axis=(1, 2)))
