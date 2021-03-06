@@ -5,8 +5,119 @@ author: C. Lockhart <chris@lockhartlab.org>
 language: Python3
 """
 
+from molecular.io import loadtxt
 
 import numpy as np
+import pandas as pd
+
+
+# TODO this name vs CoupledMarkovChain??
+class ReplicaWalk:
+    def __init__(self, data):
+        n_replicas = data['replica'].nunique()
+        for replica in range(n_replicas):
+            tmp = data.query(f'replica == {replica}')['config'].diff().fillna(0)
+            assert tmp.min() == -1
+            assert tmp.max() == 1
+        self.data = data
+
+    # Read NAMD history file (from RE multiwalker)
+    @classmethod
+    def from_namd(cls, fname, n_replicas, glob=False):
+        data = pd.DataFrame()
+        for replica in range(n_replicas):
+            tmp = loadtxt(fname.format(replica=replica), glob=glob)
+            data = data.append(pd.DataFrame({
+                'step': tmp[:, 0],
+                'replica': np.repeat(replica, len(tmp)),
+                'config': tmp[:, 1].astype(int),
+                'temperature': tmp[:, 2]
+            }), ignore_index=True)
+        return cls(data.sort_values(['replica', 'step']))
+
+    def exchange_rate(self):
+        pass
+
+    def mosaic_plot(self, interval=100, cmap='jet'):
+        import matplotlib.pyplot as plt
+        from matplotlib.ticker import MultipleLocator, MaxNLocator
+        import uplot as u
+
+        u.core.set_mpl_theme()
+
+        data = self.trajectory(by='config', reset_index=True)
+        steps = data.index.to_numpy(dtype='int')[::interval]
+        replicas = data.columns.to_numpy(dtype='int')
+        if replicas[0] == 0:
+            replicas = replicas + 1
+            data = data + 1
+        mosaic = data.to_numpy(dtype='int')[::interval, :]
+        x = np.arange(mosaic.shape[0] + 1)
+        y = np.arange(mosaic.shape[1] + 1)
+
+        # Start figure and axis
+        fig = plt.figure()
+        ax = fig.add_subplot()
+        # im = ax.pcolormesh(mosaic, cmap=cmap, edgecolors='k', linewidth=0.5)  # bwr
+        im = ax.pcolormesh(x - 0.5, y - 0.5, mosaic.T, cmap=cmap, edgecolors='k', linewidth=0.5)
+
+        # Format x axis
+        # TODO change this so only units of X are display
+        ax.set_xticks(np.arange(len(steps)))
+        ax.set_xticklabels(steps)
+        ax.set_xlabel(r'$step$')
+
+        # Format y axis
+        ax.set_yticks(np.arange(len(replicas)))
+        ax.set_yticklabels(replicas)
+        ax.set_ylabel(r'$temperature\ index$')
+
+        # Format tick lines
+        # ax.spines['top'].set_visible(False)
+        # ax.spines['right'].set_visible(False)
+        ax.xaxis.set_ticks_position('bottom')
+        ax.yaxis.set_ticks_position('left')
+        ax.tick_params(axis='both', which='both', direction='out')
+
+        ax.xaxis.set_major_locator(MultipleLocator(10))
+        ax.xaxis.set_minor_locator(MultipleLocator(10))
+
+        ax.yaxis.set_major_locator(MultipleLocator(1))
+        ax.yaxis.set_minor_locator(MultipleLocator(1))
+
+        # fig.colorbar()
+        ax.set_aspect('auto')
+        # ax.grid(which='minor', color='w', linestyle='-', linewidth=5)
+
+        ax.grid(linestyle='')
+
+        # plt.axis('equal')
+        # Add color bar
+        cbar = plt.colorbar(im, ax=ax, shrink=0.5, drawedges=False)
+        cbar.outline.set_linewidth(0.5)
+        # cbar.ax.spines['right'].set_visible(True)
+        cbar.ax.tick_params(direction='out', length=5.)
+        cbar.ax.tick_params(which='minor', length=0)
+        #        cbar.ax.yaxis.set_major_locator(MultipleLocator(1))
+        cbar.ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+        cbar.ax.set_ylabel(r'$replica\ index$')
+
+        # Save the image
+        # fig.show()
+        fig.savefig('mosaic_plot.png')
+
+    def trajectory(self, by='config', reset_index=True):
+        columns = 'config'
+        values = 'replica'
+        if by == 'replica':
+            columns, values = values, columns
+        elif by != 'config':
+            raise AttributeError('unexpected `by`')
+        data = self.data.pivot_table(index='step', columns=columns, values=values)
+        if reset_index:
+            data.reset_index(drop=True, inplace=True)
+            data.index.name = 'step'
+        return data
 
 
 # Create a temperature schedule
@@ -91,6 +202,114 @@ def temp_schedule(temp_min=300, temp_max=440, n_temps=40, mode='geometric'):
         raise AttributeError(f'mode {mode} not supported')
 
     return schedule
+
+
+class ReplicaWalk:
+    def __init__(self, data):
+        n_replicas = data['replica'].nunique()
+        for replica in range(n_replicas):
+            tmp = data.query(f'replica == {replica}')['config'].diff().fillna(0)
+            assert tmp.min() == -1
+            assert tmp.max() == 1
+        self.data = data
+
+    # Read NAMD history file (from RE multiwalker)
+    @classmethod
+    def from_namd(cls, fname, n_replicas, glob=False):
+        data = pd.DataFrame()
+        for replica in range(n_replicas):
+            tmp = mol.loadtxt(fname.format(replica=replica), glob=glob)
+            data = data.append(pd.DataFrame({
+                'step': tmp[:, 0],
+                'replica': np.repeat(replica, len(tmp)),
+                'config': tmp[:, 1].astype(int),
+                'temperature': tmp[:, 2]
+            }), ignore_index=True)
+        return cls(data.sort_values(['replica', 'step']))
+
+    def exchange_rate(self):
+        pass
+
+    def mosaic_plot(self, interval=100, cmap='jet'):
+        import matplotlib.pyplot as plt
+        from matplotlib.ticker import MultipleLocator, MaxNLocator
+        import uplot as u
+
+        u.core.set_mpl_theme()
+
+        data = self.trajectory(by='config', reset_index=True)
+        steps = data.index.to_numpy(dtype='int')[::interval]
+        replicas = data.columns.to_numpy(dtype='int')
+        if replicas[0] == 0:
+            replicas = replicas + 1
+            data = data + 1
+        mosaic = data.to_numpy(dtype='int')[::interval, :]
+        x = np.arange(mosaic.shape[0] + 1)
+        y = np.arange(mosaic.shape[1] + 1)
+
+        # Start figure and axis
+        fig = plt.figure()
+        ax = fig.add_subplot()
+        # im = ax.pcolormesh(mosaic, cmap=cmap, edgecolors='k', linewidth=0.5)  # bwr
+        im = ax.pcolormesh(x - 0.5, y - 0.5, mosaic.T, cmap=cmap, edgecolors='k', linewidth=0.5)
+
+        # Format x axis
+        # TODO change this so only units of X are display
+        ax.set_xticks(np.arange(len(steps)))
+        ax.set_xticklabels(steps)
+        ax.set_xlabel(r'$step$')
+
+        # Format y axis
+        ax.set_yticks(np.arange(len(replicas)))
+        ax.set_yticklabels(replicas)
+        ax.set_ylabel(r'$temperature\ index$')
+
+        # Format tick lines
+        # ax.spines['top'].set_visible(False)
+        # ax.spines['right'].set_visible(False)
+        ax.xaxis.set_ticks_position('bottom')
+        ax.yaxis.set_ticks_position('left')
+        ax.tick_params(axis='both', which='both', direction='out')
+
+        ax.xaxis.set_major_locator(MultipleLocator(10))
+        ax.xaxis.set_minor_locator(MultipleLocator(10))
+
+        ax.yaxis.set_major_locator(MultipleLocator(1))
+        ax.yaxis.set_minor_locator(MultipleLocator(1))
+
+        # fig.colorbar()
+        ax.set_aspect('auto')
+        # ax.grid(which='minor', color='w', linestyle='-', linewidth=5)
+
+        ax.grid(linestyle='')
+
+        # plt.axis('equal')
+        # Add color bar
+        cbar = plt.colorbar(im, ax=ax, shrink=0.5, drawedges=False)
+        cbar.outline.set_linewidth(0.5)
+        # cbar.ax.spines['right'].set_visible(True)
+        cbar.ax.tick_params(direction='out', length=5.)
+        cbar.ax.tick_params(which='minor', length=0)
+        #        cbar.ax.yaxis.set_major_locator(MultipleLocator(1))
+        cbar.ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+        cbar.ax.set_ylabel(r'$replica\ index$')
+
+        # Save the image
+        # fig.show()
+        fig.savefig('mosaic_plot.png')
+
+    def trajectory(self, by='config', reset_index=True):
+        columns = 'config'
+        values = 'replica'
+        if by == 'replica':
+            columns, values = values, columns
+        elif by != 'config':
+            raise AttributeError('unexpected `by`')
+        data = self.data.pivot_table(index='step', columns=columns, values=values)
+        if reset_index:
+            data.reset_index(drop=True, inplace=True)
+            data.index.name = 'step'
+        return data
 
 
 if __name__ == '__main__':
