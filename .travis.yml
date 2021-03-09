@@ -4,15 +4,15 @@ python: 3.8
 
 os:
   - linux
-  - osx
-  - windows
+#  - osx
+#  - windows
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gfortran
+#addons:
+#  apt:
+#    sources:
+#      - ubuntu-toolchain-r-test
+#    packages:
+#      - gfortran
 
 branches:
   only:
