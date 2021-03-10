@@ -64,7 +64,20 @@ class ReplicaWalk:
         # Return Hansmann parameter
         return 1. - np.sqrt(np.square(data).sum(axis=1)) / data.sum(axis=1)
 
-    def hansmann_plot(self, include_theoretical=True):
+    def hansmann_plot(self, plot_theoretical=True):
+        """
+        Plot the Hansmann parameter.
+
+        Parameters
+        ----------
+        plot_theoretical : bool
+            Should the theoretical Hansmann parameter in the case of equal sampling be plotted? (Default: True)
+
+        Returns
+        -------
+
+        """
+
         import uplot as u
 
         data = self.hansmann()
@@ -72,9 +85,15 @@ class ReplicaWalk:
         y = data.to_numpy()
 
         # Build figure
-        fig = u.figure(style={'x_min': 0., 'x_max': 1.})
+        fig = u.figure(style={
+            'x_title': r'$T$',
+            'y_title': r'$h$($T$)',
+            'y_min': 0.,
+            'y_max': 1.,
+
+        })
         fig += u.line(x, y)
-        if include_theoretical:
+        if plot_theoretical:
             fig += u.line(x, np.repeat(1. - 1. / np.sqrt(len(x)), len(x)))
         fig, ax = fig.to_mpl(show=False)
         fig.savefig('hansmann_plot.svg')
