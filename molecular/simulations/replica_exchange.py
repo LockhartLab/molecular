@@ -1,7 +1,7 @@
 """
 replica_exchange.py
 
-author: C. Lockhart <chris@lockhartlab.org>
+author: C. Lockhart <clockha2@gmu.edu>
 language: Python3
 """
 
@@ -37,6 +37,29 @@ class ReplicaWalk:
 
     def exchange_rate(self):
         pass
+
+    def hansmann(self):
+        r"""
+        The Hansmann parameter :math:`h(T)` shows the residence time :math:`\tau` replica :math:`r` (of :math:`R` total
+        replicas) spends at configuration :math:`T`.
+
+        .. math:: h(T) = 1 - \frac{\sqrt{\sum_{r=1}^R \tau_r^2}}{\sum_{r=1}^R \tau_r}
+
+        If all replicas are equally sampled across all configurations, then :math:`h(T) = 1 - 1 / \sqrt{R}`.
+
+        Returns
+        -------
+        pandas.Series
+            Hansmann parameter computed for all configurations.
+        """
+
+        # Cross-tabulate replica by configuration
+        data = self.trajectory(by='config', reset_index=True)
+        data_melted = data.melt(value_name='replica')
+        df = pd.crosstab(index=data_melted['config'], columns=data_melted['replica'])
+
+        # Return Hansmann parameter
+        return 1. - np.sqrt(np.square(df).sum(axis=1)) / df.sum(axis=1)
 
     def mosaic_plot(self, interval=100, cmap='jet'):
         import matplotlib.pyplot as plt
