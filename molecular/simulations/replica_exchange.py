@@ -35,6 +35,11 @@ class ReplicaWalk:
             }), ignore_index=True)
         return cls(data.sort_values(['replica', 'step']))
 
+    def crosstab(self, index='config', column='replica'):
+        data = self.trajectory(by=index, reset_index=True)
+        data_melt = data.melt(value_name=column)
+        return pd.crosstab(index=data_melt[index], columns=data_melt[column])
+
     def exchange_rate(self):
         pass
 
@@ -54,12 +59,25 @@ class ReplicaWalk:
         """
 
         # Cross-tabulate replica by configuration
-        data = self.trajectory(by='config', reset_index=True)
-        data_melted = data.melt(value_name='replica')
-        df = pd.crosstab(index=data_melted['config'], columns=data_melted['replica'])
+        data = self.crosstab(index='config', column='replica')
 
         # Return Hansmann parameter
-        return 1. - np.sqrt(np.square(df).sum(axis=1)) / df.sum(axis=1)
+        return 1. - np.sqrt(np.square(data).sum(axis=1)) / data.sum(axis=1)
+
+    def hansmann_plot(self, include_theoretical=True):
+        import uplot as u
+
+        data = self.hansmann()
+        x = data.index.to_numpy()
+        y = data.to_numpy()
+
+        # Build figure
+        fig = u.figure(style={'x_min': 0., 'x_max': 1.})
+        fig += u.line(x, y)
+        if include_theoretical:
+            fig += u.line(x, np.repeat(1. - 1. / np.sqrt(len(x)), len(x)))
+        fig, ax = fig.to_mpl(show=False)
+        fig.savefig('hansmann_plot.svg')
 
     def mosaic_plot(self, interval=100, cmap='jet'):
         import matplotlib.pyplot as plt
@@ -241,7 +259,7 @@ class ReplicaWalk:
     def from_namd(cls, fname, n_replicas, glob=False):
         data = pd.DataFrame()
         for replica in range(n_replicas):
-            tmp = mol.loadtxt(fname.format(replica=replica), glob=glob)
+            tmp = loadtxt(fname.format(replica=replica), glob=glob)
             data = data.append(pd.DataFrame({
                 'step': tmp[:, 0],
                 'replica': np.repeat(replica, len(tmp)),

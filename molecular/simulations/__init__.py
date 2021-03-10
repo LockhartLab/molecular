@@ -3,6 +3,7 @@ from .replica_exchange import *
 
 __all__ = [
     'get_pme_size',
+    'ReplicaWalk',
     'temp_schedule',
 ]
 
