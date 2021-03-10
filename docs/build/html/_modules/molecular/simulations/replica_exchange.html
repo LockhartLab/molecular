@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.simulations.replica_exchange &#8212; molecular 0.1.dev133 documentation</title>
+    <title>molecular.simulations.replica_exchange &#8212; molecular 0.1.dev134 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -27,7 +27,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev133 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev134 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.replica_exchange</a></li> 
       </ul>
@@ -42,7 +42,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">replica_exchange.py</span>
 
-<span class="sd">author: C. Lockhart &lt;chris@lockhartlab.org&gt;</span>
+<span class="sd">author: C. Lockhart &lt;clockha2@gmu.edu&gt;</span>
 <span class="sd">language: Python3</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -78,6 +78,29 @@
 
     <span class="k">def</span> <span class="nf">exchange_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">hansmann</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The Hansmann parameter :math:`h(T)` shows the residence time :math:`\tau` replica :math:`r` (of :math:`R` total</span>
+<span class="sd">        replicas) spends at configuration :math:`T`.</span>
+
+<span class="sd">        .. math:: h(T) = 1 - \frac{\sqrt{\sum_{r=1}^R \tau_r^2}}{\sum_{r=1}^R \tau_r}</span>
+
+<span class="sd">        If all replicas are equally sampled across all configurations, then :math:`h(T) = 1 - 1 / \sqrt{R}`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.Series</span>
+<span class="sd">            Hansmann parameter computed for all configurations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Cross-tabulate replica by configuration</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">reset_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">data_melted</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;replica&#39;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">data_melted</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">data_melted</span><span class="p">[</span><span class="s1">&#39;replica&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Return Hansmann parameter</span>
+        <span class="k">return</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">mosaic_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -387,7 +410,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev133 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev134 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.replica_exchange</a></li> 
       </ul>
