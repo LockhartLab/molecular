@@ -1,6 +1,8 @@
 
+from .utilities import Path, vglob
+
 from fileinput import input as input_
-from glob import glob as glob_
+from functools import partial
 import logging
 import numpy as np
 import pandas as pd
@@ -11,7 +13,7 @@ logger = logging.getLogger('molecular.io')
 
 
 # Globular loadtxt
-def loadtxt(fname, glob=False, verbose=False, **kwargs):
+def loadtxt(fname, glob=None, verbose=False, **kwargs):
     """
     A refactoring of :ref:`numpy.loadtxt` that allows for globbing files.
 
@@ -19,8 +21,9 @@ def loadtxt(fname, glob=False, verbose=False, **kwargs):
     ----------
     fname : file, str, or pathlib.Path
         Name of file.
-    glob : bool
-        Does `fname` need to be globbed?
+    glob : bool or dict
+        Does `fname` need to be globbed? If a boolean, uses :ref:`glob`. If dictionary, uses :ref:`vglob`.
+        (Default: None)
     verbose : bool
         Should information about the read-in be displayed?
     **kwargs
@@ -34,13 +37,17 @@ def loadtxt(fname, glob=False, verbose=False, **kwargs):
 
     # If glob, change fname to include all globbed files
     if glob:
+        # Convert glob to a empty dictionary if necessary
+        if not isinstance(glob, dict):
+            glob = {}
+
         # Glob first; if glob is empty, throw an error
-        fname_glob = glob_(fname)
+        fname_glob = vglob(fname, errors='raise', **glob)
         if not fname_glob:
             raise FileNotFoundError(fname)
 
         # Sort glob
-        fname_glob = sorted(fname_glob)
+        # fname_glob = sorted(fname_glob)
 
         # Output if verbose
         if verbose:
@@ -61,7 +68,7 @@ def loadtxt(fname, glob=False, verbose=False, **kwargs):
 
 
 # TODO enable fname to be stored in the DataFrame? Is this a bad idea?
-def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, **kwargs):
+def read_table(fname, glob=None, sep='\s+', header=None, reindex=False, **kwargs):
     """
     Read table into :class:`pandas.DataFrame`.
 
@@ -69,8 +76,9 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, **kwarg
     ----------
     fname : str
         Name of file.
-    glob : true
-        Should `fname` be treated as a globbed path? (Default: False)
+    glob : bool or dict
+        Does `fname` need to be globbed? If a boolean, uses :ref:`glob`. If dictionary, uses :ref:`vglob`.
+        (Default: None)
     sep : str
         Character used to separate columns? (Default: white space)
     header : bool
@@ -86,13 +94,17 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, **kwarg
 
     # If glob, change fname to include all globbed files
     if glob:
+        # Convert glob to a empty dictionary if necessary
+        if not isinstance(glob, dict):
+            glob = {}
+
         # Glob first; if glob is empty, throw an error
-        fname_glob = glob_(fname)
+        fname_glob = vglob(fname, errors='raise', **glob)
         if not fname_glob:
             raise FileNotFoundError(fname)
 
         # Sort glob
-        fnames = sorted(fname_glob)
+        # fnames = sorted(fname_glob)
 
     # Otherwise, turn fname into a list
     # TODO evaluate if creating this list is right, or if we should short-circuit the read-in
@@ -104,9 +116,13 @@ def read_table(fname, glob=False, sep='\s+', header=None, reindex=False, **kwarg
     start_time = time.time()
 
     # Cycle over fnames and read in
+    # TODO be careful here -- we want to avoid storing multiple copies of data
     kwargs['sep'] = sep
     kwargs['header'] = header
-    data = [pd.read_table(fname, **kwargs).assign(_source=fname) for fname in fnames]
+    data = map(partial(pd.read_table, **kwargs), fnames)
+    # data = [pd.read_table(fname, **kwargs).assign({**Path(fname).metadata}) for fname in fnames]
+    if glob:
+        data = [table.assign({**Path(fname).metadata}) for fname, table in zip(fnames, data)]
 
     # Concatenate
     data = data[0] if len(data) == 1 else pd.concat(data)
