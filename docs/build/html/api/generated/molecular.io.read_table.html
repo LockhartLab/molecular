@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read_table &#8212; molecular 0.1.dev136 documentation</title>
+    <title>molecular.io.read_table &#8212; molecular 0.1.dev137 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="molecular.io.read_pdb.html" title="molecular.io.read_pdb"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev136 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev137 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../io.html" accesskey="U">molecular.io</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read_table</a></li> 
@@ -51,13 +51,14 @@
 <h1>molecular.io.read_table<a class="headerlink" href="#molecular-io-read-table" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="molecular.io.read_table">
-<code class="sig-prename descclassname"><span class="pre">molecular.io.</span></code><code class="sig-name descname"><span class="pre">read_table</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\\s+'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reindex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/io/read_general.html#read_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.io.read_table" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">molecular.io.</span></code><code class="sig-name descname"><span class="pre">read_table</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\\s+'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reindex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/io/read_general.html#read_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.io.read_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read table into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of file.</p></li>
-<li><p><strong>glob</strong> (<em>true</em>) – Should <cite>fname</cite> be treated as a globbed path? (Default: False)</p></li>
+<li><p><strong>glob</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – Does <cite>fname</cite> need to be globbed? If a boolean, uses <span class="xref std std-ref">glob</span>. If dictionary, uses <span class="xref std std-ref">vglob</span>.
+(Default: None)</p></li>
 <li><p><strong>sep</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Character used to separate columns? (Default: white space)</p></li>
 <li><p><strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – (Default: None)</p></li>
 <li><p><strong>reindex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – (Default: False)</p></li>
@@ -123,7 +124,7 @@
         <li class="right" >
           <a href="molecular.io.read_pdb.html" title="molecular.io.read_pdb"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev136 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev137 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../io.html" >molecular.io</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read_table</a></li> 
