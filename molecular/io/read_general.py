@@ -105,6 +105,7 @@ def read_table(fname, glob=None, sep='\s+', header=None, reindex=False, **kwargs
 
         # Sort glob
         # fnames = sorted(fname_glob)
+        fnames = fname_glob
 
     # Otherwise, turn fname into a list
     # TODO evaluate if creating this list is right, or if we should short-circuit the read-in
