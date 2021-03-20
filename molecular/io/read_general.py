@@ -123,7 +123,7 @@ def read_table(fname, glob=None, sep='\s+', header=None, reindex=False, **kwargs
     data = map(partial(pd.read_table, **kwargs), fnames)
     # data = [pd.read_table(fname, **kwargs).assign({**Path(fname).metadata}) for fname in fnames]
     if glob:
-        data = [table.assign({**Path(fname).metadata}) for fname, table in zip(fnames, data)]
+        data = [table.assign(**Path(fname).metadata) for fname, table in zip(fnames, data)]
 
     # Concatenate
     data = data[0] if len(data) == 1 else pd.concat(data)
