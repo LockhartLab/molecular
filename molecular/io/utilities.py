@@ -12,6 +12,10 @@ class Path:
     __slots__ = ('_path', '_metadata')
 
     def __init__(self, path, **metadata):
+        if isinstance(path, Path):
+            metadata = path._metadata
+            path = path._path
+
         self._path = path
         self._metadata = metadata
 
