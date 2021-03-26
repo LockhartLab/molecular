@@ -478,8 +478,8 @@ class Trajectory(object):
             Trajectory information for structure indices.
         """
 
-        match = np.in1d(self._data.index.get_level_values('structure_id'), index)
-        return self._data[match]
+        mask = np.in1d(self._data.index.get_level_values('structure_id'), index)
+        return Trajectory(self._data[mask], topology=self._topology)
 
     def keys(self):
         return self._topology.keys()

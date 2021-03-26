@@ -68,7 +68,7 @@ def loadtxt(fname, glob=None, verbose=False, **kwargs):
 
 
 # TODO enable fname to be stored in the DataFrame? Is this a bad idea?
-def read_table(fname, glob=None, sep='\s+', header=None, reindex=False, **kwargs):
+def read_table(fname, glob=None, sep='\s+', header=None, reindex=False, **kwargs):  # noqa
     """
     Read table into :class:`pandas.DataFrame`.
 

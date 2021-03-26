@@ -25,7 +25,7 @@ logger = logging.getLogger('molecular.io')
 
 # Read PDB
 # TODO currently the only backend will by python; in future, expand to Cython or C or Fortran backend
-def read_pdb(fname, backend='python'):
+def read_pdb(fname, backend='pandas'):
     """
     Read PDB file and return Trajectory
 
@@ -37,6 +37,8 @@ def read_pdb(fname, backend='python'):
         Name of PDB file to be read
     backend : str
         (Default: 'pandas')
+    skip : int
+        (Optional) Read every `skip` frames.
 
     Returns
     -------
