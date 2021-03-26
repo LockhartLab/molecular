@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read &#8212; molecular 0.1.dev140 documentation</title>
+    <title>molecular.io.read &#8212; molecular 0.1.dev141 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -27,7 +27,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev140 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev141 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
@@ -66,7 +66,7 @@
 
 <span class="c1"># Read PDB</span>
 <span class="c1"># TODO currently the only backend will by python; in future, expand to Cython or C or Fortran backend</span>
-<div class="viewcode-block" id="read_pdb"><a class="viewcode-back" href="../../../api/generated/molecular.io.read_pdb.html#molecular.io.read_pdb">[docs]</a><span class="k">def</span> <span class="nf">read_pdb</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="read_pdb"><a class="viewcode-back" href="../../../api/generated/molecular.io.read_pdb.html#molecular.io.read_pdb">[docs]</a><span class="k">def</span> <span class="nf">read_pdb</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;pandas&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read PDB file and return Trajectory</span>
 
@@ -78,6 +78,8 @@
 <span class="sd">        Name of PDB file to be read</span>
 <span class="sd">    backend : str</span>
 <span class="sd">        (Default: &#39;pandas&#39;)</span>
+<span class="sd">    skip : int</span>
+<span class="sd">        (Optional) Read every `skip` frames.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -442,14 +444,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev140 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev141 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Lockhart Lab.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.3.
     </div>
   </body>
 </html>
