@@ -32,8 +32,8 @@ jobs:
       run: |
         cp -r molecular/tests/samples ./samples
         cp molecular/tests/test.py .
-        python -m coverage run test.py
-        coverage run -m unittest test.py
+        # python -m coverage run test.py
+        # coverage run -m unittest test.py
         rm test.py
 
     - name: Code coverage
