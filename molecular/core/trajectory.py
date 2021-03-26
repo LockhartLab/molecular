@@ -661,7 +661,7 @@ class Trajectory(object):
 
                 # Select pertinent rows and columns
                 structure = data.loc[is_structure, ['record', 'atom_id', 'atom', 'residue', 'chain', 'residue_id',
-                                                    'x', 'y', 'z', 'alpha', 'beta', 'segment', 'element']]
+                                                    'x', 'y', 'z', 'alpha', 'beta', 'segment', 'element']].to_numpy()
 
                 # Write out PDB file
                 # TODO add box to header
