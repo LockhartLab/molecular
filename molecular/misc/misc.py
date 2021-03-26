@@ -28,3 +28,12 @@ def assert_incremental(a, increment=1):
 def is_incremental(a, increment=1):
     return (np.diff(a) == increment).all()
 
+
+# Convenience zfill function
+def zfill(a, width=None):
+    if width is None:
+        return a
+    elif hasattr(a, '__getitem__'):
+        return np.char.zfill(list(map(str, a)), width)
+    else:
+        return str(a).zfill(width)
