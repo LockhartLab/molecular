@@ -24,6 +24,9 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements_dev.txt
 
+    - name: Install package
+        python -m pip install -e .
+
     - name: Test
       run: |
         cp -r molecular/tests/samples ./samples
