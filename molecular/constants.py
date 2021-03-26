@@ -7,6 +7,12 @@ import numpy as np
 from scipy.constants import Boltzmann, Avogadro, atmosphere
 import scipy.constants
 
+__all__ = [
+    'AVOGADRO',
+    'BOLTZMANN'
+]
+
+
 AVOGADRO = scipy.constants.Avogadro
 BOLTZMANN = scipy.constants.Boltzmann
 
