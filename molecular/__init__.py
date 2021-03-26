@@ -5,6 +5,9 @@ from .analysis import *
 from . import bioinformatics
 from .bioinformatics import *
 
+from . import constants
+from .constants import *
+
 from . import core
 from .core import *
 
