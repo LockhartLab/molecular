@@ -49,7 +49,8 @@ def vglob(path, errors='raise', **kwargs):
 
     # Values
     def _convert_to_list(value):
-        if not isinstance(value, range) and not hasattr(value, '_getitem_'):
+        # BUGFIX https://github.com/LockhartLab/molecular/issues/2#issue-838289328
+        if not isinstance(value, range) and not hasattr(value, '__getitem__'):
             value = [value]
         return value
 
