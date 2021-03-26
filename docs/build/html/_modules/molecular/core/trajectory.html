@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.core.trajectory &#8212; molecular 0.1.dev140 documentation</title>
+    <title>molecular.core.trajectory &#8212; molecular 0.1.dev141 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -27,7 +27,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev140 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev141 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.trajectory</a></li> 
       </ul>
@@ -519,8 +519,8 @@
 <span class="sd">            Trajectory information for structure indices.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">match</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="s1">&#39;structure_id&#39;</span><span class="p">),</span> <span class="n">index</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">match</span><span class="p">]</span></div>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="s1">&#39;structure_id&#39;</span><span class="p">),</span> <span class="n">index</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Trajectory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">topology</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_topology</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_topology</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -702,7 +702,7 @@
 
                 <span class="c1"># Select pertinent rows and columns</span>
                 <span class="n">structure</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">is_structure</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;record&#39;</span><span class="p">,</span> <span class="s1">&#39;atom_id&#39;</span><span class="p">,</span> <span class="s1">&#39;atom&#39;</span><span class="p">,</span> <span class="s1">&#39;residue&#39;</span><span class="p">,</span> <span class="s1">&#39;chain&#39;</span><span class="p">,</span> <span class="s1">&#39;residue_id&#39;</span><span class="p">,</span>
-                                                    <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="s1">&#39;segment&#39;</span><span class="p">,</span> <span class="s1">&#39;element&#39;</span><span class="p">]]</span>
+                                                    <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="s1">&#39;segment&#39;</span><span class="p">,</span> <span class="s1">&#39;element&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 
                 <span class="c1"># Write out PDB file</span>
                 <span class="c1"># TODO add box to header</span>
@@ -1037,14 +1037,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev140 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev141 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.trajectory</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Lockhart Lab.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.3.
     </div>
   </body>
 </html>
