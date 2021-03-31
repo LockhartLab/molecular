@@ -321,3 +321,21 @@ def _coerce_xyz(*args):
 
     # Return
     return results
+
+
+class HarmonicOscillator:
+    """
+
+    """
+
+    __slots__ = ('_ideal_value', '_force_constant')
+
+    def __init__(self, ideal_value, force_constant):
+        self._ideal_value = ideal_value
+        self._force_constant = force_constant
+
+    def energy(self, instantaneous_value):
+        return 0.5 * self._force_constant * np.square(instantaneous_value - self._ideal_value)
+
+    def force(self, instantaneous_value):
+        return self._force_constant * (instantaneous_value - self._ideal_value)
