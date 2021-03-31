@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.energy.energy &#8212; molecular 0.1.dev147 documentation</title>
+    <title>molecular.energy.energy &#8212; molecular 0.1.dev148 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev147 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev148 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.energy.energy</a></li> 
       </ul>
@@ -363,6 +363,24 @@
 
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">results</span>
+
+
+<span class="k">class</span> <span class="nc">HarmonicOscillator</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_ideal_value&#39;</span><span class="p">,</span> <span class="s1">&#39;_force_constant&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ideal_value</span><span class="p">,</span> <span class="n">force_constant</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ideal_value</span> <span class="o">=</span> <span class="n">ideal_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">=</span> <span class="n">force_constant</span>
+
+    <span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instantaneous_value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">instantaneous_value</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ideal_value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instantaneous_value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_constant</span> <span class="o">*</span> <span class="p">(</span><span class="n">instantaneous_value</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ideal_value</span><span class="p">)</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -394,7 +412,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev147 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev148 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.energy.energy</a></li> 
       </ul>
