@@ -1,5 +1,6 @@
 
 import numpy as np
+import pandas as pd
 from typelike import ArrayLike
 
 
@@ -32,7 +33,8 @@ def is_incremental(a, increment=1):
 # Pairwise Cartesian generator
 def pairwise_cartesian(a):
     """
-    Return the Cartesian product of `a` as a generator. However, only unique pairs will be returned.
+    Return the Cartesian product of `a` as a generator. However, only unique pairs will be returned. If
+    :math:`n = len(a)`, then in total :math:`n(n-1)/2` elements will be returned in the generator.
 
     Parameters
     ----------
@@ -47,6 +49,30 @@ def pairwise_cartesian(a):
     for i in range(len(a)):
         for j in range(i+1, len(a)):
             yield a[i], a[j]
+
+
+# Map, which supports dictionary mapping
+def map(func, iterable):  # noqa
+    """
+    Create our own map function that allows mapping to a dictionary.
+
+    Parameters
+    ----------
+    func : function or dict or pandas.Series
+    iterable : iterable
+
+    Returns
+    -------
+    iterable
+    """
+
+    if isinstance(func, dict):
+        func = pd.Series(func)
+
+    if isinstance(func, pd.Series):
+        return func[iterable]
+
+    return func(iterable)
 
 
 # Convenience zfill function
