@@ -52,7 +52,7 @@ def pairwise_cartesian(a):
 
 
 # Map, which supports dictionary mapping
-def map(func, iterable):  # noqa
+def dictmap(dictionary, iterable):  # noqa
     """
     Create our own map function that allows mapping to a dictionary.
 
@@ -66,13 +66,13 @@ def map(func, iterable):  # noqa
     iterable
     """
 
-    if isinstance(func, dict):
-        func = pd.Series(func)
+    if isinstance(dictionary, dict):
+        dictionary = pd.Series(dictionary)
 
-    if isinstance(func, pd.Series):
-        return func[iterable]
+    elif not isinstance(dictionary, pd.Series):
+        raise AttributeError('must be dict or Series')
 
-    return func(iterable)
+    return dictionary[iterable]
 
 
 # Convenience zfill function

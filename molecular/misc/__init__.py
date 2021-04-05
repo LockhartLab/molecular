@@ -7,6 +7,7 @@ import warnings
 
 __all__ = [
     'deprecated',
+    'dictmap',
     'experimental',
     'pairwise_cartesian',
     'zfill'
