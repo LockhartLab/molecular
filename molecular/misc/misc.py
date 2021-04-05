@@ -29,6 +29,26 @@ def is_incremental(a, increment=1):
     return (np.diff(a) == increment).all()
 
 
+# Pairwise Cartesian generator
+def pairwise_cartesian(a):
+    """
+    Return the Cartesian product of `a` as a generator. However, only unique pairs will be returned.
+
+    Parameters
+    ----------
+    a : array-like
+
+    Returns
+    -------
+    Pairwise Cartesian product
+        generator
+    """
+
+    for i in range(len(a)):
+        for j in range(i+1, len(a)):
+            yield a[i], a[j]
+
+
 # Convenience zfill function
 def zfill(a, width=None):
     if width is None:

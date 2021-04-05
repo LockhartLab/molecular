@@ -8,6 +8,7 @@ import warnings
 __all__ = [
     'deprecated',
     'experimental',
+    'pairwise_cartesian',
     'zfill'
 ]
 
