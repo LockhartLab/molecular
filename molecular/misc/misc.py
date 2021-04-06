@@ -30,8 +30,8 @@ def is_incremental(a, increment=1):
     return (np.diff(a) == increment).all()
 
 
-# Pairwise Cartesian generator
-def pairwise_cartesian(a):
+# Cartesian product generator
+def cartesian_product(a, offset=1):
     """
     Return the Cartesian product of `a` as a generator. However, only unique pairs will be returned. If
     :math:`n = len(a)`, then in total :math:`n(n-1)/2` elements will be returned in the generator.
@@ -39,22 +39,24 @@ def pairwise_cartesian(a):
     Parameters
     ----------
     a : array-like
+    offset : int
 
     Returns
     -------
-    Pairwise Cartesian product
+    Cartesian product
         generator
     """
 
     for i in range(len(a)):
-        for j in range(i+1, len(a)):
+        for j in range(i+offset, len(a)):
             yield a[i], a[j]
 
 
 # Map, which supports dictionary mapping
 def dictmap(dictionary, iterable):  # noqa
     """
-    Create our own map function that allows mapping to a dictionary.
+    Create our own map function that allows mapping to a dictionary. This is only marginally faster than doing a
+    list comprehension.
 
     Parameters
     ----------
@@ -76,9 +78,6 @@ def dictmap(dictionary, iterable):  # noqa
         iterable = iterable.to_numpy()
 
     return dictionary[iterable].to_numpy()
-
-
-
 
 # Convenience zfill function
 def zfill(a, width=None):

@@ -6,10 +6,10 @@ import functools
 import warnings
 
 __all__ = [
+    'cartesian_product',
     'deprecated',
     'dictmap',
     'experimental',
-    'pairwise_cartesian',
     'zfill'
 ]
 
