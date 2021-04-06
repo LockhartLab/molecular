@@ -63,7 +63,7 @@ def dictmap(dictionary, iterable):  # noqa
 
     Returns
     -------
-    iterable
+    numpy.ndarray
     """
 
     if isinstance(dictionary, dict):
@@ -72,7 +72,12 @@ def dictmap(dictionary, iterable):  # noqa
     elif not isinstance(dictionary, pd.Series):
         raise AttributeError('must be dict or Series')
 
-    return dictionary[iterable]
+    if isinstance(iterable, pd.Series):
+        iterable = iterable.to_numpy()
+
+    return dictionary[iterable].to_numpy()
+
+
 
 
 # Convenience zfill function
