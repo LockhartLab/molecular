@@ -4,12 +4,14 @@ from .misc import *
 # import molecular.flags as flags
 import functools
 import warnings
+from scipy.spatial.distance import squareform
 
 __all__ = [
     'cartesian_product',
     'deprecated',
     'dictmap',
     'experimental',
+    'squareform',
     'zfill'
 ]
 
