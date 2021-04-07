@@ -167,6 +167,8 @@ def move(a, by=None, to=None, inplace=True):
 
     # If `to` is set, let's refactor this as `by`
     if to is not None:
+        if isinstance(to, pd.DataFrame):
+            to = np.ravel(to.to_numpy())
         m = center(a)
         by = to - m  # xyz - center + to is the idea
 
