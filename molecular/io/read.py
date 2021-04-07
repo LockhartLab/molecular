@@ -272,7 +272,7 @@ def _read_pdb_pandas(fname):
     topology = Topology(df[static_columns].drop_duplicates())  # duplicates here are from structures
 
     # Next create Trajectory (the result)
-    result = Trajectory(df.set_index(['structure_id', 'atom_id'])[dynamic_columns], topology=topology)
+    result = Trajectory(df.set_index(['structure_id', 'atom_id'])[dynamic_columns].astype('float'), topology=topology)
 
     # Return
     return result
