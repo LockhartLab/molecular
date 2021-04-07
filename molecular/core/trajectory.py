@@ -119,19 +119,6 @@ class Trajectory(object):
             self._data[['x', 'y', 'z']] = self._data[['x', 'y', 'z']] + other
         return self
 
-    # Length of trajectory
-    def __len__(self):
-        """
-        The length of the trajectory is the number of structures.
-
-        Returns
-        -------
-        int
-            Length of trajectory
-        """
-
-        return self.n_structures
-
     # Get item
     def __getitem__(self, item):
         """
@@ -151,9 +138,31 @@ class Trajectory(object):
         # TODO should this return a DataFrame or a Trajectory object?
         return self._data.loc[item]
 
+    # Length of trajectory
+    def __len__(self):
+        """
+        The length of the trajectory is the number of structures.
+
+        Returns
+        -------
+        int
+            Length of trajectory
+        """
+
+        return self.n_structures
+
+    def __mul__(self, other):
+        pass
+
     # Representation of the object
     def __repr__(self):
         return "# structures: {0}\n# atoms: {1}\n# dimensions: {2}".format(*self.shape)
+
+    # Subtract the coordinates of this Trajectory by another coordinate system
+    def __sub__(self, other):
+        if isinstance(other, Trajectory):
+            other = other.coordinates
+        return self.move(by=-1. * other, inplace=False)
 
     # Get unique atom IDs (can be cached)
     @property
