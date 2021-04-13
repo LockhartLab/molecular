@@ -2,8 +2,8 @@
 from .replica_exchange import *
 
 __all__ = [
+    'ExchangeHistory',
     'get_pme_size',
-    'ReplicaWalk',
     'temp_schedule',
 ]
 
