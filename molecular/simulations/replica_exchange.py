@@ -166,13 +166,16 @@ class ReplicaWalk:
         # fig.show()
         fig.savefig('mosaic_plot.png')
 
+    def to_csv(self, *args, **kwargs):
+        self.data.to_csv(*args, **kwargs)
+
     def trajectory(self, by='config', reset_index=True):
         columns = 'config'
         values = 'replica'
         if by == 'replica':
             columns, values = values, columns
         elif by != 'config':
-            raise AttributeError('unexpected `by`')
+            raise AttributeError(f'do not understand by = {by}')
         data = self.data.pivot_table(index='step', columns=columns, values=values)
         if reset_index:
             data.reset_index(drop=True, inplace=True)
