@@ -82,7 +82,10 @@ class ExchangeHistory:
         >>> ExchangeHistory.from_namd('exchange_job?.{replica}.history', n_replicas=16, glob=True)
         """
 
+        # Initialize DataFrame to hold results
         data = pd.DataFrame()
+
+        # Loop over all replicas and read in files
         for replica in range(n_replicas):
             tmp = loadtxt(fname.format(replica=replica), glob=glob)
             data = data.append(pd.DataFrame({
@@ -91,11 +94,36 @@ class ExchangeHistory:
                 'config': tmp[:, 1].astype(int),
                 'temperature': tmp[:, 2]
             }), ignore_index=True)
+
+        # Return instantiated ExchangeHistory class. This is sorted but there's strictly no reason to do this.
         return cls(data.sort_values(['replica', 'step']))
 
+    # Cross-tabulate by config and replica axes
     def crosstab(self, index='config', column='replica'):
+        """
+        Cross-tabulate by "config" and "replica" axes. In other words, count the number of snapshots at given
+        config and replica indices.
+
+        Parameters
+        ----------
+        index : str
+            Axis to define rows.
+        column : str
+            Axis to define columns.
+
+        Returns
+        -------
+        pandas.DataFrame
+            Cross-tabulation of the ExchangeHistory instance.
+        """
+
+        # Get the exchange history trajectory by the index
         data = self.trajectory(by=index, reset_index=True)
+
+        # Melt the data by the column
         data_melt = data.melt(value_name=column)
+
+        # Return pandas cross tabulation
         return pd.crosstab(index=data_melt[index], columns=data_melt[column])
 
     def exchange_rate(self):
@@ -150,12 +178,12 @@ class ExchangeHistory:
             'y_max': 1.,
 
         })
-        fig += u.line(x, y, style={'line_color': 'black', 'line_style': 'solid'})
+        fig += u.line(x, y, style={'color': 'black', 'line_style': 'solid'})
         if plot_theoretical:
             fig += u.line(
                 x,
                 np.repeat(1. - 1. / np.sqrt(len(x)), len(x)),  # noqa
-                style={'line_color': 'black', 'line_style': 'dashed'}
+                style={'color': 'black', 'line_style': 'dashed'}
             )
         fig, ax = fig.to_mpl(show=False)
         fig.savefig('hansmann_plot.svg')
