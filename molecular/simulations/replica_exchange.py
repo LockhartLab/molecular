@@ -39,7 +39,7 @@ class ExchangeHistory:
         """
 
         # Validate input
-        if not isinstance(data, pd.DataFrame) or any(['replica', 'config', 'step'] not in data.columns):
+        if not isinstance(data, pd.DataFrame) or ~np.in1d(['replica', 'config', 'step'], data.columns).all():
             raise AttributeError('data must be DataFrame')
 
         # Make sure that replicas do not jump by more than 1 configuration at a time if only_neighbors is true
@@ -58,6 +58,30 @@ class ExchangeHistory:
     # TODO what if someone loaded .sort.history? The labels replica and config would be swapped.
     @classmethod
     def from_namd(cls, fname, n_replicas, glob=False):
+        """
+        Construct the exchange history from the results of NAMD replica exchange.
+
+        Parameters
+        ----------
+        fname : str
+            Name of the history file. The assumption is that there is one history file per replica. This method expects
+            to find the variable `{replica}` to specify the file for each replica.
+        n_replicas : int
+            The number of replicas.
+        glob : bool
+            Indicates if `fname` contains extra glob-like features, such as wild-cards.
+
+        Returns
+        -------
+        ExchangeHistory
+            Newly-created instance of ExchangeHistory.
+
+        Examples
+        --------
+        >>> ExchangeHistory.from_namd('exchange_{replica}.history', n_replicas=16, glob=False)
+        >>> ExchangeHistory.from_namd('exchange_job?.{replica}.history', n_replicas=16, glob=True)
+        """
+
         data = pd.DataFrame()
         for replica in range(n_replicas):
             tmp = loadtxt(fname.format(replica=replica), glob=glob)
