@@ -11,17 +11,50 @@ import numpy as np
 import pandas as pd
 
 
-# TODO this name vs CoupledMarkovChain??
-class ReplicaWalk:
-    def __init__(self, data):
-        n_replicas = data['replica'].nunique()
-        for replica in range(n_replicas):
-            tmp = data.query(f'replica == {replica}')['config'].diff().fillna(0)
-            assert tmp.min() == -1
-            assert tmp.max() == 1
-        self.data = data
+# Class that stores exchange history, i.e., which replicas visited which configurations over time
+class ExchangeHistory:
+    """
+    Replica-exchange and other coupled Markov chain simulations follow replicas over time as they walk across
+    configuration space. Here, "configuration" is used generically and can refer to temperature (commonly), Hamiltonian
+    scaling factors, etc.
 
-    # Read NAMD history file (from RE multiwalker)
+    The purpose of this class is to permit easy evaluation of exchange performance. We can compute (and plot) parameters
+    like the exchange rate, mosaic plot of the replica walk, the Hansmann parameter, and tunneling time.
+    """
+
+    __slots__ = '_data'
+
+    # Initialize instance of exchange history
+    def __init__(self, data, only_neighbors=True):
+        """
+        `data` must be a pandas DataFrame with the columns "replica", "config", and "step". Note that the elements in
+        "replica" and "config" refer to indices.
+
+        Parameters
+        ----------
+        data : pandas.DataFrame
+            Exchange history.
+        only_neighbors : bool
+            Were exchanges permitted only between neighbors?
+        """
+
+        # Validate input
+        if not isinstance(data, pd.DataFrame) or any(['replica', 'config', 'step'] not in data.columns):
+            raise AttributeError('data must be DataFrame')
+
+        # Make sure that replicas do not jump by more than 1 configuration at a time if only_neighbors is true
+        # TODO is it necessary to have this validation step?
+        if only_neighbors:
+            n_replicas = data['replica'].nunique()
+            for replica in range(n_replicas):
+                tmp = data.query(f'replica == {replica}')['config'].diff().fillna(0)
+                assert tmp.min() == -1
+                assert tmp.max() == 1
+
+        # Save
+        self._data = data
+
+    # Read NAMD history file (from their RE multi-copy algorithm)
     # TODO what if someone loaded .sort.history? The labels replica and config would be swapped.
     @classmethod
     def from_namd(cls, fname, n_replicas, glob=False):
@@ -65,40 +98,45 @@ class ReplicaWalk:
         # Return Hansmann parameter
         return 1. - np.sqrt(np.square(data).sum(axis=1)) / data.sum(axis=1)
 
-    def hansmann_plot(self, plot_theoretical=True):
+    def hansmann_plot(self, x_title=None, y_title=None, plot_theoretical=True):
         """
         Plot the Hansmann parameter.
 
         Parameters
         ----------
+        x_title : str
+        y_title : str
         plot_theoretical : bool
             Should the theoretical Hansmann parameter in the case of equal sampling be plotted? (Default: True)
-
-        Returns
-        -------
-
         """
 
         import uplot as u
 
         data = self.hansmann()
         x = data.index.to_numpy()
+        if x[0] == 0:  # start everything from an index of 1 for aesthetics
+            x += 1
         y = data.to_numpy()
 
         # Build figure
         fig = u.figure(style={
-            'x_title': r'$T$',
-            'y_title': r'$h$($T$)',
+            'x_title': x_title,
+            'y_title': y_title,
             'y_min': 0.,
             'y_max': 1.,
 
         })
-        fig += u.line(x, y)
+        fig += u.line(x, y, style={'line_color': 'black', 'line_style': 'solid'})
         if plot_theoretical:
-            fig += u.line(x, np.repeat(1. - 1. / np.sqrt(len(x)), len(x)))
+            fig += u.line(
+                x,
+                np.repeat(1. - 1. / np.sqrt(len(x)), len(x)),  # noqa
+                style={'line_color': 'black', 'line_style': 'dashed'}
+            )
         fig, ax = fig.to_mpl(show=False)
         fig.savefig('hansmann_plot.svg')
 
+    # TODO use ujet as default cmap
     def mosaic_plot(self, interval=100, cmap='jet'):
         import matplotlib.pyplot as plt
         from matplotlib.ticker import MultipleLocator, MaxNLocator
@@ -168,7 +206,7 @@ class ReplicaWalk:
         fig.savefig('mosaic_plot.png')
 
     def to_csv(self, *args, **kwargs):
-        self.data.to_csv(*args, **kwargs)
+        self._data.to_csv(*args, **kwargs)
 
     def trajectory(self, by='config', reset_index=True):
         columns = 'config'
@@ -177,7 +215,7 @@ class ReplicaWalk:
             columns, values = values, columns
         elif by != 'config':
             raise AttributeError(f'do not understand by = {by}')
-        data = self.data.pivot_table(index='step', columns=columns, values=values)
+        data = self._data.pivot_table(index='step', columns=columns, values=values)
         if reset_index:
             data.reset_index(drop=True, inplace=True)
             data.index.name = 'step'
