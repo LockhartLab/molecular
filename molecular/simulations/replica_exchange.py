@@ -22,6 +22,7 @@ class ReplicaWalk:
         self.data = data
 
     # Read NAMD history file (from RE multiwalker)
+    # TODO what if someone loaded .sort.history? The labels replica and config would be swapped.
     @classmethod
     def from_namd(cls, fname, n_replicas, glob=False):
         data = pd.DataFrame()
