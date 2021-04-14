@@ -260,6 +260,14 @@ class ExchangeHistory:
     def to_csv(self, *args, **kwargs):
         self._data.to_csv(*args, **kwargs)
 
+    # Save to parquet
+    def to_parquet(self, *args, **kwargs):
+        """
+        Save ExchangeHistory to parquet format. Follows :ref:`pandas.DataFrame.to_parquet`.
+        """
+
+        self._data.to_parquet(*args, **kwargs)
+
     def trajectory(self, by='config', reset_index=True):
         columns = 'config'
         values = 'replica'
