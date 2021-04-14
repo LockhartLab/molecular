@@ -183,7 +183,7 @@ class ExchangeHistory:
             fig += u.line(
                 x,
                 np.repeat(1. - 1. / np.sqrt(len(x)), len(x)),  # noqa
-                style={'color': 'black', 'line_style': 'dashed', 'line_width': 1.}
+                style={'color': 'black', 'line_style': 'longdash', 'line_width': 1.}
             )
         fig, ax = fig.to_mpl(show=False)
         fig.savefig('hansmann_plot.svg')
