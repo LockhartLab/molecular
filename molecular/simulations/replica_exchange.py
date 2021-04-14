@@ -178,12 +178,12 @@ class ExchangeHistory:
             'y_max': 1.,
 
         })
-        fig += u.line(x, y, style={'color': 'black', 'line_style': 'solid'})
+        fig += u.line(x, y, style={'color': 'black', 'line_style': 'solid', 'marker': 'circle'})
         if plot_theoretical:
             fig += u.line(
                 x,
                 np.repeat(1. - 1. / np.sqrt(len(x)), len(x)),  # noqa
-                style={'color': 'black', 'line_style': 'dashed'}
+                style={'color': 'black', 'line_style': 'dashed', 'line_width': 1.}
             )
         fig, ax = fig.to_mpl(show=False)
         fig.savefig('hansmann_plot.svg')
