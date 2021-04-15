@@ -126,8 +126,44 @@ class ExchangeHistory:
         # Return pandas cross tabulation
         return pd.crosstab(index=data_melt[index], columns=data_melt[column])
 
-    def exchange_rate(self):
-        pass
+    # Compute the exchange rate
+    def exchange_rate(self, by='config', n_attempts=None, terminal_factor=0.5):
+        """
+        Compute the exchange rate.
+
+        Parameters
+        ----------
+        by : str
+            Default: config
+        n_attempts : int
+            Number of attempts per config or replica.
+        terminal_factor : float
+            Factor to apply to the first and last config to reduce its number of attempts.
+
+        Returns
+        -------
+        pandas.Series
+            Exchange rate per config or replica.
+        """
+
+        # Pull the trajectory
+        trj = self.trajectory(by=by if by is not None else 'config')
+
+        # Derive number of attempts. This is tricky because it depends on how exchange was set up. In unbiased exchange,
+        # we expect that every replica/config exchanges every step. However, the terminal configs usually only exchange
+        # every other attempt (because they're at a boundary) so we apply the terminal factor. In the future, I would
+        # like to make this more intuitive.
+        if n_attempts is None:
+            n_attempts = np.repeat(len(trj), len(trj.columns))
+            n_attempts[0] = np.floor(n_attempts[0] * terminal_factor)
+            n_attempts[-1] = np.floor(n_attempts[-1] * terminal_factor)
+
+        # Compute number of exchanges. The logic here is that if the index from one step to the next changes, then an
+        # exchange has happened.
+        n_exchanges = (trj.diff().dropna(axis=0) != 0).sum()
+
+        # Return the rate
+        return np.sum(n_exchanges) / np.sum(n_attempts) if by is None else n_exchanges / n_attempts
 
     def hansmann(self):
         r"""
