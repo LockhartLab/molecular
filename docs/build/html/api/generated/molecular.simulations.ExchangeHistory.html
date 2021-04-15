@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>molecular.simulations.ExchangeHistory &#8212; molecular 0.1.dev170 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="molecular.simulations.temp_schedule" href="molecular.simulations.temp_schedule.html" />
+    <link rel="prev" title="molecular.simulations" href="../simulations.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="molecular.simulations.temp_schedule.html" title="molecular.simulations.temp_schedule"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../simulations.html" title="molecular.simulations"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev170 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../simulations.html" accesskey="U">molecular.simulations</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">molecular.simulations.ExchangeHistory</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="molecular-simulations-exchangehistory">
+<h1>molecular.simulations.ExchangeHistory<a class="headerlink" href="#molecular-simulations-exchangehistory" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="molecular.simulations.ExchangeHistory">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">molecular.simulations.</span></code><code class="sig-name descname"><span class="pre">ExchangeHistory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#ExchangeHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.simulations.ExchangeHistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replica-exchange and other coupled Markov chain simulations follow replicas over time as they walk across
+configuration space. Here, “configuration” is used generically and can refer to temperature (commonly), Hamiltonian
+scaling factors, etc.</p>
+<p>The purpose of this class is to permit easy evaluation of exchange performance. We can compute (and plot) parameters
+like the exchange rate, mosaic plot of the replica walk, the Hansmann parameter, and tunneling time.</p>
+<p class="rubric">Methods:</p>
+<dl class="py method">
+<dt id="molecular.simulations.ExchangeHistory.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#ExchangeHistory.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.simulations.ExchangeHistory.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>data</cite> must be a pandas DataFrame with the columns “replica”, “config”, and “step”. Note that the elements in
+“replica” and “config” refer to indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.4)"><em>pandas.DataFrame</em></a>) – Exchange history.</p></li>
+<li><p><strong>only_neighbors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Were exchanges permitted only between neighbors?</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.simulations.ExchangeHistory.crosstab">
+<code class="sig-name descname"><span class="pre">crosstab</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'config'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'replica'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#ExchangeHistory.crosstab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.simulations.ExchangeHistory.crosstab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cross-tabulate by “config” and “replica” axes. In other words, count the number of snapshots at given
+config and replica indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Axis to define rows.</p></li>
+<li><p><strong>column</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Axis to define columns.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Cross-tabulation of the ExchangeHistory instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.4)">pandas.DataFrame</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.simulations.ExchangeHistory.exchange_rate">
+<code class="sig-name descname"><span class="pre">exchange_rate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'config'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#ExchangeHistory.exchange_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.simulations.ExchangeHistory.exchange_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the exchange rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>by</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Default: config</p></li>
+<li><p><strong>n_attempts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Number of attempts per config or replica.</p></li>
+<li><p><strong>terminal_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a>) – Factor to apply to the first and last config to reduce its number of attempts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Exchange rate per config or replica.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v1.2.4)">pandas.Series</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.simulations.ExchangeHistory.from_namd">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_namd</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_replicas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#ExchangeHistory.from_namd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.simulations.ExchangeHistory.from_namd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct the exchange history from the results of NAMD replica exchange.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the history file. The assumption is that there is one history file per replica. This method expects
+to find the variable <cite>{replica}</cite> to specify the file for each replica.</p></li>
+<li><p><strong>n_replicas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – The number of replicas.</p></li>
+<li><p><strong>glob</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Indicates if <cite>fname</cite> contains extra glob-like features, such as wild-cards.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Newly-created instance of ExchangeHistory.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#molecular.simulations.ExchangeHistory" title="molecular.simulations.ExchangeHistory">ExchangeHistory</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ExchangeHistory</span><span class="o">.</span><span class="n">from_namd</span><span class="p">(</span><span class="s1">&#39;exchange_</span><span class="si">{replica}</span><span class="s1">.history&#39;</span><span class="p">,</span> <span class="n">n_replicas</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">glob</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ExchangeHistory</span><span class="o">.</span><span class="n">from_namd</span><span class="p">(</span><span class="s1">&#39;exchange_job?.</span><span class="si">{replica}</span><span class="s1">.history&#39;</span><span class="p">,</span> <span class="n">n_replicas</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">glob</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.simulations.ExchangeHistory.hansmann">
+<code class="sig-name descname"><span class="pre">hansmann</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#ExchangeHistory.hansmann"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.simulations.ExchangeHistory.hansmann" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Hansmann parameter <span class="math notranslate nohighlight">\(h(T)\)</span> shows the residence time <span class="math notranslate nohighlight">\(\tau\)</span> replica <span class="math notranslate nohighlight">\(r\)</span> (of <span class="math notranslate nohighlight">\(R\)</span> total
+replicas) spends at configuration <span class="math notranslate nohighlight">\(T\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[h(T) = 1 - \frac{\sqrt{\sum_{r=1}^R \tau_r^2}}{\sum_{r=1}^R \tau_r}\]</div>
+<p>If all replicas are equally sampled across all configurations, then <span class="math notranslate nohighlight">\(h(T) = 1 - 1 / \sqrt{R}\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Hansmann parameter computed for all configurations.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v1.2.4)">pandas.Series</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.simulations.ExchangeHistory.hansmann_plot">
+<code class="sig-name descname"><span class="pre">hansmann_plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_theoretical</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#ExchangeHistory.hansmann_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.simulations.ExchangeHistory.hansmann_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the Hansmann parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – </p></li>
+<li><p><strong>y_title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – </p></li>
+<li><p><strong>plot_theoretical</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Should the theoretical Hansmann parameter in the case of equal sampling be plotted? (Default: True)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.simulations.ExchangeHistory.mosaic_plot">
+<code class="sig-name descname"><span class="pre">mosaic_plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ujet'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#ExchangeHistory.mosaic_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.simulations.ExchangeHistory.mosaic_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the mosaic function using a heatmap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Interval for plotting. We usually cannot plot every single step because there is too much data.</p></li>
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – The matplotlib-compatible color map.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.simulations.ExchangeHistory.to_csv">
+<code class="sig-name descname"><span class="pre">to_csv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#ExchangeHistory.to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.simulations.ExchangeHistory.to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save ExchangeHistory to csv format. Follows <span class="xref std std-ref">pandas.DataFrame.to_csv</span>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.simulations.ExchangeHistory.to_parquet">
+<code class="sig-name descname"><span class="pre">to_parquet</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#ExchangeHistory.to_parquet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.simulations.ExchangeHistory.to_parquet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save ExchangeHistory to parquet format. Follows <span class="xref std std-ref">pandas.DataFrame.to_parquet</span>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="molecular.simulations.ExchangeHistory.trajectory">
+<code class="sig-name descname"><span class="pre">trajectory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'config'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/simulations/replica_exchange.html#ExchangeHistory.trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.simulations.ExchangeHistory.trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the walk of config or replicas. This is a pivot of the melted ExchangeHistory._data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>by</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Default: config.</p></li>
+<li><p><strong>reset_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Should the index be reset?</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.4)">pandas.DataFrame</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../simulations.html"
+                        title="previous chapter">molecular.simulations</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="molecular.simulations.temp_schedule.html"
+                        title="next chapter">molecular.simulations.temp_schedule</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/api/generated/molecular.simulations.ExchangeHistory.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="molecular.simulations.temp_schedule.html" title="molecular.simulations.temp_schedule"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../simulations.html" title="molecular.simulations"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev170 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../simulations.html" >molecular.simulations</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">molecular.simulations.ExchangeHistory</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Lockhart Lab.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.4.
+    </div>
+  </body>
+</html>
