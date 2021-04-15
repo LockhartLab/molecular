@@ -9,4 +9,5 @@ Functions
 .. autosummary::
    :toctree: generated
 
+   ExchangeHistory
    temp_schedule

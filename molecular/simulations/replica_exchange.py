@@ -225,6 +225,17 @@ class ExchangeHistory:
         fig.savefig('hansmann_plot.svg')
 
     def mosaic_plot(self, interval=100, cmap='ujet'):
+        """
+        Plot the mosaic function using a heatmap.
+
+        Parameters
+        ----------
+        interval : int
+            Interval for plotting. We usually cannot plot every single step because there is too much data.
+        cmap : str or object
+            The matplotlib-compatible color map.
+        """
+
         import matplotlib.pyplot as plt
         from matplotlib.ticker import MultipleLocator, MaxNLocator
         import uplot as u
@@ -295,7 +306,11 @@ class ExchangeHistory:
         # fig.show()
         fig.savefig('mosaic_plot.png')
 
+    # Sve to csv
     def to_csv(self, *args, **kwargs):
+        """
+        Save ExchangeHistory to csv format. Follows :ref:`pandas.DataFrame.to_csv`.
+        """
         self._data.to_csv(*args, **kwargs)
 
     # Save to parquet
@@ -306,17 +321,40 @@ class ExchangeHistory:
 
         self._data.to_parquet(*args, **kwargs)
 
+    # TODO should this be renamed mosaic?
     def trajectory(self, by='config', reset_index=True):
+        """
+        Compute the walk of config or replicas. This is a pivot of the melted ExchangeHistory._data.
+
+        Parameters
+        ----------
+        by : str
+            Default: config.
+        reset_index : bool
+            Should the index be reset?
+
+        Returns
+        -------
+        pandas.DataFrame
+        """
+
+        # Define the columns and values for the pivot
         columns = 'config'
         values = 'replica'
         if by == 'replica':
             columns, values = values, columns
         elif by != 'config':
             raise AttributeError(f'do not understand by = {by}')
+
+        # Perform the pivot
         data = self._data.pivot_table(index='step', columns=columns, values=values)
+
+        # Reset index?
         if reset_index:
             data.reset_index(drop=True, inplace=True)
             data.index.name = 'step'
+
+        # Return
         return data
 
 
