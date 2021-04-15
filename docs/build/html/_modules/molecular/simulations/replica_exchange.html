@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.simulations.replica_exchange &#8212; molecular 0.1.dev170 documentation</title>
+    <title>molecular.simulations.replica_exchange &#8212; molecular 0.1.dev171 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev170 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev171 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.replica_exchange</a></li> 
       </ul>
@@ -139,6 +139,24 @@
 
         <span class="c1"># Return instantiated ExchangeHistory class. This is sorted but there&#39;s strictly no reason to do this.</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;replica&#39;</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">]))</span></div>
+
+    <span class="c1"># Read history from parquet</span>
+<div class="viewcode-block" id="ExchangeHistory.from_parquet"><a class="viewcode-back" href="../../../api/generated/molecular.simulations.ExchangeHistory.html#molecular.simulations.ExchangeHistory.from_parquet">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_parquet</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read exchange history from parquet.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fname : str</span>
+<span class="sd">            Parquet file.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ExchangeHistory</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span></div>
 
     <span class="c1"># Cross-tabulate by config and replica axes</span>
 <div class="viewcode-block" id="ExchangeHistory.crosstab"><a class="viewcode-back" href="../../../api/generated/molecular.simulations.ExchangeHistory.html#molecular.simulations.ExchangeHistory.crosstab">[docs]</a>    <span class="k">def</span> <span class="nf">crosstab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;replica&#39;</span><span class="p">):</span>
@@ -348,7 +366,15 @@
         <span class="c1"># fig.show()</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;mosaic_plot.png&#39;</span><span class="p">)</span></div>
 
-    <span class="c1"># Sve to csv</span>
+    <span class="c1"># Reset the step index?</span>
+<div class="viewcode-block" id="ExchangeHistory.reset_step"><a class="viewcode-back" href="../../../api/generated/molecular.simulations.ExchangeHistory.html#molecular.simulations.ExchangeHistory.reset_step">[docs]</a>    <span class="k">def</span> <span class="nf">reset_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets step from arbitrary interval to rank from 1 ... N. This operation occurs in place.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;dense&#39;</span><span class="p">)</span></div>
+
+    <span class="c1"># Save to csv</span>
 <div class="viewcode-block" id="ExchangeHistory.to_csv"><a class="viewcode-back" href="../../../api/generated/molecular.simulations.ExchangeHistory.html#molecular.simulations.ExchangeHistory.to_csv">[docs]</a>    <span class="k">def</span> <span class="nf">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save ExchangeHistory to csv format. Follows :ref:`pandas.DataFrame.to_csv`.</span>
@@ -518,7 +544,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev170 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev171 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.replica_exchange</a></li> 
       </ul>
