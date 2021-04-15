@@ -188,8 +188,7 @@ class ExchangeHistory:
         fig, ax = fig.to_mpl(show=False)
         fig.savefig('hansmann_plot.svg')
 
-    # TODO use ujet as default cmap
-    def mosaic_plot(self, interval=100, cmap='jet'):
+    def mosaic_plot(self, interval=100, cmap='ujet'):
         import matplotlib.pyplot as plt
         from matplotlib.ticker import MultipleLocator, MaxNLocator
         import uplot as u
@@ -210,6 +209,9 @@ class ExchangeHistory:
         fig = plt.figure()
         ax = fig.add_subplot()
         # im = ax.pcolormesh(mosaic, cmap=cmap, edgecolors='k', linewidth=0.5)  # bwr
+        if cmap == 'ujet':
+            import uplot
+            cmap = uplot.jet
         im = ax.pcolormesh(x - 0.5, y - 0.5, mosaic.T, cmap=cmap, edgecolors='k', linewidth=0.5)
 
         # Format x axis
