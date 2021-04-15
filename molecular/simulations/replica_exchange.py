@@ -98,6 +98,24 @@ class ExchangeHistory:
         # Return instantiated ExchangeHistory class. This is sorted but there's strictly no reason to do this.
         return cls(data.sort_values(['replica', 'step']))
 
+    # Read history from parquet
+    @classmethod
+    def from_parquet(cls, fname):
+        """
+        Read exchange history from parquet.
+
+        Parameters
+        ----------
+        fname : str
+            Parquet file.
+
+        Returns
+        -------
+        ExchangeHistory
+        """
+
+        return cls(pd.read_parquet(fname))
+
     # Cross-tabulate by config and replica axes
     def crosstab(self, index='config', column='replica'):
         """
@@ -306,7 +324,15 @@ class ExchangeHistory:
         # fig.show()
         fig.savefig('mosaic_plot.png')
 
-    # Sve to csv
+    # Reset the step index?
+    def reset_step(self):
+        """
+        Resets step from arbitrary interval to rank from 1 ... N. This operation occurs in place.
+        """
+
+        self._data['step'] = self._data['step'].rank(method='dense')
+
+    # Save to csv
     def to_csv(self, *args, **kwargs):
         """
         Save ExchangeHistory to csv format. Follows :ref:`pandas.DataFrame.to_csv`.
