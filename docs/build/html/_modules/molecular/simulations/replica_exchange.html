@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.simulations.replica_exchange &#8212; molecular 0.1.dev168 documentation</title>
+    <title>molecular.simulations.replica_exchange &#8212; molecular 0.1.dev169 documentation</title>
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev168 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev169 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.replica_exchange</a></li> 
       </ul>
@@ -168,8 +168,44 @@
         <span class="c1"># Return pandas cross tabulation</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">data_melt</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">data_melt</span><span class="p">[</span><span class="n">column</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">exchange_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
+    <span class="c1"># Compute the exchange rate</span>
+    <span class="k">def</span> <span class="nf">exchange_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">n_attempts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">terminal_factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the exchange rate.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        by : str</span>
+<span class="sd">            Default: config</span>
+<span class="sd">        n_attempts : int</span>
+<span class="sd">            Number of attempts per config or replica.</span>
+<span class="sd">        terminal_factor : float</span>
+<span class="sd">            Factor to apply to the first and last config to reduce its number of attempts.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.Series</span>
+<span class="sd">            Exchange rate per config or replica.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Pull the trajectory</span>
+        <span class="n">trj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">by</span> <span class="k">if</span> <span class="n">by</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;config&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Derive number of attempts. This is tricky because it depends on how exchange was set up. In unbiased exchange,</span>
+        <span class="c1"># we expect that every replica/config exchanges every step. However, the terminal configs usually only exchange</span>
+        <span class="c1"># every other attempt (because they&#39;re at a boundary) so we apply the terminal factor. In the future, I would</span>
+        <span class="c1"># like to make this more intuitive.</span>
+        <span class="k">if</span> <span class="n">n_attempts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_attempts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trj</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">trj</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+            <span class="n">n_attempts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">n_attempts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">terminal_factor</span><span class="p">)</span>
+            <span class="n">n_attempts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">n_attempts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">terminal_factor</span><span class="p">)</span>
+
+        <span class="c1"># Compute number of exchanges. The logic here is that if the index from one step to the next changes, then an</span>
+        <span class="c1"># exchange has happened.</span>
+        <span class="n">n_exchanges</span> <span class="o">=</span> <span class="p">(</span><span class="n">trj</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="c1"># Return the rate</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">n_exchanges</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">n_attempts</span><span class="p">)</span> <span class="k">if</span> <span class="n">by</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">n_exchanges</span> <span class="o">/</span> <span class="n">n_attempts</span>
 
     <span class="k">def</span> <span class="nf">hansmann</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -444,7 +480,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev168 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev169 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.replica_exchange</a></li> 
       </ul>
