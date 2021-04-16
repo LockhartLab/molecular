@@ -81,8 +81,8 @@ def rmsd(a, b=None, paired=False, fit=True):
         a_index, b_index = np.transpose(list(product(a_index, b_index)))
 
     # Expand a_xyz and b_xyz so they have the same dimensions and become "paired"
-    a_xyz = a_xyz[a_index, :, :]
-    b_xyz = b_xyz[b_index, :, :]
+    a_xyz = a_xyz.loc[a_index, :, :]
+    b_xyz = b_xyz.loc[b_index, :, :]
 
     # Should we fit the two structures?
     if fit:
@@ -92,7 +92,7 @@ def rmsd(a, b=None, paired=False, fit=True):
     # diff = a_xyz[a_index, :, :] - b_xyz[b_index, :, :]
 
     # Actually Compute RMSD
-    result = np.sqrt(np.sum(np.square(a_xyz - b_xyz), axis=(1, 2)) / n_atoms)
+    result = np.sqrt((a_xyz - b_xyz).pow(2).to_numpy().sum() / n_atoms)
     # result = np.zeros((a.n_structures, b.n_structures))
     # for i, j in iterable:
     #     result[i, j] = np.sqrt(np.mean((a_xyz[i, :, :] - b_xyz[j, :, :]) ** 2))
