@@ -139,6 +139,8 @@ def read_table(fname, glob=None, sep='\s+', header=None, ignore_index=True, rein
     # Reindex?
     if reindex:
         data = data.reset_index(drop=True)
+        if 'index' not in data.columns:
+            data.index.name = 'index'
 
     # Return
     return data
