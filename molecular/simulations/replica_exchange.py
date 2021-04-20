@@ -234,9 +234,8 @@ class ExchangeHistory:
         })
         fig += u.line(x, y, style={'color': 'black', 'line_style': 'solid', 'marker': 'circle'})
         if plot_theoretical:
-            fig += u.line(
-                x,
-                np.repeat(1. - 1. / np.sqrt(len(x)), len(x)),  # noqa
+            fig += u.hline(
+                y=1. - 1. / np.sqrt(len(x)),
                 style={'color': 'black', 'line_style': 'longdash', 'line_width': 1.}
             )
         fig, ax = fig.to_mpl(show=False)
