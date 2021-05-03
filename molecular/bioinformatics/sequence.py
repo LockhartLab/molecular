@@ -31,12 +31,12 @@ class Protein(Sequence):
         # Convert to list if not already list
         super().__init__()
         if not isinstance(sequence, ArrayLike):
-            residues = list(sequence)
+            sequence = list(sequence)
 
         # Which format are these residues in?
         len_sequence = len(sequence[0])
         if len_sequence == 1:
-            residues = _letter_to_code(sequence)
+            sequence = _letter_to_code(sequence)
         elif len_sequence != 3:
             raise AttributeError('must supply residue triplets')
 
