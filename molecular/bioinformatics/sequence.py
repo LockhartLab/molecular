@@ -1,10 +1,95 @@
-"""
+4"""
 sequence.py
 
 >>> abeta = Protein('YEVHHQKLVFFAEDVGSNKGAIIGLMVGGVV')
 """
 
+import pandas as pd
 from typelike import ArrayLike
+
+
+class Residue:
+    def __init__(self):
+        pass
+
+
+class AminoAcid(Residue):
+    _defaults = pd.DataFrame([
+        ['ALA', 'A', 0],
+        ['CYS', 'C', 0],
+        ['ASP', 'D', -1],
+        ['GLU', 'E', -1],
+        ['PHE', 'F', 0],
+        ['GLY', 'G', 0],
+        ['HIS', 'H', 0],
+        ['ILE', 'I', 0],
+        ['LYS', 'K', 1],
+        ['LEU', 'L', 0],
+        ['MET', 'M', 0],
+        ['ASN', 'N', 0],
+        ['PRO', 'P', 0],
+        ['GLN', 'Q', 0],
+        ['ARG', 'R', 1],
+        ['SER', 'S', 0],
+        ['THR', 'T', 0],
+        ['VAL', 'V', 0],
+        ['TRP', 'W', 0],
+        ['TYR', 'Y', 0],
+    ], columns=['name', 'code', 'charge'])
+
+    def __init__(self, name, code, charge):
+        super().__init__()
+        self._name = name
+        self._code = code
+        self._charge = charge
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def code(self):
+        return self._code
+
+
+def _get_amino_acid(name=None, code=None):
+    if name is None and code is None:
+        raise AttributeError('must specify name or code')
+
+    name = name.upper()
+    code = code.upper()
+
+    _code_to_name = {
+        'A': 'ALA',
+        'C': 'CYS',
+        'D': 'ASP',
+        'E': 'GLU',
+        'F': 'PHE',
+        'G': 'GLY',
+        'H': 'HIS',
+        'I': 'ILE',
+        'K': 'LYS',
+        'L': 'LEu',
+        'M': 'MET',
+        'N': 'ASN',
+        'P': 'PRO',
+        'Q': 'GLN',
+        'R': 'ARG',
+        'S': 'SER',
+        'T': 'THR',
+        'V': 'VAL',
+        'W': 'TRP',
+        'Y': 'TYR'
+    }
+
+    _name_to_code = {name: code for code, name in _code_to_name.items()}
+
+    if code is not None:
+        name = _code_to_name[code]
+    else:
+        code = _name_to_code[name]
+
+    return AminoAcid(name, code, 0.)
 
 
 class Sequence:
@@ -14,13 +99,12 @@ class Sequence:
 
 class Protein(Sequence):
     """
-    Construct for dealing with protein sequence.
-
+    Construct for dealing with protein sequences.
     """
 
     def __init__(self, sequence, ):
         """
-
+        Initialize Protein object.
 
         Parameters
         ----------
@@ -29,8 +113,9 @@ class Protein(Sequence):
         """
 
         # Convert to list if not already list
-        super().__init__()
-        if not isinstance(sequence, ArrayLike):
+        # super().__init__()
+        # if not isinstance(sequence, ArrayLike):
+        if isinstance(sequence, str):
             sequence = list(sequence)
 
         # Which format are these residues in?
@@ -42,6 +127,9 @@ class Protein(Sequence):
 
         # Save
         self.sequence = sequence
+
+    def __repr__(self):
+        return str(self.sequence)
 
     def to_letters(self, join=False):
         code_to_letter = {
@@ -75,7 +163,6 @@ class Protein(Sequence):
 
         return sequence
 
-
     def to_str(self):
         pass
 
@@ -106,3 +193,7 @@ def _letter_to_code(residues):
         'V': 'VAL'
     }
     return [letter_to_code.get(residue, residue) for residue in residues]
+
+
+if __name__ == '__main__':
+    ab = Protein('YEVHHQKLVFFAEDVGSNKGAIIGLMVGGVV')  # noqa
