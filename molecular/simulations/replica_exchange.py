@@ -230,12 +230,13 @@ class ExchangeHistory:
             'y_title': y_title,
             'y_min': 0.,
             'y_max': 1.,
-
+            'height': 5,
+            'width': 6
         })
-        fig += u.line(x, y, style={'color': 'black', 'line_style': 'solid', 'marker': 'circle'})
+        fig += u.line(x, y, style={'color': 'black', 'line_style': 'solid', 'marker': 'circle'})  # noqa
         if plot_theoretical:
             fig += u.hline(
-                y=1. - 1. / np.sqrt(len(x)),
+                y=1. - 1. / np.sqrt(len(x)),  # noqa
                 style={'color': 'black', 'line_style': 'longdash', 'line_width': 1.}
             )
         fig, ax = fig.to_mpl(show=False)

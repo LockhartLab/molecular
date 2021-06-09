@@ -1,4 +1,4 @@
-4"""
+"""
 sequence.py
 
 >>> abeta = Protein('YEVHHQKLVFFAEDVGSNKGAIIGLMVGGVV')
