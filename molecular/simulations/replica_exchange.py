@@ -25,6 +25,7 @@ class ExchangeHistory:
     __slots__ = '_data'
 
     # Initialize instance of exchange history
+    # TODO allow "warm start" from initial conditions
     def __init__(self, data, only_neighbors=True):
         """
         `data` must be a pandas DataFrame with the columns "replica", "config", and "step". Note that the elements in
@@ -183,7 +184,7 @@ class ExchangeHistory:
         # Return the rate
         return np.sum(n_exchanges) / np.sum(n_attempts) if by is None else n_exchanges / n_attempts
 
-    def hansmann(self):
+    def hansmann(self, ):
         r"""
         The Hansmann parameter :math:`h(T)` shows the residence time :math:`\tau` replica :math:`r` (of :math:`R` total
         replicas) spends at configuration :math:`T`.
@@ -230,8 +231,8 @@ class ExchangeHistory:
             'y_title': y_title,
             'y_min': 0.,
             'y_max': 1.,
-            'height': 5,
-            'width': 6
+            # 'height': 5,
+            # 'width': 6
         })
         fig += u.line(x, y, style={'color': 'black', 'line_style': 'solid', 'marker': 'circle'})  # noqa
         if plot_theoretical:
