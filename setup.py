@@ -44,8 +44,6 @@ setup(
     url="https://www.lockhartlab.org",
     packages=[
         'molecular',
-        'molecular._include',
-        'molecular._include.protein',
         'molecular.analysis',
         'molecular.analysis.protein',
         'molecular.bioinformatics',
@@ -59,6 +57,9 @@ setup(
         'molecular.statistics',
         'molecular.transform',
         'molecular.viz'
+    ],
+    data_files=[
+        ('_include/protein', ['_include/protein/relative_sasa.yml'])
     ],
     install_requires=requirements,
     include_package_data=True,
