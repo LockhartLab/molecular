@@ -44,6 +44,7 @@ setup(
     url="https://www.lockhartlab.org",
     packages=[
         'molecular',
+        'molecular._include',
         'molecular.analysis',
         'molecular.analysis.protein',
         'molecular.bioinformatics',
