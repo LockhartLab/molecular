@@ -45,6 +45,7 @@ setup(
     packages=[
         'molecular',
         'molecular._include',
+        'molecular._include.protein',
         'molecular.analysis',
         'molecular.analysis.protein',
         'molecular.bioinformatics',
