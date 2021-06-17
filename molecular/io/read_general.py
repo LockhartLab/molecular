@@ -120,7 +120,7 @@ def read_table(fname, glob=None, sep='\s+', header=None, ignore_index=True, rein
     # TODO be careful here -- we want to avoid storing multiple copies of data
     kwargs['sep'] = sep
     kwargs['header'] = header
-    data = map(partial(pd.read_table, **kwargs), fnames)
+    data = list(map(partial(pd.read_table, **kwargs), fnames))
     # data = [pd.read_table(fname, **kwargs).assign({**Path(fname).metadata}) for fname in fnames]
     if glob:
         data = [table.assign(**Path(fname).metadata) for fname, table in zip(fnames, data)]
