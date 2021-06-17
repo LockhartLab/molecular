@@ -59,7 +59,7 @@ setup(
         'molecular.viz'
     ],
     data_files=[
-        ('_include/protein', ['_include/protein/relative_sasa.yml'])
+        '_include/protein/relative_sasa.yml'
     ],
     install_requires=requirements,
     include_package_data=True,
