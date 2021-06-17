@@ -1,5 +1,6 @@
-recursive-include molecular *.c *.pyf *.f90 *.pyx
+recursive-include molecular *.c *.pyf *.f90 *.pyx *.yml
 include requirements.txt
 include version.yml
+include _include/protein/relative_sasa.yml
 include molecular/_include/protein/relative_sasa.yml
 include pyproject.toml
