@@ -4,7 +4,7 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-import setuptools  # noqa
+# import setuptools  # noqa
 import numpy as np
 from numpy.distutils.core import Extension, setup
 from numpy.distutils.misc_util import Configuration
