@@ -38,7 +38,7 @@ with open('README.rst', 'r') as buffer:
 # Create configuration
 def configuration(parent_package='', top_path=None):
     config = Configuration('molecular', parent_package, top_path)
-    config.add_data_dir('_include/protein')
+    config.add_data_dir(('_include/protein', 'molecular/_include/protein'))
     return config
 
 
