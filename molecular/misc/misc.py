@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 from typelike import ArrayLike
@@ -48,7 +47,7 @@ def cartesian_product(a, offset=1):
     """
 
     for i in range(len(a)):
-        for j in range(i+offset, len(a)):
+        for j in range(i + offset, len(a)):
             yield a[i], a[j]
 
 
@@ -79,6 +78,7 @@ def dictmap(dictionary, iterable):  # noqa
 
     return dictionary[iterable].to_numpy()
 
+
 # Convenience zfill function
 def zfill(a, width=None):
     if width is None:
@@ -87,3 +87,7 @@ def zfill(a, width=None):
         return np.char.zfill(list(map(str, a)), width)
     else:
         return str(a).zfill(width)
+
+
+if __name__ == '__main__':
+    print(zfill(range(5), 2))
