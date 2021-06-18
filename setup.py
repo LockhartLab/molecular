@@ -7,6 +7,7 @@ author: C. Lockhart <chris@lockhartlab.org>
 import setuptools # noqa
 import numpy as np
 from numpy.distutils.core import Extension, setup
+from numpy.distutils.misc_util import Configuration
 import os.path
 
 from Cython.Build import cythonize
@@ -33,6 +34,12 @@ with open('README.rst', 'r') as buffer:
 # First make sure numpy is installed
 # _setup(install_requires=['numpy'])
 
+# Create configuration
+config = Configuration(package_name='molecular')
+
+# Add data files
+config.add_data_dir('_include/protein')
+
 # Then, install molecular
 setup(
     name='molecular',
@@ -58,11 +65,9 @@ setup(
         'molecular.transform',
         'molecular.viz'
     ],
-    data_files=[
-        ('molecular', ['_include/protein/relative_sasa.yml'])
-    ],
     install_requires=requirements,
-    include_package_data=True,
+    # include_package_data=True,
+    config=config,
     zip_safe=True,
     ext_modules=cythonize([
         Extension(
