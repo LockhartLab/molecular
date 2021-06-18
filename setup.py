@@ -4,7 +4,7 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-import setuptools # noqa
+import setuptools  # noqa
 import numpy as np
 from numpy.distutils.core import Extension, setup
 from numpy.distutils.misc_util import Configuration
@@ -31,14 +31,15 @@ with open('requirements.txt', 'r') as buffer:
 with open('README.rst', 'r') as buffer:
     long_description = buffer.read()
 
+
 # First make sure numpy is installed
 # _setup(install_requires=['numpy'])
 
 # Create configuration
-config = Configuration(package_name='molecular')
-
-# Add data files
-config.add_data_dir('_include/protein')
+def configuration(parent_package='', top_path=None):
+    config = Configuration('molecular', parent_package, top_path)
+    config.add_data_dir('_include/protein')
+    return config
 
 # Then, install molecular
 setup(
@@ -67,7 +68,7 @@ setup(
     ],
     install_requires=requirements,
     # include_package_data=True,
-    configuration=config,
+    configuration=configuration,
     zip_safe=True,
     ext_modules=cythonize([
         Extension(
