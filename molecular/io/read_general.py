@@ -136,7 +136,7 @@ def read_table(fname, glob=None, sep='\s+', header=None, ignore_index=True, rein
     if header is None and kwargs.get('index_col', None) is not None:
         offset = 0 if not glob else len(Path(fnames[0]).metadata)
         n_raw_columns = len(data.columns) - offset
-        data.columns[:n_raw_columns] = np.arange(n_raw_columns)
+        data.columns = list(range(n_raw_columns)) + list(Path(fnames[0]).metadata.keys())
 
     # Reindex?
     if reindex:

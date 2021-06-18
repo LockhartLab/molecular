@@ -12,7 +12,8 @@ __all__ = [
     'dictmap',
     'experimental',
     'squareform',
-    'zfill'
+    'zfill',
+    'zfillr'
 ]
 
 
