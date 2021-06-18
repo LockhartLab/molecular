@@ -13,11 +13,11 @@ class Histogram:
 
     def plot(self):
         import uplot as u
-        u.plot(self.to_pandas())
+        u.plot(self.to_frame())
 
     # FIXME when count = False and probability = False, this will break because there will be a pandas index with no
     #  other content.
-    def to_pandas(self, count=True, probability=False):
+    def to_frame(self, count=True, probability=False):
         import pandas as pd
 
         df = pd.DataFrame({'bin': self._bins})
