@@ -1,5 +1,7 @@
 from .distance import *
 
+from .histogram import *
+
 from . import protein
 from .protein import *
 
@@ -7,6 +9,7 @@ from .rmsd import *
 
 __all__ = [
     'distance',
+    'ihist',
     'rmsd',
 ]
 

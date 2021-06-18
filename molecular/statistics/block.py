@@ -54,12 +54,16 @@ class Block:
         # Compute standard error around mean
         return block_error(self.mean())
 
+    def std(self):
+        return self._data.pivot_table(index='block', aggfunc='std')  # same as aggfunc=partial(np.std, ddof=1)
+
 
 def block_average(df, n_blocks=10):
     return Block(df, n_blocks=n_blocks).mean()
 
 
 # Shortcut function to compute block error directly from a DataFrame
+# TODO make this compatible with Series as well
 def block_error(df, n_blocks=10):
     # If block is in the DataFrame, assume we're passed block averages
     if 'block' in df.columns:
@@ -72,7 +76,12 @@ def block_error(df, n_blocks=10):
         df = Block(df, n_blocks=n_blocks).mean()
 
     # Return the block error
+    # TODO make this return a single number of len(df.columns) == 1
     return df.std(ddof=1) / np.sqrt(len(df))
+
+
+def block_std(df, n_blocks=10):
+    return Block(df, n_blocks=n_blocks).mean().std(ddof=1)
 
 
 # noinspection PyShadowingNames
