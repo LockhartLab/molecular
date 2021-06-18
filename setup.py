@@ -67,7 +67,7 @@ setup(
     ],
     install_requires=requirements,
     # include_package_data=True,
-    config=config,
+    configuration=config,
     zip_safe=True,
     ext_modules=cythonize([
         Extension(
