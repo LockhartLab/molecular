@@ -323,7 +323,7 @@ class ExchangeHistory:
 
         # Save the image
         # fig.show()
-        fig.savefig('mosaic_plot.png')
+        fig.savefig('mosaic_plot.svg')
 
     # Reset the step index?
     def reset_step(self):
