@@ -43,7 +43,7 @@ def configuration(parent_package='', top_path=None):
 
 # Then, install molecular
 setup(
-    name='molecular',
+    # name='molecular',
     version=version,
     author='C. Lockhart',
     author_email='chris@lockhartlab.org',
