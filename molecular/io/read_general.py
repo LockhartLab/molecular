@@ -132,9 +132,11 @@ def read_table(fname, glob=None, sep='\s+', header=None, ignore_index=True, rein
     end_time = time.time()
     logger.info(f'files loaded with shape {data.shape} in {int(end_time - start_time)} seconds')
 
-    # If header is None and index_col is defined, reset columns
+    # If header is None and index_col is defined, reset columns (so starts at 0 and not 1)
     if header is None and kwargs.get('index_col', None) is not None:
-        data.columns = np.arange(len(data.columns))
+        offset = 0 if not glob else len(Path(fnames[0]).metadata)
+        n_raw_columns = len(data.columns) - offset
+        data.columns[:n_raw_columns] = np.arange(n_raw_columns)
 
     # Reindex?
     if reindex:
