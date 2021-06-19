@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.statistics.block &#8212; molecular 0.1.dev204 documentation</title>
+    <title>molecular.statistics.block &#8212; molecular 0.1.dev205 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev204 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev205 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.statistics.block</a></li> 
       </ul>
@@ -53,10 +53,10 @@
 
 
 <span class="k">class</span> <span class="nc">Block</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">n_blocks</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">n_blocks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">discard_remainder</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="c1"># Make sure data is DataFrame</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;data must be pandas.DataFrame&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;data must be pandas DataFrame&#39;</span><span class="p">)</span>
 
         <span class="c1"># Create a copy of the DataFrame</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -64,8 +64,13 @@
         <span class="c1"># Split into blocks</span>
         <span class="k">if</span> <span class="s1">&#39;block&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;block cannot be in pandas.DataFrame&#39;</span><span class="p">)</span>
-        <span class="n">block_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_blocks</span>  <span class="c1"># should this be ceiled?</span>
-        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;block&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">/</span> <span class="n">block_size</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="c1"># block_size = len(data) / n_blocks  # should this be ceiled?</span>
+        <span class="c1"># data[&#39;block&#39;] = (np.arange(len(data)) / block_size).astype(int)</span>
+
+        <span class="n">block_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_blocks</span><span class="p">)</span>
+        <span class="n">blocks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_blocks</span><span class="p">),</span> <span class="n">block_size</span><span class="p">)</span>
+        <span class="n">last_block</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="n">discard_remainder</span> <span class="k">else</span> <span class="n">n_blocks</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;block&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">blocks</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">last_block</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">blocks</span><span class="p">))])</span>
 
         <span class="c1"># Make sure that we computed the right number of blocks</span>
         <span class="k">if</span> <span class="n">n_blocks</span> <span class="o">!=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;block&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">():</span>
@@ -205,23 +210,23 @@
     <span class="c1"># Compute error around average</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">blocks_avg</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">blocks</span><span class="p">))</span>
 
-<span class="c1">#</span>
+
 <span class="c1"># if __name__ == &#39;__main__&#39;:</span>
 <span class="c1">#     # 1D, equal</span>
 <span class="c1">#     a = np.random.rand(10000)</span>
 <span class="c1">#     print(sem_block(a, 10))</span>
 <span class="c1">#</span>
 <span class="c1">#     # 1D, unequal</span>
-<span class="c1">#     # a = np.random.rand(10000)</span>
-<span class="c1">#     # print(block_error(a, 3, errors=&#39;warn&#39;))</span>
+<span class="c1">#     a = np.random.rand(10000)</span>
+<span class="c1">#     print(block_error(a, 3))</span>
 <span class="c1">#</span>
 <span class="c1">#     # 2D, equal</span>
-<span class="c1">#     # a = np.random.rand(10000, 31)</span>
-<span class="c1">#     # print(block_error(a))</span>
+<span class="c1">#     a = np.random.rand(10000, 31)</span>
+<span class="c1">#     print(block_error(a))</span>
 <span class="c1">#</span>
 <span class="c1">#     # 2D, unequal</span>
-<span class="c1">#     # a = np.random.rand(10000, 31)</span>
-<span class="c1">#     # print(block_error(a, 3))</span>
+<span class="c1">#     a = np.random.rand(10000, 31)</span>
+<span class="c1">#     print(block_error(a, 3))</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -253,7 +258,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev204 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev205 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.statistics.block</a></li> 
       </ul>
