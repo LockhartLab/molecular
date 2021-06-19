@@ -1,4 +1,3 @@
-
 from .utilities import Path, vglob
 
 from fileinput import input as input_
@@ -65,6 +64,13 @@ def loadtxt(fname, glob=None, verbose=False, **kwargs):
 
     # Return
     return data
+
+
+# Note: signature should match read_table...
+def read_csv(fname, **kwargs):
+    if 'sep' != kwargs:
+        kwargs['sep'] = ','
+    return read_table(fname, **kwargs)
 
 
 # TODO enable fname to be stored in the DataFrame? Is this a bad idea?
