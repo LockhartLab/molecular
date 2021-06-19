@@ -11,10 +11,10 @@ from warnings import warn
 
 
 class Block:
-    def __init__(self, data, n_blocks=10):
+    def __init__(self, data, n_blocks=10, discard_remainder=True):
         # Make sure data is DataFrame
         if not isinstance(data, pd.DataFrame):
-            raise AttributeError('data must be pandas.DataFrame')
+            raise AttributeError('data must be pandas DataFrame')
 
         # Create a copy of the DataFrame
         data = data.copy()
@@ -22,8 +22,13 @@ class Block:
         # Split into blocks
         if 'block' in data.columns:
             raise AttributeError('block cannot be in pandas.DataFrame')
-        block_size = len(data) / n_blocks  # should this be ceiled?
-        data['block'] = (np.arange(len(data)) / block_size).astype(int)
+        # block_size = len(data) / n_blocks  # should this be ceiled?
+        # data['block'] = (np.arange(len(data)) / block_size).astype(int)
+
+        block_size = np.floor(len(data) / n_blocks)
+        blocks = np.repeat(np.arange(n_blocks), block_size)
+        last_block = np.nan if discard_remainder else n_blocks - 1
+        data['block'] = np.hstack([blocks, np.repeat(last_block, len(data) - len(blocks))])
 
         # Make sure that we computed the right number of blocks
         if n_blocks != data['block'].nunique():
@@ -163,20 +168,20 @@ def sem_block(a, indices_or_sections=10, errors='ignore'):
     # Compute error around average
     return np.std(blocks_avg, ddof=1, axis=0) / np.sqrt(len(blocks))
 
-#
+
 # if __name__ == '__main__':
 #     # 1D, equal
 #     a = np.random.rand(10000)
 #     print(sem_block(a, 10))
 #
 #     # 1D, unequal
-#     # a = np.random.rand(10000)
-#     # print(block_error(a, 3, errors='warn'))
+#     a = np.random.rand(10000)
+#     print(block_error(a, 3))
 #
 #     # 2D, equal
-#     # a = np.random.rand(10000, 31)
-#     # print(block_error(a))
+#     a = np.random.rand(10000, 31)
+#     print(block_error(a))
 #
 #     # 2D, unequal
-#     # a = np.random.rand(10000, 31)
-#     # print(block_error(a, 3))
+#     a = np.random.rand(10000, 31)
+#     print(block_error(a, 3))
