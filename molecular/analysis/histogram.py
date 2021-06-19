@@ -76,7 +76,7 @@ def ihist(a, width, right=False):
 
     # Take `a` and get binned values
     func = np.floor if not right else np.ceil
-    a_binned = np.copy(func(a / width) * width)
+    a_binned = func(a / width) * width
 
     # Create histogram
     if isinstance(a_binned, pd.DataFrame):
