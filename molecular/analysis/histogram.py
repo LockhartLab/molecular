@@ -18,7 +18,21 @@ class Histogram:
 
     @property
     def pmf(self):
-        return self._data / self._data.sum(axis=0)
+        """
+
+        Returns
+        -------
+
+        """
+
+        df = self._data / self._data.sum(axis=0)
+
+        if len(df.columns) > 1:
+            df.columns.name = 'pmf'
+        else:
+            df.rename(columns={'count': 'pmf'}, inplace=True)
+
+        return df
 
     def plot(self):
         import uplot as u
