@@ -8,6 +8,7 @@ __all__ = [
     'read_dcd',
     'read_peptide_sequence',
     'read_pdb',
+    'read_csv',
     'read_table',
     'vglob'
 ]
