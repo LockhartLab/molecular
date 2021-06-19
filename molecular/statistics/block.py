@@ -11,7 +11,22 @@ from warnings import warn
 
 
 class Block:
+    """
+
+    """
+
     def __init__(self, data, n_blocks=10, discard_remainder=True):
+        """
+
+        Parameters
+        ----------
+        data
+        n_blocks
+        discard_remainder : bool
+            If the length of data is not evenly divisible by `n_blocks`, then should we include or discard the
+            remainder? If we choose not to discard the remainder, the last block will be larger. (Default: True).
+        """
+
         # Make sure data is DataFrame
         if not isinstance(data, pd.DataFrame):
             raise AttributeError('data must be pandas DataFrame')
@@ -68,8 +83,11 @@ def block_average(df, n_blocks=10):
 
 
 # Shortcut function to compute block error directly from a DataFrame
-# TODO make this compatible with Series as well
 def block_error(df, n_blocks=10):
+    # Convert Series to DataFrame if necessary
+    if isinstance(df, pd.Series):
+        df = df.to_frame()
+
     # If block is in the DataFrame, assume we're passed block averages
     if 'block' in df.columns:
         _, counts = np.unique(df['block'], return_counts=True)
