@@ -615,12 +615,12 @@ class Trajectory(object):
 
         # Center Trajectory in place or return a copy
         if inplace:
-            logging.info(f'centered {self.designator} at origin')
+            logger.info(f'centered {self.designator} at origin')
             self.coordinates = coord
 
         else:
             trajectory = self.copy()
-            logging.info(f'centered {trajectory.designator} at origin')
+            logger.info(f'centered {trajectory.designator} at origin')
             trajectory.coordinates = coord
             return trajectory
 
