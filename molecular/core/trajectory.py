@@ -580,7 +580,10 @@ class Trajectory(object):
             item = kwargs[key]
             if not isinstance(item, ArrayLike):
                 item = [item]
-            data = data[data[key].isin(item) is not exclude]
+            mask = data[key].isin(item)
+            if exclude:
+                mask = ~mask
+            data = data[mask]
 
         # Extract indices and create a new topology
         # Remember: Topology index is atom_id

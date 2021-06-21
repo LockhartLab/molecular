@@ -243,6 +243,7 @@ def dihedral(a, b, c, d=None):
 
 
 # Compute the distance between two vectors
+# naming inspired by VMD
 def vecdist(a, b=None):
     """
     Compute the Euclidean distance between two vectors.
