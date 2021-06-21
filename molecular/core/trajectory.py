@@ -587,13 +587,17 @@ class Trajectory(object):
 
         # Extract indices and create a new topology
         # Remember: Topology index is atom_id
-        index = data.index.to_numpy()
+        index = data['atom_id'].to_numpy()  # used to be data.index, but this breaks on multiple selections
         topology = Topology(data)
+        assert len(index) == len(topology)  # noqa
 
         # Create new Trajectory, log, and return
         # return Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim), topology=topology)
         trajectory = Trajectory(data=self.get_atoms(index), topology=topology)  # noqa
-        logger.info(f'selected {trajectory.n_atoms} of {self.n_atoms} (exclude mode={exclude}; {kwargs})')
+        logger.info(f'selected {trajectory.n_atoms} of {self.n_atoms} atoms (new Trajectory: '
+                    f'{trajectory.designator}; exclude mode={exclude};'
+                    f' {kwargs})')
+        assert len(index) == trajectory.n_atoms  # noqa
         return trajectory
 
     # Recenter the Trajectory at the origin
@@ -889,7 +893,10 @@ class Topology:
         return Topology(self._data.copy())
 
     # Infer elements from the Topology
-    def infer_elements(self, overwrite=False):
+    def infer_elements(self, overwrite=False, inplace=True):
+        if not inplace:
+            raise NotImplementedError
+
         # "Infer" from first letter of atom name; this will fail for two letter elements...
         # FIXME for 2 letter elements
         # TODO add warning for the fixme?
