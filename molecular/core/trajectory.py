@@ -888,10 +888,11 @@ class Topology:
 
         return Topology(self._data.copy())
 
+    # Infer elements from the Topology
     def infer_elements(self, overwrite=False):
         # "Infer" from first letter of atom name; this will fail for two letter elements...
         # FIXME for 2 letter elements
-        # TODO add warning for the fixme
+        # TODO add warning for the fixme?
         elements = self._data['atom'].str.strip().str[0]
         logger.info(f'inferring missing elements (overwrite = {overwrite})')
         if overwrite:
