@@ -298,10 +298,10 @@ def read_dcd(fname, topology=None, backend='cython'):
     ----------
     fname : str
         Name of DCD file.
-    topology : Topology
-        (Optional) Topology file to load for coordinates.
+    topology : Trajectory or Topology
+        (Optional) Topology file to load for coordinates. If Trajectory object, we will extract Topology.
     backend : str
-        How to load the DCD? (Default: "scipy")
+        How to load the DCD? (Default: "cython")
 
     Returns
     -------
@@ -311,6 +311,11 @@ def read_dcd(fname, topology=None, backend='cython'):
 
     # Convert backend to lowercase
     backend = backend.lower()
+
+    # Sort out Topology
+    topology_id = id(topology)  # need to save this for logging
+    if isinstance(topology, Trajectory):
+        topology = topology.topology
 
     # Our Python backend
     if backend in 'python':
@@ -368,7 +373,7 @@ def read_dcd(fname, topology=None, backend='cython'):
     a = Trajectory(coordinates=xyz, box=box, topology=topology)
 
     # Logging
-    logger.info(f'read in {fname} as {a.designator}')
+    logger.info(f'read in {fname} as {a.designator} with topology {topology_id}')
 
     # Return
     return a
