@@ -179,6 +179,11 @@ class Trajectory(object):
         # noinspection PyUnresolvedReferences
         return self._data.index.levels[1]
 
+    # Box
+    @property
+    def box(self):
+        return self._configuration[['bx', 'by', 'bz']]
+
     # Get coordinates
     @property
     def coord(self):
