@@ -243,7 +243,7 @@ def dihedral(a, b, c, d=None):
 
 
 # Compute the distance between two vectors
-def distance(a, b=None):
+def vecdist(a, b=None):
     """
     Compute the Euclidean distance between two vectors.
 
@@ -316,7 +316,7 @@ def norm(a):
     # a, needs_ravel = _coerce_to_2d(a)
     #
     # return _array_result(np.linalg.norm(a, axis=1), needs_ravel)
-    return distance(a)
+    return vecdist(a)
 
 
 # Compute the normal between three points
