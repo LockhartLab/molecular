@@ -590,9 +590,11 @@ class Trajectory(object):
         index = data.index.to_numpy()
         topology = Topology(data)
 
-        # Return
+        # Create new Trajectory, log, and return
         # return Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim), topology=topology)
-        return Trajectory(data=self.get_atoms(index), topology=topology)  # noqa
+        trajectory = Trajectory(data=self.get_atoms(index), topology=topology)  # noqa
+        logger.info(f'selected {trajectory.n_atoms} of {self.n_atoms} (exclude mode={exclude}; {kwargs})')
+        return trajectory
 
     # Recenter the Trajectory at the origin
     # TODO need to decide if this should be moved to molecular.transform
