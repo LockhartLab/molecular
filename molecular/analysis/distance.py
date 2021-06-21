@@ -31,3 +31,7 @@ def distance(a, b):
     b_xyz = b.xyz.to_numpy().reshape(*b.shape)
 
     return np.sqrt(np.sum(np.square(a_xyz - b_xyz), axis=(1, 2)))
+
+# Compute pairwise distance between two Trajectories (or within a Trajectory?)
+def pairwise_distance(a, b):
+    pass

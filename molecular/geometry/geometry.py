@@ -5,8 +5,13 @@ author: C. Lockhart <chris@lockhartlab.org>
 """
 
 
+import logging
 import numpy as np
 from scipy.spatial.distance import squareform
+
+
+# Get the molecular.geometry logger
+logger = logging.getLogger('molecular.geometry')
 
 
 # Compute angle between three points
@@ -268,6 +273,8 @@ def vecdist(a, b=None):
     if b is None:
         b = np.zeros(a.shape)
     b, _ = _coerce_to_2d(b)
+
+    logger.info('computed vector distance')
 
     # Return distance
     return _array_result(np.sqrt(np.sum(np.square(vector(a, b)), axis=1)), needs_ravel)
