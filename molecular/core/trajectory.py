@@ -510,6 +510,12 @@ class Trajectory(object):
     def keys(self):
         return self._topology.keys()
 
+    def min(self):
+        return self.coordinates.pivot_table(index='structure_id', values=['x', 'y', 'z'], aggfunc='min')
+
+    def max(self):
+        return self.coordinates.pivot_table(index='structure_id', values=['x', 'y', 'z'], aggfunc='max')
+
     # Move
     @set_doc(move)
     def move(self, by=None, to=None, inplace=True):
