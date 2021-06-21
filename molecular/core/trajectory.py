@@ -594,9 +594,9 @@ class Trajectory(object):
         # return Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim), topology=topology)
         return Trajectory(data=self.get_atoms(index), topology=topology)  # noqa
 
-    # Recenter the Trajectory
+    # Recenter the Trajectory at the origin
     # TODO need to decide if this should be moved to molecular.transform
-    def to_center(self, weights=None, inplace=False):
+    def to_origin(self, weights=None, inplace=False):
         """
         Recenter all structures in the Trajectory around the origin.
 
@@ -609,18 +609,17 @@ class Trajectory(object):
         """
 
         # Center xyz coordinates
-        # noinspection PyUnresolvedReferences,PyArgumentList
-        xyz = self.xyz - self.center(weights).reshape(self.n_structures, -1, self.n_dim)
+        coord = self.coordinates - self.center(weights)
 
         # Center Trajectory in place or return a copy
         if inplace:
             logging.info(f'centered {self.designator} at origin in place')
-            self.xyz = xyz
+            self.coordinates = coord
 
         else:
             logging.info(f'centered {self.designator} at origin')
             trajectory = self.copy()
-            trajectory.xyz = xyz
+            trajectory.coordinates = coord
             return trajectory
 
     # Convert to pandas DataFrame
@@ -834,6 +833,11 @@ class Topology:
         """
 
         return self.n_atoms
+
+    # Hex ID
+    @property
+    def hex_id(self):
+        return hex(id(self))
 
     # Add new atoms f
     def add_atoms(self, **kwargs):

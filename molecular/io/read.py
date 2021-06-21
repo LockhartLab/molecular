@@ -313,7 +313,7 @@ def read_dcd(fname, topology=None, backend='cython'):
     backend = backend.lower()
 
     # Sort out Topology
-    topology_id = id(topology)  # need to save this for logging
+    topology_id = hex(id(topology))  # need to save this for logging
     if isinstance(topology, Trajectory):
         topology = topology.topology
 

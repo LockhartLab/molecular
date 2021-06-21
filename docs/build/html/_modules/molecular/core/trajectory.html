@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.core.trajectory &#8212; molecular 0.1.dev215 documentation</title>
+    <title>molecular.core.trajectory &#8212; molecular 0.1.dev216 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev215 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev216 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.trajectory</a></li> 
       </ul>
@@ -636,9 +636,9 @@
         <span class="c1"># return Trajectory(self.get_atoms(index).reshape(self.n_structures, len(index), self.n_dim), topology=topology)</span>
         <span class="k">return</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_atoms</span><span class="p">(</span><span class="n">index</span><span class="p">),</span> <span class="n">topology</span><span class="o">=</span><span class="n">topology</span><span class="p">)</span>  <span class="c1"># noqa</span></div>
 
-    <span class="c1"># Recenter the Trajectory</span>
+    <span class="c1"># Recenter the Trajectory at the origin</span>
     <span class="c1"># TODO need to decide if this should be moved to molecular.transform</span>
-<div class="viewcode-block" id="Trajectory.to_center"><a class="viewcode-back" href="../../../api/generated/molecular.core.Trajectory.html#molecular.core.Trajectory.to_center">[docs]</a>    <span class="k">def</span> <span class="nf">to_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Trajectory.to_origin"><a class="viewcode-back" href="../../../api/generated/molecular.core.Trajectory.html#molecular.core.Trajectory.to_origin">[docs]</a>    <span class="k">def</span> <span class="nf">to_origin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recenter all structures in the Trajectory around the origin.</span>
 
@@ -651,18 +651,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Center xyz coordinates</span>
-        <span class="c1"># noinspection PyUnresolvedReferences,PyArgumentList</span>
-        <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xyz</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_structures</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_dim</span><span class="p">)</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
 
         <span class="c1"># Center Trajectory in place or return a copy</span>
         <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;centered </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">designator</span><span class="si">}</span><span class="s1"> at origin in place&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="n">coord</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;centered </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">designator</span><span class="si">}</span><span class="s1"> at origin&#39;</span><span class="p">)</span>
             <span class="n">trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            <span class="n">trajectory</span><span class="o">.</span><span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span>
+            <span class="n">trajectory</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="n">coord</span>
             <span class="k">return</span> <span class="n">trajectory</span></div>
 
     <span class="c1"># Convert to pandas DataFrame</span>
@@ -877,6 +876,11 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_atoms</span>
 
+    <span class="c1"># Hex ID</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hex_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hex</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
     <span class="c1"># Add new atoms f</span>
     <span class="k">def</span> <span class="nf">add_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -1073,7 +1077,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev215 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev216 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.core.trajectory</a></li> 
       </ul>
