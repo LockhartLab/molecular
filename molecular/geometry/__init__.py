@@ -14,12 +14,12 @@ __all__ = [
     'cos_angle',
     'cross',
     'dihedral',
-    'distance',
     'dot',
     'norm',
     'normal',
     'polar_to_cartesian',
     'unit_vector',
+    'vecdist',
     'vector',
 ]
 

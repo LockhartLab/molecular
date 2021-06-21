@@ -132,9 +132,9 @@ class TestGeometry(TestCase):
         #         vdihedral(u, v, w)
 
         # Compute distance
-        np.testing.assert_almost_equal(_distance(a, b, n_points), distance(a, b))
-        np.testing.assert_almost_equal(_distance(b, c, n_points), distance(b, c))
-        np.testing.assert_almost_equal(_distance(c, d, n_points), distance(c, d))
+        np.testing.assert_almost_equal(_distance(a, b, n_points), vecdist(a, b))
+        np.testing.assert_almost_equal(_distance(b, c, n_points), vecdist(b, c))
+        np.testing.assert_almost_equal(_distance(c, d, n_points), vecdist(c, d))
 
         # Test xyz to polar and vice versa (don't need to compute because we can use identities)
         np.testing.assert_array_almost_equal(a, polar_to_cartesian(cartesian_to_polar(a)))
