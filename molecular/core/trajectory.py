@@ -481,8 +481,8 @@ class Trajectory(object):
         # xyz will be a view if index is an int, otherwise it will be a copy...
         # TODO how will this affect behavior?
         # return self._xyz[:, index, :]
-        match = np.in1d(self._data.index.get_level_values('atom_id'), index)
-        return self._data[match]
+        mask = np.in1d(self._data.index.get_level_values('atom_id'), index)
+        return self._data[mask].copy()  # need to do a copy here, because otherwise the view creates downstream warnings
 
     # Get column
     def get_column(self, column):
@@ -613,12 +613,12 @@ class Trajectory(object):
 
         # Center Trajectory in place or return a copy
         if inplace:
-            logging.info(f'centered {self.designator} at origin in place')
+            logging.info(f'centered {self.designator} at origin')
             self.coordinates = coord
 
         else:
-            logging.info(f'centered {self.designator} at origin')
             trajectory = self.copy()
+            logging.info(f'centered {trajectory.designator} at origin')
             trajectory.coordinates = coord
             return trajectory
 
