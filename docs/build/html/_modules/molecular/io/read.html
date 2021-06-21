@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.io.read &#8212; molecular 0.1.dev208 documentation</title>
+    <title>molecular.io.read &#8212; molecular 0.1.dev209 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev208 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev209 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
@@ -330,6 +330,7 @@
 
 <span class="c1"># Read DCD</span>
 <span class="c1"># could https://www.pytables.org/usersguide/tutorials.html speed this up?</span>
+<span class="c1"># TODO add first, last frames and mask to only read some atoms</span>
 <div class="viewcode-block" id="read_dcd"><a class="viewcode-back" href="../../../api/generated/molecular.io.read_dcd.html#molecular.io.read_dcd">[docs]</a><span class="k">def</span> <span class="nf">read_dcd</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;cython&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read in DCD file with `fname`. This function is partially based off</span>
@@ -413,7 +414,6 @@
 
     <span class="c1"># Return</span>
     <span class="k">return</span> <span class="n">a</span></div>
-
 </pre></div>
 
             <div class="clearer"></div>
@@ -445,7 +445,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev208 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev209 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read</a></li> 
       </ul>
