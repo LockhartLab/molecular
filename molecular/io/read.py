@@ -288,6 +288,7 @@ def _read_pdb_pandas(fname):
 
 # Read DCD
 # could https://www.pytables.org/usersguide/tutorials.html speed this up?
+# TODO add first, last frames and mask to only read some atoms
 def read_dcd(fname, topology=None, backend='cython'):
     """
     Read in DCD file with `fname`. This function is partially based off
@@ -371,4 +372,3 @@ def read_dcd(fname, topology=None, backend='cython'):
 
     # Return
     return a
-
