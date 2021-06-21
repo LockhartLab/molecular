@@ -450,6 +450,18 @@ class Trajectory(object):
         print('# atoms: %s' % self.n_atoms)
         print('# dimensions: %s' % self.n_dim)
 
+    # Exclude
+    def exclude(self, **kwargs):
+        """
+        Convenience function that passes to :func:`select`.
+
+        Returns
+        -------
+        Trajectory
+        """
+
+        return self.select(exclude=True, **kwargs)
+
     # Get atoms
     def get_atoms(self, index):
         """
@@ -541,7 +553,7 @@ class Trajectory(object):
 
     # Select
     # TODO compare the efficiency of this vs query
-    def select(self, **kwargs):
+    def select(self, exclude=False, **kwargs):
         """
 
         Parameters
@@ -562,7 +574,7 @@ class Trajectory(object):
             item = kwargs[key]
             if not isinstance(item, ArrayLike):
                 item = [item]
-            data = data[data[key].isin(item)]
+            data = data[data[key].isin(item) is not exclude]
 
         # Extract indices and create a new topology
         # Remember: Topology index is atom_id
