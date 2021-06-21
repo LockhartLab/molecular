@@ -25,7 +25,7 @@ logger = logging.getLogger('molecular.io')
 
 # Read PDB
 # TODO currently the only backend will by python; in future, expand to Cython or C or Fortran backend
-def read_pdb(fname, backend='pandas'):
+def read_pdb(fname, backend='pandas', infer_elements=True):
     """
     Read PDB file and return Trajectory
 
@@ -39,6 +39,8 @@ def read_pdb(fname, backend='pandas'):
         (Default: 'pandas')
     skip : int
         (Optional) Read every `skip` frames.
+    infer_elements : bool
+        Infer elements from atom names. (Default: True)
 
     Returns
     -------
@@ -65,6 +67,10 @@ def read_pdb(fname, backend='pandas'):
 
     # Logging
     logger.info(f'read in {fname} as {a.designator}')
+
+    # Infer elements?
+    if infer_elements:
+        a.topology.infer_elements(inplace=True)
 
     # Return
     return a

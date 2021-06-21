@@ -182,7 +182,7 @@ class Trajectory(object):
     # Box
     @property
     def box(self):
-        return self._configuration[['bx', 'by', 'bz']]
+        return self._configuration.set_index('structure_id')[['bx', 'by', 'bz']]
 
     # Get coordinates
     @property
@@ -587,6 +587,7 @@ class Trajectory(object):
 
         # Extract indices and create a new topology
         # Remember: Topology index is atom_id
+        # TODO should I inforce that Topology.index = Topology.atom_id??
         index = data['atom_id'].to_numpy()  # used to be data.index, but this breaks on multiple selections
         topology = Topology(data)
         assert len(index) == len(topology)  # noqa
