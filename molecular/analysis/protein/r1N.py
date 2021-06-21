@@ -6,7 +6,7 @@ version: 3.7
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-from molecular.geometry import distance
+from molecular.geometry import vecdist
 
 
 # noinspection PyPep8Naming
@@ -32,4 +32,4 @@ def r1N(a):
     com_idN = a.select(residue_id=residue_idN).center()
 
     # Return the distances
-    return distance(com_id1, com_idN)
+    return vecdist(com_id1, com_idN)
