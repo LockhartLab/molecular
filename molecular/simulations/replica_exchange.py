@@ -205,7 +205,7 @@ class ExchangeHistory:
         # Return Hansmann parameter
         return 1. - np.sqrt(np.square(data).sum(axis=1)) / data.sum(axis=1)
 
-    def hansmann_plot(self, x_title=None, y_title=None, plot_theoretical=True):
+    def hansmann_plot(self, x_title=None, y_title=None, height=None, width=None, plot_theoretical=True):
         """
         Plot the Hansmann parameter.
 
@@ -213,6 +213,10 @@ class ExchangeHistory:
         ----------
         x_title : str
         y_title : str
+        height : numeric
+            Height of plot.
+        width : numeric
+            Width of plot.
         plot_theoretical : bool
             Should the theoretical Hansmann parameter in the case of equal sampling be plotted? (Default: True)
         """
@@ -227,12 +231,12 @@ class ExchangeHistory:
 
         # Build figure
         fig = u.figure(style={
-            'x_title': x_title,
-            'y_title': y_title,
+            'x_title': x_title if x_title else r'replica index, $r$',
+            'y_title': y_title if y_title else r'mixing parameter, $m$($r$)',
             'y_min': 0.,
             'y_max': 1.,
-            # 'height': 5,
-            # 'width': 6
+            'height': height,
+            'width': width
         })
         fig += u.line(x, y, style={'color': 'black', 'line_style': 'solid', 'marker': 'circle'})  # noqa
         if plot_theoretical:
@@ -288,12 +292,12 @@ class ExchangeHistory:
         # TODO change this so only units of X are display
         ax.set_xticks(np.arange(len(steps)))
         ax.set_xticklabels(steps)
-        ax.set_xlabel(r'$step$')
+        ax.set_xlabel(r'step')
 
         # Format y axis
         ax.set_yticks(np.arange(len(replicas)))
         ax.set_yticklabels(replicas)
-        ax.set_ylabel(r'$temperature\ index$')
+        ax.set_ylabel(r'temperature index')
 
         # Format tick lines
         # ax.spines['top'].set_visible(False)
@@ -323,7 +327,7 @@ class ExchangeHistory:
         cbar.ax.tick_params(which='minor', length=0)
         #        cbar.ax.yaxis.set_major_locator(MultipleLocator(1))
         cbar.ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-        cbar.ax.set_ylabel(r'$replica\ index$')
+        cbar.ax.set_ylabel(r'replica index')
 
         # Save the image
         # fig.show()
