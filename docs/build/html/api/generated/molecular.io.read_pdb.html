@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>molecular.io.read_pdb &#8212; molecular 0.1.dev220 documentation</title>
+    <title>molecular.io.read_pdb &#8212; molecular 0.1.dev221 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -37,7 +37,7 @@
         <li class="right" >
           <a href="molecular.io.read_dcd.html" title="molecular.io.read_dcd"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev220 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev221 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../io.html" accesskey="U">molecular.io</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read_pdb</a></li> 
@@ -53,7 +53,7 @@
 <h1>molecular.io.read_pdb<a class="headerlink" href="#molecular-io-read-pdb" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="molecular.io.read_pdb">
-<span class="sig-prename descclassname"><span class="pre">molecular.io.</span></span><span class="sig-name descname"><span class="pre">read_pdb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pandas'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/io/read.html#read_pdb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.io.read_pdb" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">molecular.io.</span></span><span class="sig-name descname"><span class="pre">read_pdb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pandas'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infer_elements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/molecular/io/read.html#read_pdb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#molecular.io.read_pdb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read PDB file and return Trajectory</p>
 <p>PDB format can be described in depth at <a class="reference external" href="http://www.wwpdb.org/documentation/file-format">http://www.wwpdb.org/documentation/file-format</a>.</p>
 <dl class="field-list simple">
@@ -62,6 +62,7 @@
 <li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of PDB file to be read</p></li>
 <li><p><strong>backend</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – (Default: ‘pandas’)</p></li>
 <li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – (Optional) Read every <cite>skip</cite> frames.</p></li>
+<li><p><strong>infer_elements</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Infer elements from atom names. (Default: True)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -124,7 +125,7 @@
         <li class="right" >
           <a href="molecular.io.read_dcd.html" title="molecular.io.read_dcd"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev220 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">molecular 0.1.dev221 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../io.html" >molecular.io</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.io.read_pdb</a></li> 
