@@ -243,7 +243,7 @@ class ExchangeHistory:
         fig, ax = fig.to_mpl(show=False)
         fig.savefig('hansmann_plot.svg')
 
-    def mosaic_plot(self, interval=100, cmap='ujet'):
+    def mosaic_plot(self, interval=100, cmap='ujet', height=None, width=None):
         """
         Plot the mosaic function using a heatmap.
 
@@ -253,6 +253,10 @@ class ExchangeHistory:
             Interval for plotting. We usually cannot plot every single step because there is too much data.
         cmap : str or object
             The matplotlib-compatible color map.
+        height : numeric
+            Height of plot.
+        width : numeric
+            Width of plot.
         """
 
         import matplotlib.pyplot as plt
@@ -272,7 +276,7 @@ class ExchangeHistory:
         y = np.arange(mosaic.shape[1] + 1)
 
         # Start figure and axis
-        fig = plt.figure()
+        fig = plt.figure(figsize=(width, height))
         ax = fig.add_subplot()
         # im = ax.pcolormesh(mosaic, cmap=cmap, edgecolors='k', linewidth=0.5)  # bwr
         if cmap == 'ujet':
