@@ -119,6 +119,14 @@ class ExchangeHistory:
         return cls(pd.read_parquet(fname))
 
     @property
+    def n_configs(self):
+        return self._data['config'].nunique()
+
+    @property
+    def n_replicas(self):
+        return self._data['replica'].nunique()
+
+    @property
     def n_steps(self):
         return self._data['step'].nunique()
 
