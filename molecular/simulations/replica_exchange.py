@@ -280,7 +280,10 @@ class ExchangeHistory:
         y = np.arange(mosaic.shape[1] + 1)
 
         # Start figure and axis
-        fig = plt.figure(figsize=(width, height))
+        figsize = None
+        if height is not None and width is not None:
+            figsize = (width, height)
+        fig = plt.figure(figsize=figsize)
         ax = fig.add_subplot()
         # im = ax.pcolormesh(mosaic, cmap=cmap, edgecolors='k', linewidth=0.5)  # bwr
         if cmap == 'ujet':
