@@ -4,11 +4,9 @@ written in Python3
 author: C. Lockhart <chris@lockhartlab.org>
 """
 
-
 import logging
 import numpy as np
 from scipy.spatial.distance import squareform
-
 
 # Get the molecular.geometry logger
 logger = logging.getLogger('molecular.geometry')
@@ -247,6 +245,25 @@ def dihedral(a, b, c, d=None):
     return angle(u, v, method='acos')
 
 
+def vecadd(a, b):
+    """
+    Add two vectors together
+    
+    Parameters
+    ----------
+    a : array
+    b : array
+
+    Returns
+    -------
+    numpy.ndarray
+    """
+
+    logger.info('adding vectors')
+
+    return a + b
+
+
 # Compute the distance between two vectors
 # naming inspired by VMD
 def vecdist(a, b=None):
@@ -278,6 +295,25 @@ def vecdist(a, b=None):
 
     # Return distance
     return _array_result(np.sqrt(np.sum(np.square(vector(a, b)), axis=1)), needs_ravel)
+
+
+def vecsub(a, b):
+    """
+    Add two vectors together
+
+    Parameters
+    ----------
+    a : array
+    b : array
+
+    Returns
+    -------
+    numpy.ndarray
+    """
+
+    logger.info('subtracting vectors')
+
+    return a - b
 
 
 # Dot product
@@ -530,3 +566,10 @@ def _has_dimensions(*args, n_dim=3):
     return all(result)
 
 
+if __name__ == '__main__':
+    import numpy as np
+    a = np.random.rand(100, 3)
+    b = np.random.rand(100, 3)
+    vecadd(a, b)
+    vecsub(a, b)
+    vecdist(a, b)
