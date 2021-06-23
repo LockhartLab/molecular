@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>molecular.simulations.replica_exchange &#8212; molecular 0.1.dev222 documentation</title>
+    <title>molecular.simulations.replica_exchange &#8212; molecular 0.1.dev223 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev222 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev223 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.replica_exchange</a></li> 
       </ul>
@@ -247,7 +247,7 @@
         <span class="c1"># Return Hansmann parameter</span>
         <span class="k">return</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">data</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ExchangeHistory.hansmann_plot"><a class="viewcode-back" href="../../../api/generated/molecular.simulations.ExchangeHistory.html#molecular.simulations.ExchangeHistory.hansmann_plot">[docs]</a>    <span class="k">def</span> <span class="nf">hansmann_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot_theoretical</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="ExchangeHistory.hansmann_plot"><a class="viewcode-back" href="../../../api/generated/molecular.simulations.ExchangeHistory.html#molecular.simulations.ExchangeHistory.hansmann_plot">[docs]</a>    <span class="k">def</span> <span class="nf">hansmann_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot_theoretical</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the Hansmann parameter.</span>
 
@@ -255,6 +255,10 @@
 <span class="sd">        ----------</span>
 <span class="sd">        x_title : str</span>
 <span class="sd">        y_title : str</span>
+<span class="sd">        height : numeric</span>
+<span class="sd">            Height of plot.</span>
+<span class="sd">        width : numeric</span>
+<span class="sd">            Width of plot.</span>
 <span class="sd">        plot_theoretical : bool</span>
 <span class="sd">            Should the theoretical Hansmann parameter in the case of equal sampling be plotted? (Default: True)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -269,12 +273,12 @@
 
         <span class="c1"># Build figure</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="p">{</span>
-            <span class="s1">&#39;x_title&#39;</span><span class="p">:</span> <span class="n">x_title</span><span class="p">,</span>
-            <span class="s1">&#39;y_title&#39;</span><span class="p">:</span> <span class="n">y_title</span><span class="p">,</span>
+            <span class="s1">&#39;x_title&#39;</span><span class="p">:</span> <span class="n">x_title</span> <span class="k">if</span> <span class="n">x_title</span> <span class="k">else</span> <span class="sa">r</span><span class="s1">&#39;replica index, $r$&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;y_title&#39;</span><span class="p">:</span> <span class="n">y_title</span> <span class="k">if</span> <span class="n">y_title</span> <span class="k">else</span> <span class="sa">r</span><span class="s1">&#39;mixing parameter, $m$($r$)&#39;</span><span class="p">,</span>
             <span class="s1">&#39;y_min&#39;</span><span class="p">:</span> <span class="mf">0.</span><span class="p">,</span>
             <span class="s1">&#39;y_max&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span>
-            <span class="c1"># &#39;height&#39;: 5,</span>
-            <span class="c1"># &#39;width&#39;: 6</span>
+            <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="n">height</span><span class="p">,</span>
+            <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="n">width</span>
         <span class="p">})</span>
         <span class="n">fig</span> <span class="o">+=</span> <span class="n">u</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="s1">&#39;line_style&#39;</span><span class="p">:</span> <span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="s1">&#39;circle&#39;</span><span class="p">})</span>  <span class="c1"># noqa</span>
         <span class="k">if</span> <span class="n">plot_theoretical</span><span class="p">:</span>
@@ -330,12 +334,12 @@
         <span class="c1"># TODO change this so only units of X are display</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">steps</span><span class="p">)))</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$step$&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;step&#39;</span><span class="p">)</span>
 
         <span class="c1"># Format y axis</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">replicas</span><span class="p">)))</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">replicas</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$temperature\ index$&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;temperature index&#39;</span><span class="p">)</span>
 
         <span class="c1"># Format tick lines</span>
         <span class="c1"># ax.spines[&#39;top&#39;].set_visible(False)</span>
@@ -365,7 +369,7 @@
         <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="c1">#        cbar.ax.yaxis.set_major_locator(MultipleLocator(1))</span>
         <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">integer</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-        <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$replica\ index$&#39;</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;replica index&#39;</span><span class="p">)</span>
 
         <span class="c1"># Save the image</span>
         <span class="c1"># fig.show()</span>
@@ -549,7 +553,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev222 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">molecular 0.1.dev223 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">molecular.simulations.replica_exchange</a></li> 
       </ul>
