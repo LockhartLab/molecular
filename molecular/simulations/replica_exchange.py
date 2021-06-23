@@ -47,6 +47,7 @@ class ExchangeHistory:
         # TODO is it necessary to have this validation step?
         if only_neighbors:
             n_replicas = data['replica'].nunique()
+            data = data.sort_values(['replica', 'step'])
             for replica in range(n_replicas):
                 tmp = data.query(f'replica == {replica}')['config'].diff().fillna(0)
                 assert tmp.min() == -1
@@ -116,6 +117,10 @@ class ExchangeHistory:
         """
 
         return cls(pd.read_parquet(fname))
+
+    @property
+    def n_steps(self):
+        return self._data['step'].nunique()
 
     # Cross-tabulate by config and replica axes
     def crosstab(self, index='config', column='replica'):
@@ -335,6 +340,13 @@ class ExchangeHistory:
         # Save the image
         # fig.show()
         fig.savefig('mosaic_plot.svg')
+
+    # Exchange rate plot
+    def rate_plot(self):
+        import uplot as u
+        fig, ax = u.plot(self.exchange_rate(by='config'), x_title='replica', y_title='exchange rate', y_min=0.,  # noqa
+                         y_max=1., height=5, width=6, show=False)
+        fig.savefig('exchange_rate.svg')
 
     # Reset the step index?
     def reset_step(self):
