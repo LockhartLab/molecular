@@ -619,14 +619,10 @@ class Trajectory(object):
         coord = self.coordinates - self.center(weights)
 
         # Center Trajectory in place or return a copy
-        if inplace:
-            logger.info(f'centered {self.designator} at origin')
-            self.coordinates = coord
-
-        else:
-            trajectory = self.copy()
-            logger.info(f'centered {trajectory.designator} at origin')
-            trajectory.coordinates = coord
+        trajectory = self if inplace else self.copy()
+        trajectory.coordinates = coord
+        logger.info(f'centered {trajectory.designator} at origin')
+        if not inplace:
             return trajectory
 
     # Convert to pandas DataFrame
@@ -726,6 +722,37 @@ class Trajectory(object):
             if self.xyz.shape != xyz.shape:
                 raise AttributeError('must be same shape')
             self.xyz = xyz
+
+    # Wrap all
+    def wrap_all(self, inplace=True):
+        """
+        Wraps all atoms in the selection to the unit cell.
+
+        Parameters
+        ----------
+        inplace : bool
+            Should the wrap happen in place? (Default: True)
+
+        Returns
+        -------
+        Trajectory
+        """
+
+        # Wrap all atoms to the unit cell
+        coord = self.coordinates
+        box = self.box.rename(columns={'bx': 'x', 'by': 'y', 'bz': 'z'})
+        cell = coord / box
+        for col in cell.columns:
+            cell[col] = cell[col].round()
+        offset = box * cell
+        coord_wrapped = coord - offset
+
+        # Do in place or return a copy
+        trajectory = self if inplace else self.copy()
+        trajectory.coordinates = coord
+        logger.info(f'wrapped all atoms of {trajectory.designator} to unit cell')
+        if not inplace:
+            return trajectory
 
     # View
     # https://github.com/arose/nglview
